@@ -1,19 +1,54 @@
-import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import { Layout } from "antd";
+import React, { useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import routes from "../routes";
+import AppFooter from "./AppFooter";
+import AppHeader from "./AppHeader";
+import AppSidebar from "./AppSidebar";
+const { Content } = Layout;
 
 const DefaultLayout = () => {
-  return (
-    <div>
-      <AppSidebar />
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <AppHeader />
-        <div className="body flex-grow-1 px-3">
-          <AppContent />
-        </div>
-        <AppFooter />
-      </div>
-    </div>
-  )
-}
+  const [collapsed, setCollapsed] = useState(false);
 
-export default DefaultLayout
+  return (
+    <Layout>
+      <AppSidebar
+        isCollapsed={collapsed}
+        onChangeCollapsed={(e) => setCollapsed(e)}
+      />
+      <Layout className="site-layout">
+        <AppHeader
+          className="site-layout-background"
+          isCollapsed={collapsed}
+          onChangeCollapsed={(e) => setCollapsed(e)}
+        />
+        <Content
+          style={{
+            margin: "30px 30px",
+            overflow: "initial",
+          }}
+        >
+          <Routes>
+            {routes.map((route, idx) => {
+              return (
+                route.element && (
+                  <Route
+                    key={idx}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    element={<route.element />}
+                  />
+                )
+              );
+            })}
+            <Route path="/" element={<Navigate to="dashboard" replace />} />
+          </Routes>
+        </Content>
+        <AppFooter />
+      </Layout>
+    </Layout>
+  );
+};
+
+export default DefaultLayout;

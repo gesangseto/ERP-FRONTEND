@@ -1,4 +1,3 @@
-import TextInput from './TextInput'
-import Table from './Table'
-import FilterTable from './FilterTable'
-export { TextInput, Table, FilterTable }
+import XTable from "./XTable";
+import XButton from "./XButton";
+export { XTable, XButton };
