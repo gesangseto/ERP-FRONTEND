@@ -1,4 +1,4 @@
-import { Table, Pagination } from "antd";
+import { Table, Pagination, Row, Col, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { defaultFilter } from "../constants";
 import XButton from "./XButton";
@@ -35,16 +35,34 @@ const DataTable = (props) => {
       obj.dataIndex = it.key;
       if (it.hasOwnProperty("action") && Array.isArray(it["action"])) {
         obj.render = (_e, record) =>
-          it["action"].map((act, idx) => (
-            <span key={idx}>
-              <XButton
-                popover={act}
-                type={act}
-                onClick={() => handleClickAction(act, record[it.key])}
-              />
-              &nbsp;
-            </span>
-          ));
+          it["action"].map((act, idx) => {
+            if (act == "delete") {
+              return (
+                <Popconfirm
+                  key={idx}
+                  title="Are you sure to delete this data?"
+                  onConfirm={() => handleClickAction(act, record[it.key])}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <span key={idx}>
+                    <XButton popover={act} type={act} />
+                    &nbsp;
+                  </span>
+                </Popconfirm>
+              );
+            }
+            return (
+              <span key={idx}>
+                <XButton
+                  popover={act}
+                  type={act}
+                  onClick={() => handleClickAction(act, record[it.key])}
+                />
+                &nbsp;
+              </span>
+            );
+          });
       }
       formatCol.push(obj);
     }
@@ -67,18 +85,29 @@ const DataTable = (props) => {
   return (
     <>
       <Table
-        rowKey="id"
+        {...props}
+        // rowKey="id"
         columns={data.columns}
         dataSource={data.items}
         pagination={false}
       />
-      <Pagination
-        defaultCurrent={filter.page}
-        total={totalData}
-        onChange={(page, limit) =>
-          setFilter({ ...filter, page: page, limit: limit })
-        }
-      />
+
+      <Row style={{ padding: 30 }}>
+        <Col span={16}>
+          <Pagination
+            defaultCurrent={filter.page}
+            total={totalData}
+            onChange={(page, limit) =>
+              setFilter({ ...filter, page: page, limit: limit })
+            }
+          />
+        </Col>
+        <Col span={8}>
+          <h3 style={{ marginRight: "0", float: "right" }}>
+            Total Data: {totalData}
+          </h3>
+        </Col>
+      </Row>
     </>
   );
 };

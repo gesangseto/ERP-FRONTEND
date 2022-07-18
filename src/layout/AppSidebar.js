@@ -11,11 +11,13 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-import React from "react";
-import { makeId, makeString } from "../helper/utils";
+import { Layout, Menu, Anchor } from "antd";
+import React, { useEffect, useState } from "react";
+import { makeId, makeString, reformatMenu } from "../helper/utils";
+import { useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
+const { Link } = Anchor;
 
 function getItem(label, key, icon, children) {
   return {
@@ -62,7 +64,30 @@ const items_old = [
 ];
 
 const AppSidebar = (props) => {
+  const navigate = useNavigate();
   const { isCollapsed } = props;
+  const [menuItems, setMenuItems] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState([1]);
+  const [menuApi, setMenuApi] = useState([]);
+
+  useEffect(() => {
+    let menu = JSON.parse(localStorage.getItem("menu"));
+    if (menu) {
+      setMenuApi([...menu]);
+      menu = reformatMenu(menu);
+      setMenuItems([...menu]);
+      console.log(menu);
+    }
+  }, []);
+
+  const handleClickMenu = (e) => {
+    console.log(e);
+    let getMenu = menuApi.findIndex((x) => x.sys_menu_id == e.key);
+    if (getMenu >= 0) {
+      navigate(menuApi[getMenu].sys_menu_url);
+      setSelectedMenu([...e.keyPath]);
+    }
+  };
 
   return (
     <Sider
@@ -80,9 +105,10 @@ const AppSidebar = (props) => {
       <div className="logo" style={{ height: "60px" }} />
       <Menu
         theme="dark"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={selectedMenu}
         mode="inline"
-        items={items}
+        items={menuItems}
+        onClick={(e) => handleClickMenu(e)}
       />
     </Sider>
   );

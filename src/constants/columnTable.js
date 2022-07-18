@@ -1,19 +1,19 @@
 export const userColumns = [
   {
     title: "ID",
-    key: "id",
+    key: "user_id",
   },
   {
     title: "Name",
-    key: "name",
+    key: "user_name",
   },
   {
     title: "Email",
-    key: "email",
+    key: "user_email",
   },
   {
     title: "Address",
-    key: "address",
+    key: "user_address",
   },
   {
     title: "Status",
@@ -26,7 +26,7 @@ export const userColumns = [
   },
   {
     title: "Action",
-    key: "id",
+    key: "user_id",
     action: ["update", "read", "delete"],
   },
 ];

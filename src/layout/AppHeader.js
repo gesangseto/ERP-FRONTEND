@@ -1,46 +1,66 @@
 import {
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  SettingOutlined,
   UserOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, Layout, Menu, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 
-const menu = (
-  <Menu
-    items={[
-      {
-        key: "1",
-        label: (
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.antgroup.com"
-          >
-            Profile
-          </a>
-        ),
-      },
-      {
-        key: "4",
-        danger: true,
-        label: "Logout",
-      },
-    ]}
-  />
-);
-
 const AppHeader = (props) => {
+  const navigate = useNavigate();
   const { onChangeCollapsed, isCollapsed } = props;
   const [collapsed, setCollapsed] = useState(false);
+
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: "1",
+          label: (
+            <a>
+              <SettingOutlined />
+              &nbsp;Proffile
+            </a>
+          ),
+        },
+        {
+          key: "4",
+          danger: true,
+          label: (
+            <a onClick={() => handleLogout()}>
+              <LogoutOutlined />
+              &nbsp;Logout
+            </a>
+          ),
+        },
+      ]}
+    />
+  );
 
   useEffect(() => {
     if (onChangeCollapsed) {
       onChangeCollapsed(collapsed);
     }
   }, [collapsed]);
+
+  useEffect(() => {
+    let profile = localStorage.getItem("profile");
+    if (!profile) {
+      handleLogout();
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("profile");
+    localStorage.removeItem("menu");
+    navigate("Login");
+  };
 
   return (
     <Header
