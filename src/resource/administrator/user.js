@@ -2,6 +2,11 @@ import { toast } from "react-toastify";
 import $axios from "../../Api";
 
 export const getUser = async (property = {}, useAlert = true) => {
+  if (property.hasOwnProperty("search")) {
+    if (Array.isArray(property.search)) {
+      property.search = JSON.stringify(property.search);
+    }
+  }
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios

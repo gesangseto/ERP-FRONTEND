@@ -76,7 +76,6 @@ const AppSidebar = (props) => {
       setMenuApi([...menu]);
       menu = reformatMenu(menu);
       setMenuItems([...menu]);
-      console.log(menu);
     }
   }, []);
 

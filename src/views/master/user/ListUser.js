@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
@@ -17,16 +17,17 @@ const ListUser = () => {
   const [filter, setFilter] = useState({ ...defaultFilter });
 
   useEffect(() => {
+    console.log("filter", filter);
     loadData();
   }, [filter]);
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     let _data = await getUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
     }
-  }, []);
+  };
 
   const handleClickAction = async (action, id) => {
     if (action == "delete") {

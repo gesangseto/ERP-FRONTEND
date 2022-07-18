@@ -1,9 +1,23 @@
-import { Table, Pagination, Row, Col, Popconfirm } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  Pagination,
+  Popconfirm,
+  Row,
+  Select,
+  Table,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { defaultFilter } from "../constants";
 import XButton from "./XButton";
+import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
+import routes from "../routes";
 
-const DataTable = (props) => {
+const XTable = (props) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [{ route }] = matchRoutes(routes, location);
   const {
     items,
     columns,
@@ -12,6 +26,7 @@ const DataTable = (props) => {
     totalData = 0,
   } = props;
   const [filter, setFilter] = useState({ ...defaultFilter });
+  const [search, setSearch] = useState([]);
   const [data, setData] = useState({
     items: [],
     columns: [],
@@ -27,6 +42,11 @@ const DataTable = (props) => {
       onChangePagination(filter);
     }
   }, [filter]);
+
+  useEffect(() => {
+    let menu = JSON.parse(localStorage.getItem("menu"));
+    console.log(menu);
+  }, []);
 
   const generateColumn = (_column = Array) => {
     let formatCol = [];
@@ -75,15 +95,31 @@ const DataTable = (props) => {
       onClickAction(type, id);
     }
   };
-  const handleChangePagination = () => {
-    console.log(`onChangePagination(${filter});`);
-    if (onChangePagination) {
-      onChangePagination(filter);
-    }
+
+  const handleClickSearch = () => {
+    setFilter({ ...filter, search: search });
   };
 
   return (
     <>
+      <Row style={{ paddingBlock: 10 }}>
+        <Col span={12}>
+          {/* <Search /> */}
+
+          <Input.Group compact>
+            <Select
+              placeholder="Search anything"
+              notFoundContent="Search anything"
+              mode="tags"
+              style={{ width: "70%" }}
+              onChange={(e) => setSearch([...e])}
+              tokenSeparators={[","]}
+            />
+            <Button onClick={() => handleClickSearch()}>Search</Button>
+          </Input.Group>
+        </Col>
+      </Row>
+
       <Table
         {...props}
         // rowKey="id"
@@ -112,37 +148,4 @@ const DataTable = (props) => {
   );
 };
 
-export default DataTable;
-
-const columns_old = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-    // render: (text,record) => <a>{text}</a>,
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Action",
-    key: "action",
-    dataIndex: "id",
-    render: (item, record) => (
-      <>
-        <XButton popover="Delete" type="delete" />
-        &nbsp;
-        <XButton popover="Update" type="update" />
-        &nbsp;
-        <XButton popover="Read" type="read" />
-      </>
-    ),
-  },
-];
+export default XTable;

@@ -1,3 +1,5 @@
 import XTable from "./XTable";
 import XButton from "./XButton";
-export { XTable, XButton };
+import XFilter from "./XFilter";
+
+export { XTable, XButton, XFilter };
