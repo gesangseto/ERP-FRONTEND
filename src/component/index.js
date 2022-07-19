@@ -1,5 +1,5 @@
 import XTable from "./XTable";
 import XButton from "./XButton";
-import XFilter from "./XFilter";
+import XFormApproval from "./XFormApproval";
 
-export { XTable, XButton, XFilter };
+export { XTable, XButton, XFormApproval };

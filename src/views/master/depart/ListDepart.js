@@ -4,11 +4,11 @@ import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { userColumns } from "../../../constants/columnTable";
-import { deleteUser, getUser } from "../../../resource";
+import { departColumns } from "../../../constants/columnTable";
+import { deleteDepartment, getDepartment } from "../../../resource";
 import routes from "../../../routes";
 
-const ListUser = () => {
+const ListDepart = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
@@ -17,12 +17,11 @@ const ListUser = () => {
   const [filter, setFilter] = useState({ ...defaultFilter });
 
   useEffect(() => {
-    console.log("filter", filter);
     loadData();
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getUser(filter);
+    let _data = await getDepartment(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -31,7 +30,7 @@ const ListUser = () => {
 
   const handleClickAction = async (action, id) => {
     if (action == "delete") {
-      if (await deleteUser({ user_id: id })) {
+      if (await deleteDepartment({ user_department_id: id })) {
         loadData();
         toast.success(`Delete id ${id} successfully`);
       }
@@ -55,8 +54,8 @@ const ListUser = () => {
       }
     >
       <XTable
-        rowKey="user_id"
-        columns={userColumns}
+        rowKey="user_department_id"
+        columns={departColumns}
         items={listData}
         totalData={totalData}
         pagination={(e) => handleClickRow(e)}
@@ -67,4 +66,4 @@ const ListUser = () => {
   );
 };
 
-export default ListUser;
+export default ListDepart;

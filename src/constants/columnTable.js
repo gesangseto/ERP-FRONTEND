@@ -30,3 +30,31 @@ export const userColumns = [
     action: ["update", "read", "delete"],
   },
 ];
+export const departColumns = [
+  {
+    title: "ID",
+    key: "user_department_id",
+  },
+  {
+    title: "Code",
+    key: "user_department_code",
+  },
+  {
+    title: "Name",
+    key: "user_department_name",
+  },
+  {
+    title: "Status",
+    key: "status",
+    render: (i, rec) => (
+      <p style={{ color: rec.status ? "green" : "red" }}>
+        {rec.status ? "Active" : "Inactive"}
+      </p>
+    ),
+  },
+  {
+    title: "",
+    key: "user_department_id",
+    action: ["approve", "update", "read", "delete"],
+  },
+];

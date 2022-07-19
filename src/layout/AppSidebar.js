@@ -14,7 +14,13 @@ import {
 import { Layout, Menu, Anchor } from "antd";
 import React, { useEffect, useState } from "react";
 import { makeId, makeString, reformatMenu } from "../helper/utils";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+  matchRoutes,
+  useParams,
+} from "react-router-dom";
+import routes from "../routes";
 
 const { Sider } = Layout;
 const { Link } = Anchor;
@@ -64,6 +70,10 @@ const items_old = [
 ];
 
 const AppSidebar = (props) => {
+  // let { type, id } = useParams();
+  // const match = { params: useParams() };
+  // const location = useLocation();
+  // const [{ route }] = matchRoutes(routes, location);
   const navigate = useNavigate();
   const { isCollapsed } = props;
   const [menuItems, setMenuItems] = useState([]);
@@ -79,8 +89,15 @@ const AppSidebar = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    // let idxMenu = selectedMenu[0];
+    // let menu = JSON.parse(localStorage.getItem("menu"));
+    // // console.log("type", type);
+    // console.log(menu[idxMenu]);
+    // console.log(match);
+  }, []);
+
   const handleClickMenu = (e) => {
-    console.log(e);
     let getMenu = menuApi.findIndex((x) => x.sys_menu_id == e.key);
     if (getMenu >= 0) {
       navigate(menuApi[getMenu].sys_menu_url);

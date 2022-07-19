@@ -1,11 +1,10 @@
 import { toast } from "react-toastify";
 import $axios from "../../Api";
 
-export const getDepartment = async (property = {}, useAlert = true) => {
-  var query_string = new URLSearchParams(property).toString();
+export const updateFlowApproval = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/user_department?${query_string}`)
+      .post(`/api/approval/flow-approval`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

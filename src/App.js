@@ -1,4 +1,6 @@
 import "antd/dist/antd.min.css";
+import "antd-button-color/dist/css/style.css"; // or 'antd-button-color/dist/css/style.less'
+
 import React, { Component, Suspense } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";

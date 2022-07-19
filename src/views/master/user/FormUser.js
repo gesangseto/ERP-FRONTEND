@@ -11,8 +11,9 @@ import {
   getUser,
   insertUser,
   updateUser,
-} from "../../../resource/administrator/user";
-import { getDepartment, getSection } from "../../../resource/master";
+  getDepartment,
+  getSection,
+} from "../../../resource";
 import routes from "../../../routes";
 
 const FormUser = () => {

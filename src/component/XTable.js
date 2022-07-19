@@ -11,13 +11,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { defaultFilter } from "../constants";
 import XButton from "./XButton";
-import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
-import routes from "../routes";
+import XFormApproval from "./XFormApproval";
 
 const XTable = (props) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const {
     items,
     columns,
@@ -27,6 +23,7 @@ const XTable = (props) => {
   } = props;
   const [filter, setFilter] = useState({ ...defaultFilter });
   const [search, setSearch] = useState([]);
+  const [approvalId, setApprovalId] = useState(null);
   const [data, setData] = useState({
     items: [],
     columns: [],
@@ -43,11 +40,6 @@ const XTable = (props) => {
     }
   }, [filter]);
 
-  useEffect(() => {
-    let menu = JSON.parse(localStorage.getItem("menu"));
-    console.log(menu);
-  }, []);
-
   const generateColumn = (_column = Array) => {
     let formatCol = [];
     for (const it of _column) {
@@ -59,28 +51,32 @@ const XTable = (props) => {
             if (act == "delete") {
               return (
                 <Popconfirm
-                  key={idx}
+                  key={`${act}${record[it.key]}`}
                   title="Are you sure to delete this data?"
-                  onConfirm={() => handleClickAction(act, record[it.key])}
+                  onConfirm={() =>
+                    handleClickAction(act, record[it.key], record)
+                  }
                   okText="Yes"
                   cancelText="No"
                 >
-                  <span key={idx}>
-                    <XButton popover={act} type={act} />
-                    &nbsp;
-                  </span>
+                  <XButton
+                    popover={act}
+                    type={act}
+                    record={record}
+                    style={{ float: "right", marginInline: 2 }}
+                  />
                 </Popconfirm>
               );
             }
             return (
-              <span key={idx}>
-                <XButton
-                  popover={act}
-                  type={act}
-                  onClick={() => handleClickAction(act, record[it.key])}
-                />
-                &nbsp;
-              </span>
+              <XButton
+                key={`${act}${record[it.key]}`}
+                popover={act}
+                type={act}
+                record={record}
+                onClick={() => handleClickAction(act, record[it.key], record)}
+                style={{ float: "right", marginInline: 2 }}
+              />
             );
           });
       }
@@ -89,7 +85,12 @@ const XTable = (props) => {
     setData({ ...data, items: items, columns: formatCol });
   };
 
-  const handleClickAction = (type, id) => {
+  const handleClickAction = (type, id, record) => {
+    if (type == "approve") {
+      let rec = record.approval;
+      setApprovalId(rec.approval_flow_id);
+      return;
+    }
     console.log(`onClickAction(${type},${id});`);
     if (onClickAction) {
       onClickAction(type, id);
@@ -119,7 +120,14 @@ const XTable = (props) => {
           </Input.Group>
         </Col>
       </Row>
-
+      <XFormApproval
+        approval_flow_id={approvalId}
+        onCancel={() => setApprovalId(null)}
+        onApprove={() => {
+          setApprovalId(null);
+          handleClickSearch();
+        }}
+      />
       <Table
         {...props}
         // rowKey="id"
