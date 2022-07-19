@@ -8,6 +8,7 @@ import {
 import { Button, Popover, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { matchRoutes, useLocation } from "react-router-dom";
+import { canApprove } from "../helper/utils";
 import routes from "../routes";
 
 const XButton = (props) => {
@@ -49,30 +50,22 @@ const XButton = (props) => {
   useEffect(() => {
     let hidden = false;
     let profile = JSON.parse(localStorage.getItem("profile"));
-    if ((type && permission[`flag_${type}`]) || !use_permission) {
+    if ((type && permission[`flag_${type}`]) || use_permission == "false") {
       hidden = false;
     } else {
       hidden = true;
     }
-
+    // APPROVAL BUTTON
     if (type == "approve" && record) {
       if (record.hasOwnProperty("approval")) {
         let approval = record.approval;
-        if (approval && approval.approval_current_user_id) {
-          if (
-            approval.approval_current_user_id != profile.user_id &&
-            profile.user_id != 0
-          ) {
-            hidden = true;
-          }
-        }
-        if (!approval) {
-          hidden = true;
-        } else if (approval.is_approve) {
+        if (canApprove(approval)) {
+          hidden = false;
+        } else {
           hidden = true;
         }
-
-        console.log(approval);
+      } else {
+        hidden = true;
       }
     }
     setIsHidden(hidden);

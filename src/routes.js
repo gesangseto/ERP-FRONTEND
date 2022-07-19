@@ -2,8 +2,10 @@ import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/Dashboard"));
 
-const ListDepart = React.lazy(() => import("./views/master/depart/ListDepart"));
-const FormDepart = React.lazy(() => import("./views/master/depart/FormDepart"));
+const LDepart = React.lazy(() => import("./views/master/depart/ListDepart"));
+const FDepart = React.lazy(() => import("./views/master/depart/FormDepart"));
+const LSection = React.lazy(() => import("./views/master/section/ListSection"));
+const FSection = React.lazy(() => import("./views/master/section/FormSection"));
 const ListUser = React.lazy(() => import("./views/master/user/ListUser"));
 const FormUser = React.lazy(() => import("./views/master/user/FormUser"));
 
@@ -17,17 +19,25 @@ const routes = [
   {
     path: "/master/department",
     name: "Master Department",
-    element: ListDepart,
+    element: LDepart,
   },
   {
     path: "/master/department/:type",
     name: "Create Department",
-    element: FormDepart,
+    element: FDepart,
   },
   {
     path: "/master/department/:type/:id",
     name: "Detail Department",
-    element: FormDepart,
+    element: FDepart,
+  },
+  // Master Section
+  { path: "/master/section", name: "Master Section", element: LSection },
+  { path: "/master/section/:type", name: "Create Section", element: FSection },
+  {
+    path: "/master/section/:type/:id",
+    name: "Detail Section",
+    element: FSection,
   },
   // Master User
   { path: "/master/user", name: "Master User", element: ListUser },

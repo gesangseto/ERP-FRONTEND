@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { defaultFilter } from "../constants";
 import XButton from "./XButton";
-import XFormApproval from "./XFormApproval";
+import XModalApproval from "./XModalApproval";
 
 const XTable = (props) => {
   const {
@@ -120,8 +120,9 @@ const XTable = (props) => {
           </Input.Group>
         </Col>
       </Row>
-      <XFormApproval
+      <XModalApproval
         approval_flow_id={approvalId}
+        visible={approvalId}
         onCancel={() => setApprovalId(null)}
         onApprove={() => {
           setApprovalId(null);

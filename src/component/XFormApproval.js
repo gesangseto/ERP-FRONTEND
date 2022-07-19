@@ -1,81 +1,84 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { Button, Modal, Form, Input, Switch, Space } from "antd";
+import { Button, Input, Form, Card, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { updateFlowApproval } from "../resource";
+import XButton from "./XButton";
+import XModalApproval from "./XModalApproval";
 // import { updateDepartment } from "../../../resource/administrator/department";
 
 const XFormApproval = (props) => {
-  const { approval_flow_id, item, onApprove } = props;
-  const [formData, setFormData] = useState({
-    approval_flow_id: null,
-    is_approve: null,
+  const { item, onApprove } = props;
+  const [openApproval, setOpenApproval] = useState(false);
+  const [data, setData] = useState({
+    approval_ref_table: "",
+    approval_desc: "",
+    approval_user_id_1: "",
+    approval_user_id_2: "",
+    approval_user_id_3: "",
+    approval_user_id_4: "",
+    approval_user_id_5: "",
+    approval_ref_id: "9",
     rejected_note: "",
+    approval_current_user_id: "",
+    approval_flow_id: "",
+    is_approve: true,
+    approval_user_name: "",
+    approval_user_email: "",
   });
-
   useEffect(() => {
-    setFormData({ ...formData, approval_flow_id: approval_flow_id });
-  }, [approval_flow_id]);
-
-  const showModal = () => {
-    setFormData({ ...formData, approval_flow_id: 1 });
-  };
-
-  const hideModal = () => {
-    setFormData({ ...formData, approval_flow_id: null });
-  };
-
-  const handleApprove = async (type) => {
-    let param = formData;
-    param.is_approve = type == "approve" ? true : false;
-    let _res = await updateFlowApproval(param);
-    if (_res) {
-      toast.success(`${type} is success`);
-      hideModal();
-    }
-    if (onApprove) {
-      onApprove();
-    }
-  };
+    setData({ ...item });
+  }, [item]);
   return (
-    <>
-      <Modal
-        title="Approval Form"
-        visible={formData.approval_flow_id}
-        onOk={hideModal}
-        okText="Approve"
-        footer={[
-          <Button
-            key="Reject"
-            type="danger"
-            onClick={() => handleApprove("reject")}
-          >
-            Reject
-          </Button>,
-          <Button
-            key="Approve"
-            type="success"
-            onClick={() => handleApprove("approve")}
-          >
-            Approve
-          </Button>,
-        ]}
-        {...props}
-      >
-        <p>
-          The applicant tries to open a dialog to approve or reject data on your
-          own responsibility.
-        </p>
-        <Input
-          initialValue={formData.rejected_note}
-          onChange={(e) =>
-            setFormData({ ...formData, rejected_note: e.target.value })
-          }
-          placeholder="Note"
-          name="rejected_note"
+    <Card style={{ margin: 10 }}>
+      <h3>Approval Data</h3>
+      <Row style={{ margin: 10 }}>
+        <Col span={11}>
+          <label>Approval Flow</label>
+          <Input value={`${data.approval_desc ?? ""}`} />
+        </Col>
+        <Col span={2}></Col>
+        <Col span={11}>
+          <label>Approval Status</label>
+          <Input
+            value={
+              data.is_approve == null
+                ? "Pending"
+                : data.is_approve
+                ? "Approved"
+                : "Rejected"
+            }
+          />
+        </Col>
+      </Row>
+      <Row style={{ margin: 10 }}>
+        <Col span={11}>
+          <label>Approval By</label>
+          <Input value={data.approval_user_email} />
+        </Col>
+        <Col span={2}></Col>
+        <Col span={11}>
+          <label>Noted</label>
+          <Input value={data.rejected_note} />
+        </Col>
+      </Row>
+
+      {data.approval_flow_id ? (
+        <XButton
+          title="Approve"
+          use_permission={"false"}
+          onClick={() => setOpenApproval(true)}
         />
-      </Modal>
-    </>
+      ) : null}
+      <XModalApproval
+        visible={openApproval}
+        approval_flow_id={data.approval_flow_id}
+        onCancel={() => setOpenApproval(false)}
+        onApprove={() => {
+          setOpenApproval(false);
+          onApprove ? onApprove() : null;
+        }}
+      />
+    </Card>
   );
 };
 export default XFormApproval;

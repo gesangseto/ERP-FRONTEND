@@ -44,7 +44,7 @@ const FormUser = () => {
 
   useEffect(() => {
     form.current.resetFields();
-  }, [formData, listSect]);
+  }, [formData]);
 
   const loadUser = async (id) => {
     let _data = await getUser({ user_id: id });

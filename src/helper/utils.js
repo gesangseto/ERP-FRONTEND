@@ -65,3 +65,19 @@ function treeify(list, idAttr, parentAttr, childrenAttr) {
   });
   return treeList;
 }
+
+export const canApprove = (approval) => {
+  let profile = JSON.parse(localStorage.getItem("profile"));
+  try {
+    if (
+      approval.is_approve == null &&
+      (approval.approval_current_user_id == profile.user_id ||
+        0 == profile.user_id)
+    ) {
+      return approval;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+};

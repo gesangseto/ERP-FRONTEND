@@ -7,8 +7,6 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval } from "../../../component";
-import { canApprove } from "../../../helper/utils";
 // import { updateDepartment } from "../../../resource/administrator/department";
 import {
   getDepartment,
@@ -17,7 +15,7 @@ import {
 } from "../../../resource";
 import routes from "../../../routes";
 
-const FormDepart = () => {
+const FormSection = () => {
   let { type, id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,8 +23,6 @@ const FormDepart = () => {
   const form = useRef(null);
   const [componentSize, setComponentSize] = useState("default");
   const [loading, setLoading] = useState(false);
-  const [approval, setApproval] = useState({});
-  const [openApproval, setOpenApproval] = useState(false);
   const [formData, setFormData] = useState({
     user_department_id: "",
     user_department_name: "",
@@ -41,15 +37,6 @@ const FormDepart = () => {
 
   useEffect(() => {
     form.current.resetFields();
-    if (formData.hasOwnProperty("approval")) {
-      let app = formData.approval;
-      if (app) {
-        if (!canApprove(app)) {
-          delete app.approval_flow_id;
-        }
-        setApproval({ ...app });
-      }
-    }
   }, [formData]);
 
   const loadFormData = async (id) => {
@@ -140,10 +127,7 @@ const FormDepart = () => {
           </Button>
         </Form.Item>
       </Form>
-      {Object.keys(approval).length > 0 ? (
-        <XFormApproval item={approval} />
-      ) : null}
     </Card>
   );
 };
-export default FormDepart;
+export default FormSection;
