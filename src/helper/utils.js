@@ -31,9 +31,22 @@ export const mergeArray = (a, b, prop) => {
   return reduced.concat(b);
 };
 
+export const haveRole = (item) => {
+  if (
+    item.flag_create == 0 &&
+    item.flag_delete == 0 &&
+    item.flag_download == 0 &&
+    item.flag_print == 0 &&
+    item.flag_read == 0 &&
+    item.flag_update == 0
+  ) {
+    return false;
+  }
+  return true;
+};
+
 export const reformatMenu = (menu = Array) => {
   let threeMenu = treeify(menu, "sys_menu_id", "sys_menu_parent_id");
-
   let _res = [];
   for (const it of threeMenu) {
     let item = {
@@ -46,9 +59,22 @@ export const reformatMenu = (menu = Array) => {
       item.children = reformatMenu(it.children);
       delete item.to;
     }
-    _res.push(item);
+    if (!haveRole(it) && it.children.length == 0) {
+      console.log("Punya", it);
+    } else {
+      _res.push(item);
+    }
   }
-  return _res;
+
+  let newMenu = [];
+  _res.forEach(function (obj) {
+    if (obj.hasOwnProperty("children") && obj.children.length > 0) {
+      newMenu.push(obj);
+    } else if (obj.hasOwnProperty("to")) {
+      newMenu.push(obj);
+    }
+  });
+  return newMenu;
 };
 
 export const groupBy = (array = Array, key) => {

@@ -11,19 +11,18 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Anchor } from "antd";
+import { Layout, Menu } from "antd";
 import React, { useEffect, useState } from "react";
-import { makeId, makeString, reformatMenu } from "../helper/utils";
 import {
   useNavigate,
+  useParams,
   useLocation,
   matchRoutes,
-  useParams,
 } from "react-router-dom";
+import { findOnArr, makeId, makeString, reformatMenu } from "../helper/utils";
 import routes from "../routes";
 
 const { Sider } = Layout;
-const { Link } = Anchor;
 
 function getItem(label, key, icon, children) {
   return {
@@ -68,12 +67,10 @@ const items_old = [
   ]),
   getItem("Files", "9", <FileOutlined />),
 ];
-
 const AppSidebar = (props) => {
-  // let { type, id } = useParams();
-  // const match = { params: useParams() };
-  // const location = useLocation();
-  // const [{ route }] = matchRoutes(routes, location);
+  let { type, id } = useParams();
+  const location = useLocation();
+  const [{ route }] = matchRoutes(routes, location);
   const navigate = useNavigate();
   const { isCollapsed } = props;
   const [menuItems, setMenuItems] = useState([]);
@@ -91,11 +88,29 @@ const AppSidebar = (props) => {
 
   useEffect(() => {
     // let idxMenu = selectedMenu[0];
-    // let menu = JSON.parse(localStorage.getItem("menu"));
-    // // console.log("type", type);
+    let menu = JSON.parse(localStorage.getItem("menu"));
+    // findOnArr({});
+    let haveRole = false;
+    for (const it of menu) {
+      let path = route.path.toLowerCase();
+      let url = it.sys_menu_url.toLowerCase();
+      if (path.includes(url)) {
+        // console.log(type);
+        // console.log(`it[flag_${type}]`, it[`flag_${type}`]);
+        if (it[`flag_${type}`]) {
+          haveRole = true;
+        }
+      }
+    }
+    if (!haveRole) {
+      // navigate("/404");
+    }
+    console.log(route.path.includes("M"));
+    console.log(menu);
+    // console.log("type", type);
     // console.log(menu[idxMenu]);
     // console.log(match);
-  }, []);
+  }, [type]);
 
   const handleClickMenu = (e) => {
     let getMenu = menuApi.findIndex((x) => x.sys_menu_id == e.key);

@@ -4,7 +4,6 @@ import {
   MenuUnfoldOutlined,
   SettingOutlined,
   UserOutlined,
-  UserSwitchOutlined,
 } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, Layout, Menu, Row } from "antd";
 import React, { useEffect, useState } from "react";

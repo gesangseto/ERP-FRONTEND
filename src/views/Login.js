@@ -15,7 +15,10 @@ const Login = () => {
     let _login = await loginUser(data);
     if (_login) {
       localStorage.setItem("profile", JSON.stringify(_login));
-      let _menu = await menuUser({ user_section_id: _login.user_section_id });
+      let _menu = await menuUser({
+        user_section_id: _login.user_section_id,
+        show_all: true,
+      });
       localStorage.setItem("menu", JSON.stringify(_menu));
       toast.success(`Welcome ${_login.user_name}`);
       navigate(`/dashboard`);
