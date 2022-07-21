@@ -23,10 +23,8 @@ const FormDepart = () => {
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
-  const [componentSize, setComponentSize] = useState("default");
   const [loading, setLoading] = useState(false);
   const [approval, setApproval] = useState({});
-  const [openApproval, setOpenApproval] = useState(false);
   const [formData, setFormData] = useState({
     user_department_id: "",
     user_department_name: "",
@@ -34,9 +32,11 @@ const FormDepart = () => {
   });
 
   useEffect(() => {
-    if (id) {
-      loadFormData(id);
-    }
+    (async function () {
+      if (id) {
+        loadFormData(id);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -90,9 +90,9 @@ const FormDepart = () => {
         }}
         layout="horizontal"
         initialValues={{
-          size: componentSize,
+          size: "default",
         }}
-        size={componentSize}
+        size={"default"}
       >
         <Form.Item
           initialValue={formData.user_department_code}

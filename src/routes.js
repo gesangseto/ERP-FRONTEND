@@ -6,6 +6,8 @@ const LDepart = React.lazy(() => import("./views/master/depart/ListDepart"));
 const FDepart = React.lazy(() => import("./views/master/depart/FormDepart"));
 const LSection = React.lazy(() => import("./views/master/section/ListSection"));
 const FSection = React.lazy(() => import("./views/master/section/FormSection"));
+const FRole = React.lazy(() => import("./views/master/role/FormRole"));
+const LRole = React.lazy(() => import("./views/master/role/ListRole"));
 const ListUser = React.lazy(() => import("./views/master/user/ListUser"));
 const FormUser = React.lazy(() => import("./views/master/user/FormUser"));
 
@@ -39,6 +41,10 @@ const routes = [
     name: "Detail Section",
     element: FSection,
   },
+  // Master Role
+  { path: "/master/role", name: "Master Role", element: LRole },
+  { path: "/master/role/:type", name: "Create Role", element: FRole },
+  { path: "/master/role/:type/:id", name: "Detail Role", element: FRole },
   // Master User
   { path: "/master/user", name: "Master User", element: ListUser },
   { path: "/master/user/:type", name: "Create User", element: FormUser },

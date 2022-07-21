@@ -12,11 +12,12 @@ const Login = () => {
   const onSubmit = async (data) => {
     console.log("Success:", data);
     setLoading(true);
-    if (await loginUser(data)) {
-      let profile = JSON.parse(localStorage.getItem("profile"));
-      console.log(profile);
-      await menuUser({ user_section_id: profile.section_id });
-      toast.success(`Welcome ${profile.user_name}`);
+    let _login = await loginUser(data);
+    if (_login) {
+      localStorage.setItem("profile", JSON.stringify(_login));
+      let _menu = await menuUser({ user_section_id: _login.user_section_id });
+      localStorage.setItem("menu", JSON.stringify(_menu));
+      toast.success(`Welcome ${_login.user_name}`);
       navigate(`/dashboard`);
     }
     setLoading(false);

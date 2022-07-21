@@ -58,7 +58,6 @@ const ListDepart = () => {
         columns={departColumns}
         items={listData}
         totalData={totalData}
-        pagination={(e) => handleClickRow(e)}
         onChangePagination={(e) => setFilter({ ...e })}
         onClickAction={(type, id) => handleClickAction(type, id)}
       />

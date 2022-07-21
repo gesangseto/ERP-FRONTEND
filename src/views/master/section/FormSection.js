@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Switch } from "antd";
+import { Button, Card, Form, Input, Select, Switch } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
   matchRoutes,
@@ -7,11 +7,15 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
+import { canApprove } from "../../../helper/utils";
 // import { updateDepartment } from "../../../resource/administrator/department";
 import {
   getDepartment,
+  getSection,
   insertDepartment,
+  insertSection,
   updateDepartment,
+  updateSection,
 } from "../../../resource";
 import routes from "../../../routes";
 
@@ -21,37 +25,57 @@ const FormSection = () => {
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
-  const [componentSize, setComponentSize] = useState("default");
   const [loading, setLoading] = useState(false);
+  const [approval, setApproval] = useState({});
+  const [listDepart, setListDepart] = useState([]);
   const [formData, setFormData] = useState({
     user_department_id: "",
-    user_department_name: "",
-    user_department_code: "",
+    user_section_name: "",
+    user_section_code: "",
   });
 
   useEffect(() => {
-    if (id) {
-      loadFormData(id);
-    }
+    (async function () {
+      if (id) {
+        await loadFormData(id);
+      }
+      await loadDepartment();
+    })();
   }, []);
 
   useEffect(() => {
-    form.current.resetFields();
+    if (formData.user_department_id) form.current.resetFields();
+    if (formData.hasOwnProperty("approval")) {
+      let app = formData.approval;
+      if (app) {
+        if (!canApprove(app)) {
+          delete app.approval_flow_id;
+        }
+        setApproval({ ...app });
+      }
+    }
   }, [formData]);
 
   const loadFormData = async (id) => {
-    let _data = await getDepartment({ user_department_id: id });
+    let _data = await getSection({ user_section_id: id });
     _data = _data.data[0];
     setFormData({ ..._data });
+  };
+
+  const loadDepartment = async () => {
+    let _data = await getDepartment({ status: 1 });
+
+    _data = _data.data;
+    setListDepart([..._data]);
   };
 
   const saveFormData = async (param = Object) => {
     let _data;
     if (id) {
-      param.user_department_id = id;
-      _data = await updateDepartment(param);
+      param.user_section_id = id;
+      _data = await updateSection(param);
     } else {
-      _data = await insertDepartment(param);
+      _data = await insertSection(param);
     }
     if (_data) {
       toast.success("Success");
@@ -77,28 +101,49 @@ const FormSection = () => {
         }}
         layout="horizontal"
         initialValues={{
-          size: componentSize,
+          size: "default",
         }}
-        size={componentSize}
+        size={"default"}
       >
         <Form.Item
-          initialValue={formData.user_department_code}
-          label="Department Code"
-          name="user_department_code"
+          initialValue={formData.user_department_id}
+          label="Department"
+          name="user_department_id"
           rules={[
-            { required: true, message: "Please input your Department Code!" },
+            {
+              required: true,
+              message: "Please input your department!",
+            },
+          ]}
+        >
+          <Select onChange={(e) => loadSection(e)} disabled={type == "read"}>
+            {listDepart.map((item, idx) => {
+              return (
+                <Select.Option key={idx} value={item.user_department_id}>
+                  {item.user_department_name}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          initialValue={formData.user_section_code}
+          label="Section Code"
+          name="user_section_code"
+          rules={[
+            { required: true, message: "Please input your Section Code!" },
           ]}
         >
           <Input disabled={type == "read"} />
         </Form.Item>
         <Form.Item
-          initialValue={formData.user_department_name}
-          label="Department Name"
-          name="user_department_name"
+          initialValue={formData.user_section_name}
+          label="Section Name"
+          name="user_section_name"
           rules={[
             {
               required: true,
-              message: "Please input your Department Name!",
+              message: "Please input your Section Name!",
             },
           ]}
         >

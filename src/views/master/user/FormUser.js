@@ -7,6 +7,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
+import { canApprove } from "../../../helper/utils";
 import {
   getUser,
   insertUser,
@@ -17,16 +18,17 @@ import {
 import routes from "../../../routes";
 
 const FormUser = () => {
-  let { type, id } = useParams();
+  const { type, id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
-  const [componentSize, setComponentSize] = useState("default");
   const [loading, setLoading] = useState(false);
+  const [approval, setApproval] = useState({});
   const [listDepart, setListDepart] = useState([]);
   const [listSect, setListSect] = useState([]);
   const [formData, setFormData] = useState({
+    user_id: "",
     user_name: "",
     user_email: "",
     user_department_id: "",
@@ -35,26 +37,38 @@ const FormUser = () => {
   });
 
   useEffect(() => {
-    console.log(route);
-    if (id) {
-      loadUser(id);
-    }
-    loadDepartment();
+    (async function () {
+      if (id) {
+        await loadUser(id);
+      }
+      await loadDepartment();
+    })();
   }, []);
 
   useEffect(() => {
     form.current.resetFields();
+    if (formData.hasOwnProperty("approval")) {
+      let app = formData.approval;
+      if (app) {
+        if (!canApprove(app)) {
+          delete app.approval_flow_id;
+        }
+        setApproval({ ...app });
+      }
+    }
   }, [formData]);
 
   const loadUser = async (id) => {
     let _data = await getUser({ user_id: id });
     _data = _data.data[0];
     setFormData({ ..._data });
-    loadSection(_data.user_department_id);
+    await loadSection(_data.user_department_id);
   };
 
   const loadDepartment = async () => {
-    let _data = await getDepartment();
+    let _data = await getDepartment({
+      status: 1,
+    });
     _data = _data.data;
     setListDepart([..._data]);
   };
@@ -62,6 +76,7 @@ const FormUser = () => {
   const loadSection = async (department_id) => {
     let param = {
       user_department_id: department_id ?? null,
+      status: 1,
     };
     let _data = await getSection(param);
     _data = _data.data;
@@ -90,7 +105,7 @@ const FormUser = () => {
     <Card title={route.name} style={{ textTransform: "capitalize" }}>
       <Form
         ref={form}
-        defaultValue={formData}
+        // defaultValue={formData}
         onFinish={(e) => handleSubmit(e)}
         labelCol={{
           span: 4,
@@ -100,9 +115,9 @@ const FormUser = () => {
         }}
         layout="horizontal"
         initialValues={{
-          size: componentSize,
+          size: "default",
         }}
-        size={componentSize}
+        size={"default"}
       >
         <Form.Item
           initialValue={formData.user_name}

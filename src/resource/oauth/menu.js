@@ -12,8 +12,7 @@ export const menuUser = async (property = {}, useAlert = true) => {
           toast.error(_res.message);
           return resolve(false);
         }
-        localStorage.setItem("menu", JSON.stringify(_res.data));
-        return resolve(true);
+        return resolve(_res.data);
       })
       .catch((e) => {
         console.log(e);

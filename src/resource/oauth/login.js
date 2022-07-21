@@ -11,8 +11,7 @@ export const loginUser = async (property = {}, useAlert = true) => {
           toast.error(_res.message);
           return resolve(false);
         }
-        localStorage.setItem("profile", JSON.stringify(_res.data[0]));
-        return resolve(true);
+        return resolve(_res.data[0]);
       })
       .catch((e) => {
         console.log(e);

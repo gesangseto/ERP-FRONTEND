@@ -94,3 +94,39 @@ export const sectionColumns = [
     action: ["approve", "update", "read", "delete"],
   },
 ];
+export const roleColumns = [
+  {
+    title: "ID",
+    key: "user_section_id",
+  },
+  {
+    title: "Dept Code",
+    key: "user_department_code",
+  },
+  {
+    title: "Dept Name",
+    key: "user_department_name",
+  },
+  {
+    title: "Code",
+    key: "user_section_code",
+  },
+  {
+    title: "Name",
+    key: "user_section_name",
+  },
+  {
+    title: "Status",
+    key: "status",
+    render: (i, rec) => (
+      <p style={{ color: rec.status ? "green" : "red" }}>
+        {rec.status ? "Active" : "Inactive"}
+      </p>
+    ),
+  },
+  {
+    title: "",
+    key: "user_section_id",
+    action: ["approve", "update", "read"],
+  },
+];

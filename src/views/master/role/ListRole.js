@@ -4,11 +4,11 @@ import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { sectionColumns } from "../../../constants/columnTable";
+import { roleColumns } from "../../../constants/columnTable";
 import { deleteSection, getSection } from "../../../resource";
 import routes from "../../../routes";
 
-const ListSection = () => {
+const ListRole = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
@@ -55,7 +55,7 @@ const ListSection = () => {
     >
       <XTable
         rowKey="user_section_id"
-        columns={sectionColumns}
+        columns={roleColumns}
         items={listData}
         totalData={totalData}
         onChangePagination={(e) => setFilter({ ...e })}
@@ -65,4 +65,4 @@ const ListSection = () => {
   );
 };
 
-export default ListSection;
+export default ListRole;

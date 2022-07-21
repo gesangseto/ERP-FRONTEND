@@ -19,6 +19,17 @@ export const makeString = (length) => {
   }
   return result;
 };
+export const findOnArr = ({ str, key = "id", array = Array }) => {
+  let result = array.findIndex((x) => x[key] === str);
+  return result;
+};
+
+export const mergeArray = (a, b, prop) => {
+  var reduced = a.filter(
+    (aitem) => !b.find((bitem) => aitem[prop] === bitem[prop])
+  );
+  return reduced.concat(b);
+};
 
 export const reformatMenu = (menu = Array) => {
   let threeMenu = treeify(menu, "sys_menu_id", "sys_menu_parent_id");
@@ -40,7 +51,14 @@ export const reformatMenu = (menu = Array) => {
   return _res;
 };
 
-function treeify(list, idAttr, parentAttr, childrenAttr) {
+export const groupBy = (array = Array, key) => {
+  return array.reduce(function (rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+
+export const treeify = (list, idAttr, parentAttr, childrenAttr) => {
   if (!idAttr) idAttr = "id";
   if (!parentAttr) parentAttr = "parent";
   if (!childrenAttr) childrenAttr = "children";
@@ -64,7 +82,7 @@ function treeify(list, idAttr, parentAttr, childrenAttr) {
     }
   });
   return treeList;
-}
+};
 
 export const canApprove = (approval) => {
   let profile = JSON.parse(localStorage.getItem("profile"));
