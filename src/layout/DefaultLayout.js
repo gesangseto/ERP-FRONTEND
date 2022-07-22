@@ -5,6 +5,7 @@ import routes from "../routes";
 import AppFooter from "./AppFooter";
 import AppHeader from "./AppHeader";
 import AppSidebar from "./AppSidebar";
+import AppSidebarModule from "./AppSidebarModule";
 const { Content } = Layout;
 
 const DefaultLayout = () => {
@@ -12,6 +13,7 @@ const DefaultLayout = () => {
 
   return (
     <Layout>
+      <AppSidebarModule isCollapsed={true} />
       <AppSidebar
         isCollapsed={collapsed}
         onChangeCollapsed={(e) => setCollapsed(e)}

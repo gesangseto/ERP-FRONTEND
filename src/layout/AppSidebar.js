@@ -140,7 +140,7 @@ const AppSidebar = (props) => {
     >
       <div className="logo" style={{ height: "60px" }} />
       <Menu
-        theme="light"
+        theme="dark"
         defaultSelectedKeys={selectedMenu}
         mode="inline"
         items={menuItems}
