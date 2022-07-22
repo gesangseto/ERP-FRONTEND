@@ -58,23 +58,27 @@ export const reformatMenu = (menu = Array) => {
     if (it.children.length > 0) {
       item.children = reformatMenu(it.children);
       delete item.to;
-    }
-    if (!haveRole(it) && it.children.length == 0) {
-      console.log("Punya", it);
     } else {
-      _res.push(item);
+      delete item.children;
     }
+
+    _res.push(item);
+    // if (!haveRole(it) && it.children.length == 0) {
+    //   console.log("Punya", it);
+    // } else {
+    //   _res.push(item);
+    // }
   }
 
-  let newMenu = [];
-  _res.forEach(function (obj) {
-    if (obj.hasOwnProperty("children") && obj.children.length > 0) {
-      newMenu.push(obj);
-    } else if (obj.hasOwnProperty("to")) {
-      newMenu.push(obj);
-    }
-  });
-  return newMenu;
+  // let newMenu = [];
+  // _res.forEach(function (obj) {
+  //   if (obj.hasOwnProperty("children") && obj.children.length > 0) {
+  //     newMenu.push(obj);
+  //   } else if (obj.hasOwnProperty("to")) {
+  //     newMenu.push(obj);
+  //   }
+  // });
+  return _res;
 };
 
 export const groupBy = (array = Array, key) => {
@@ -100,14 +104,31 @@ export const treeify = (list, idAttr, parentAttr, childrenAttr) => {
       if (lookup[obj[parentAttr]] !== undefined) {
         lookup[obj[parentAttr]][childrenAttr].push(obj);
       } else {
-        //console.log('Missing Parent Data: ' + obj[parentAttr]);
+        // console.log("Missing Parent Data: " + obj[parentAttr]);
         treeList.push(obj);
       }
     } else {
       treeList.push(obj);
     }
+    // console.log(obj);
   });
   return treeList;
+};
+
+export const removeEmptyChild = (arr = Array, key = String) => {
+  console.log(key);
+  let _data = [];
+  for (const it of arr) {
+    if (Array.isArray(it[key]) && it[key].length == 0) {
+      delete it[key];
+    } else {
+      it[key] = removeEmptyChild(it[key], "children");
+    }
+    console.log(it);
+    _data.push(it);
+  }
+  console.log(_data);
+  return _data;
 };
 
 export const canApprove = (approval) => {

@@ -13,6 +13,7 @@ import {
   VideoCameraOutlined,
   HddOutlined,
   FundOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 export const icon = {
@@ -30,4 +31,5 @@ export const icon = {
   VideoCameraOutlined: <VideoCameraOutlined />,
   HddOutlined: <HddOutlined />,
   FundOutlined: <FundOutlined />,
+  SettingOutlined: <SettingOutlined />,
 };

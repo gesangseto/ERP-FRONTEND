@@ -17,7 +17,13 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
-import { findOnArr, groupBy, mergeArray, treeify } from "../../../helper/utils";
+import {
+  findOnArr,
+  groupBy,
+  mergeArray,
+  removeEmptyChild,
+  treeify,
+} from "../../../helper/utils";
 import { getRole, getSection, updateRole } from "../../../resource";
 import routes from "../../../routes";
 
@@ -61,7 +67,9 @@ const FormRole = () => {
     let _data = await getRole({ user_section_id: id, show_all: true });
     _data = _data.data;
     let reformat = treeify(_data, "sys_menu_id", "sys_menu_parent_id");
-    let grouping = groupBy(reformat, "sys_menu_module_name");
+    let rmChild = removeEmptyChild(reformat, "children");
+    console.log(rmChild);
+    let grouping = groupBy(rmChild, "sys_menu_module_name");
     setGroupRole({ ...grouping });
     setListRole([..._data]);
   };
@@ -209,7 +217,7 @@ const RenderTable = (props) => {
         key: "flag_create",
         dataIndex: "flag_create",
         render: (_, record) => {
-          if (record.children.length == 0) {
+          if (!record.children) {
             return (
               <RenderChecbox
                 initialValue={record.flag_create}
@@ -224,13 +232,15 @@ const RenderTable = (props) => {
         key: "flag_read",
         dataIndex: "flag_read",
         render: (_, record) => {
-          if (record.children.length == 0) {
+          if (!record.children) {
             return (
               <RenderChecbox
                 initialValue={record.flag_read}
                 onChange={(e) => handleChecked(record, "read", e)}
               />
             );
+          } else {
+            <>{_}</>;
           }
         },
       },
@@ -239,7 +249,7 @@ const RenderTable = (props) => {
         key: "flag_update",
         dataIndex: "flag_update",
         render: (_, record) => {
-          if (record.children.length == 0) {
+          if (!record.children) {
             return (
               <RenderChecbox
                 initialValue={record.flag_update}
@@ -254,7 +264,7 @@ const RenderTable = (props) => {
         key: "flag_delete",
         dataIndex: "flag_delete",
         render: (_, record) => {
-          if (record.children.length == 0) {
+          if (!record.children) {
             return (
               <RenderChecbox
                 initialValue={record.flag_delete}

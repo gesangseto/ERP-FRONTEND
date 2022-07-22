@@ -15,32 +15,44 @@ const AppHeader = (props) => {
   const navigate = useNavigate();
   const { onChangeCollapsed, isCollapsed } = props;
   const [collapsed, setCollapsed] = useState(false);
+  const [profile, setProfile] = useState({});
 
-  const menu = (
-    <Menu
-      items={[
-        {
-          key: "1",
-          label: (
-            <a>
-              <SettingOutlined />
-              &nbsp;Proffile
-            </a>
-          ),
-        },
-        {
-          key: "4",
-          danger: true,
-          label: (
-            <a onClick={() => handleLogout()}>
-              <LogoutOutlined />
-              &nbsp;Logout
-            </a>
-          ),
-        },
-      ]}
-    />
-  );
+  const menu = () => {
+    return (
+      <Menu
+        items={[
+          {
+            key: "0",
+            label: (
+              <a>
+                <UserOutlined />
+                &nbsp;{profile.user_name}
+              </a>
+            ),
+          },
+          {
+            key: "1",
+            label: (
+              <a>
+                <SettingOutlined />
+                &nbsp;Proffile
+              </a>
+            ),
+          },
+          {
+            key: "4",
+            danger: true,
+            label: (
+              <a onClick={() => handleLogout()}>
+                <LogoutOutlined />
+                &nbsp;Logout
+              </a>
+            ),
+          },
+        ]}
+      />
+    );
+  };
 
   useEffect(() => {
     if (onChangeCollapsed) {
@@ -49,8 +61,10 @@ const AppHeader = (props) => {
   }, [collapsed]);
 
   useEffect(() => {
-    let profile = localStorage.getItem("profile");
-    if (!profile) {
+    let prfl = JSON.parse(localStorage.getItem("profile"));
+    if (prfl) {
+      setProfile({ ...prfl });
+    } else {
       handleLogout();
     }
   }, []);
@@ -88,7 +102,7 @@ const AppHeader = (props) => {
           )}
         </Col>
         <Col span={12}>
-          <Dropdown overlay={menu} trigger={["click", "hover"]}>
+          <Dropdown overlay={menu()} trigger={["click", "hover"]}>
             <Avatar
               icon={
                 <UserOutlined

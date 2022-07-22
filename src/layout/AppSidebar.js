@@ -73,16 +73,21 @@ const AppSidebar = (props) => {
   const [{ route }] = matchRoutes(routes, location);
   const navigate = useNavigate();
   const { isCollapsed } = props;
+  const [profile, setProfile] = useState({});
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([1]);
   const [menuApi, setMenuApi] = useState([]);
 
   useEffect(() => {
     let menu = JSON.parse(localStorage.getItem("menu"));
+    let prfl = JSON.parse(localStorage.getItem("profile"));
     if (menu) {
       setMenuApi([...menu]);
       menu = reformatMenu(menu);
       setMenuItems([...menu]);
+    }
+    if (prfl) {
+      setProfile({ ...prfl });
     }
   }, []);
 
@@ -135,7 +140,7 @@ const AppSidebar = (props) => {
     >
       <div className="logo" style={{ height: "60px" }} />
       <Menu
-        theme="dark"
+        theme="light"
         defaultSelectedKeys={selectedMenu}
         mode="inline"
         items={menuItems}
