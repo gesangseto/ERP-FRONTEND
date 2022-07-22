@@ -14,6 +14,7 @@ import {
   HddOutlined,
   FundOutlined,
   SettingOutlined,
+  FolderOpenOutlined,
 } from "@ant-design/icons";
 
 export const icon = {
@@ -32,4 +33,5 @@ export const icon = {
   HddOutlined: <HddOutlined />,
   FundOutlined: <FundOutlined />,
   SettingOutlined: <SettingOutlined />,
+  FolderOpenOutlined: <FolderOpenOutlined />,
 };

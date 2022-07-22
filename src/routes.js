@@ -70,7 +70,7 @@ const routes = [
   { path: "/setting/approval", name: "Master Approval", element: LAppr },
   { path: "/setting/approval/:type", name: "Create Approval", element: FAppr },
   {
-    path: "/setting/approvalr/:type/:id",
+    path: "/setting/approval/:type/:id",
     name: "Detail Approval",
     element: FAppr,
   },
