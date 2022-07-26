@@ -10,14 +10,22 @@ const { Content } = Layout;
 
 const DefaultLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [sideMenu, setSideMenu] = useState([]);
 
   return (
     <Layout>
-      <AppSidebarModule isCollapsed={true} />
-      <AppSidebar
-        isCollapsed={collapsed}
-        onChangeCollapsed={(e) => setCollapsed(e)}
+      <AppSidebarModule
+        isCollapsed={true}
+        changeMenu={(e) => setSideMenu([...e])}
       />
+      {sideMenu.length > 0 ? (
+        <AppSidebar
+          isCollapsed={collapsed}
+          onChangeCollapsed={(e) => setCollapsed(e)}
+          menuItem={sideMenu}
+        />
+      ) : null}
+
       <Layout className="site-layout">
         <AppHeader
           className="site-layout-background"

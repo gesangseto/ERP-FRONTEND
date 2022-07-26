@@ -1,57 +1,68 @@
-import { Layout, Menu } from "antd";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Layout, Menu, Popover } from "antd";
 import React, { useEffect, useState } from "react";
-import {
-  matchRoutes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { icon } from "../constants";
 import { groupBy, reformatMenu } from "../helper/utils";
-import routes from "../routes";
 
 const { Sider } = Layout;
 
 const AppSidebarModule = (props) => {
-  let { type, id } = useParams();
-  const location = useLocation();
-  const [{ route }] = matchRoutes(routes, location);
   const navigate = useNavigate();
-  const { isCollapsed } = props;
-  const [profile, setProfile] = useState({});
-  const [menuItems, setMenuItems] = useState([]);
+  const { isCollapsed, changeMenu } = props;
   const [module, setModule] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([1]);
-  const [menuApi, setMenuApi] = useState([]);
 
   useEffect(() => {
     let menu = JSON.parse(localStorage.getItem("menu"));
-    let prfl = JSON.parse(localStorage.getItem("profile"));
     if (menu) {
-      let grp = groupBy(menu, "sys_menu_module_name");
+      let grp = groupBy(menu, "sys_menu_module_code");
       let group = [];
       for (const key in grp) {
         let it = {
           key: key,
-          label: key,
-          icon: icon.BarChartOutlined ?? null,
+          label: grp[key][0].sys_menu_module_name,
+          icon: icon[grp[key][0].sys_menu_module_icon] ?? null,
         };
         group.push(it);
       }
       setModule([...group]);
-      console.log(group);
-      setMenuApi([...menu]);
-      menu = reformatMenu(menu);
-
-      setMenuItems([...menu]);
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("profile");
+    localStorage.removeItem("menu");
+    navigate("Login");
+  };
+
+  const handleClickMenu = (e) => {
+    let _menu = JSON.parse(localStorage.getItem("menu"));
+    let module_menu = [];
+    for (const it of _menu) {
+      if (it.sys_menu_module_code === e.key) {
+        module_menu.push(it);
+      }
+    }
+    if (changeMenu) {
+      changeMenu(module_menu);
+    }
+  };
   return (
     <Sider
       theme="light"
-      trigger={null}
+      trigger={
+        <Popover content="Logout" placement="right" trigger="hover">
+          <LogoutOutlined
+            type="button"
+            style={{ fontSize: "20px", color: "#08c" }}
+            theme="outlined"
+            onClick={(e) => handleLogout(e)}
+          />
+        </Popover>
+      }
       collapsible
+      collapsedWidth={50}
       collapsed={isCollapsed}
       style={{
         overflow: "auto",
@@ -61,13 +72,35 @@ const AppSidebarModule = (props) => {
         left: 0,
       }}
     >
-      <div className="logo" style={{ height: "60px" }} />
+      <Popover content="Profile" placement="right" trigger="hover">
+        <div
+          style={{
+            height: "60px",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <Avatar
+            icon={
+              <UserOutlined
+                type="button"
+                style={{ fontSize: "20px", color: "#08c" }}
+                theme="outlined"
+                onClick={(e) => navigate("/Profile")}
+              />
+            }
+            style={{
+              alignSelf: "center",
+            }}
+          />
+        </div>
+      </Popover>
       <Menu
         theme="light"
         defaultSelectedKeys={selectedMenu}
         mode="inline"
         items={module}
-        // onClick={(e) => handleClickMenu(e)}
+        onClick={(e) => handleClickMenu(e)}
       />
     </Sider>
   );

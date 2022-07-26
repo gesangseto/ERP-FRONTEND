@@ -1,6 +1,7 @@
 import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/Dashboard"));
+const Profile = React.lazy(() => import("./views/Profile"));
 
 /* 
   MODULE ADMINSTRATOR
@@ -28,6 +29,7 @@ const routes = [
   // { path: "/master/user/:type/:id", name: "Master User", element: FUser },
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
+  { path: "/profile", name: "Profile", element: Profile },
 
   /* 
   MODULE ADMINSTRATOR

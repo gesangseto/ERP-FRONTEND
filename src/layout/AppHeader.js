@@ -102,7 +102,7 @@ const AppHeader = (props) => {
           )}
         </Col>
         <Col span={12}>
-          <Dropdown overlay={menu()} trigger={["click", "hover"]}>
+          {/* <Dropdown overlay={menu()} trigger={["click", "hover"]}>
             <Avatar
               icon={
                 <UserOutlined
@@ -117,7 +117,7 @@ const AppHeader = (props) => {
                 float: "right",
               }}
             />
-          </Dropdown>
+          </Dropdown> */}
         </Col>
       </Row>
     </Header>

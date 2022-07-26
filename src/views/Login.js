@@ -19,7 +19,7 @@ const Login = () => {
       });
       localStorage.setItem("menu", JSON.stringify(_menu));
       toast.success(`Welcome ${_login.user_name}`);
-      navigate(`/dashboard`);
+      navigate(`/Profile`);
     }
     setLoading(false);
   };
