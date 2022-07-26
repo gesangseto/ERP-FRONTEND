@@ -24,7 +24,6 @@ const FormDepart = () => {
   const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [approval, setApproval] = useState({});
   const [formData, setFormData] = useState({
     user_department_id: "",
     user_department_name: "",
@@ -131,7 +130,7 @@ const FormDepart = () => {
           </Button>
         </Form.Item>
       </Form>
-      <XFormApproval item={approval} />
+      <XFormApproval item={formData} />
     </Card>
   );
 };

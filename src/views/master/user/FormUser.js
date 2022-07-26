@@ -25,7 +25,6 @@ const FormUser = () => {
   const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [approval, setApproval] = useState({});
   const [listDepart, setListDepart] = useState([]);
   const [listSect, setListSect] = useState([]);
   const [formData, setFormData] = useState({
@@ -48,15 +47,6 @@ const FormUser = () => {
 
   useEffect(() => {
     form.current.resetFields();
-    if (formData.hasOwnProperty("approval")) {
-      let app = formData.approval;
-      if (app) {
-        if (!canApprove(app)) {
-          delete app.approval_flow_id;
-        }
-        setApproval({ ...app });
-      }
-    }
   }, [formData]);
 
   const loadUser = async (id) => {

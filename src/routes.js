@@ -17,6 +17,9 @@ const FRole = React.lazy(() => import("./views/master/role/FormRole"));
 const LRole = React.lazy(() => import("./views/master/role/ListRole"));
 const ListUser = React.lazy(() => import("./views/master/user/ListUser"));
 const FormUser = React.lazy(() => import("./views/master/user/FormUser"));
+// MASTER Data
+const LCust = React.lazy(() => import("./views/masterData/customer/ListCust"));
+const FCust = React.lazy(() => import("./views/masterData/customer/FormCust"));
 // SETTING
 const LAppr = React.lazy(() => import("./views/setting/approval/ListApproval"));
 const FAppr = React.lazy(() => import("./views/setting/approval/FormApproval"));
@@ -68,6 +71,23 @@ const routes = [
   { path: "/master/user", name: "Master User", element: ListUser },
   { path: "/master/user/:type", name: "Create User", element: FormUser },
   { path: "/master/user/:type/:id", name: "Detail User", element: FormUser },
+  // MASTER DATA
+  // CUSTOMER
+  {
+    path: "/Masterdata/customer",
+    name: "Master Data Customer",
+    element: LCust,
+  },
+  {
+    path: "/Masterdata/customer/:type",
+    name: "Create Customer",
+    element: FCust,
+  },
+  {
+    path: "/Masterdata/customer/:type/:id",
+    name: "Detail Customer",
+    element: FCust,
+  },
   // SETTING
   { path: "/setting/approval", name: "Master Approval", element: LAppr },
   { path: "/setting/approval/:type", name: "Create Approval", element: FAppr },

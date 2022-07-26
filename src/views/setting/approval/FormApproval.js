@@ -26,7 +26,6 @@ const FormApproval = () => {
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [listUser, setListUser] = useState([]);
-  const [approval, setApproval] = useState({});
   const [formData, setFormData] = useState({
     approval_desc: "",
     approval_id: null,
@@ -182,7 +181,7 @@ const FormApproval = () => {
           </Button>
         </Form.Item>
       </Form>
-      <XFormApproval item={approval} />
+      <XFormApproval item={formData} />
     </Card>
   );
 };
