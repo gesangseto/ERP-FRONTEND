@@ -31,6 +31,7 @@ const XTable = (props) => {
 
   useEffect(() => {
     if (columns && items) generateColumn(columns);
+    console.log("columns", columns);
   }, [columns, items]);
 
   useEffect(() => {

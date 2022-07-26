@@ -41,15 +41,6 @@ const FormDepart = () => {
 
   useEffect(() => {
     form.current.resetFields();
-    if (formData.hasOwnProperty("approval")) {
-      let app = formData.approval;
-      if (app) {
-        if (!canApprove(app)) {
-          delete app.approval_flow_id;
-        }
-        setApproval({ ...app });
-      }
-    }
   }, [formData]);
 
   const loadFormData = async (id) => {
@@ -140,9 +131,7 @@ const FormDepart = () => {
           </Button>
         </Form.Item>
       </Form>
-      {Object.keys(approval).length > 0 ? (
-        <XFormApproval item={approval} />
-      ) : null}
+      <XFormApproval item={approval} />
     </Card>
   );
 };

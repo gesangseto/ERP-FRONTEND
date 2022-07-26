@@ -4,7 +4,6 @@ import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { roleColumns } from "../../../constants/columnTable";
 import { deleteSection, getSection } from "../../../resource";
 import routes from "../../../routes";
 
@@ -55,7 +54,7 @@ const ListRole = () => {
     >
       <XTable
         rowKey="user_section_id"
-        columns={roleColumns}
+        columns={roleColumns()}
         items={listData}
         totalData={totalData}
         onChangePagination={(e) => setFilter({ ...e })}
@@ -66,3 +65,42 @@ const ListRole = () => {
 };
 
 export default ListRole;
+
+const roleColumns = () => {
+  return [
+    {
+      title: "ID",
+      key: "user_section_id",
+    },
+    {
+      title: "Dept Code",
+      key: "user_department_code",
+    },
+    {
+      title: "Dept Name",
+      key: "user_department_name",
+    },
+    {
+      title: "Code",
+      key: "user_section_code",
+    },
+    {
+      title: "Name",
+      key: "user_section_name",
+    },
+    {
+      title: "Status",
+      key: "status",
+      render: (i, rec) => (
+        <p style={{ color: rec.status ? "green" : "red" }}>
+          {rec.status ? "Active" : "Inactive"}
+        </p>
+      ),
+    },
+    {
+      title: "",
+      key: "user_section_id",
+      action: ["update", "read"],
+    },
+  ];
+};

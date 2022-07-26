@@ -6,6 +6,7 @@ import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
 import { departColumns } from "../../../constants/columnTable";
 import {
+  deleteApproval,
   deleteDepartment,
   getApproval,
   getDepartment,
@@ -34,7 +35,7 @@ const ListApproval = () => {
 
   const handleClickAction = async (action, id) => {
     if (action == "delete") {
-      if (await deleteDepartment({ approval_id: id })) {
+      if (await deleteApproval({ approval_id: id })) {
         loadData();
         toast.success(`Delete id ${id} successfully`);
       }
@@ -113,7 +114,7 @@ const tableSchema = () => {
     {
       title: "",
       key: "approval_id",
-      action: ["approve", "delete", "update", "read"],
+      action: ["approve", "update", "read"],
     },
   ];
 };

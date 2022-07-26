@@ -7,6 +7,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
+import { XFormApproval } from "../../../component";
 import { canApprove } from "../../../helper/utils";
 // import { updateDepartment } from "../../../resource/administrator/department";
 import {
@@ -172,6 +173,7 @@ const FormSection = () => {
           </Button>
         </Form.Item>
       </Form>
+      <XFormApproval item={formData} />
     </Card>
   );
 };

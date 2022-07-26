@@ -4,7 +4,6 @@ import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { departColumns } from "../../../constants/columnTable";
 import { deleteDepartment, getDepartment } from "../../../resource";
 import routes from "../../../routes";
 
@@ -55,7 +54,7 @@ const ListDepart = () => {
     >
       <XTable
         rowKey="user_department_id"
-        columns={departColumns}
+        columns={departColumns()}
         items={listData}
         totalData={totalData}
         onChangePagination={(e) => setFilter({ ...e })}
@@ -66,3 +65,34 @@ const ListDepart = () => {
 };
 
 export default ListDepart;
+
+const departColumns = () => {
+  return [
+    {
+      title: "ID",
+      key: "user_department_id",
+    },
+    {
+      title: "Code",
+      key: "user_department_code",
+    },
+    {
+      title: "Name",
+      key: "user_department_name",
+    },
+    {
+      title: "Status",
+      key: "status",
+      render: (i, rec) => (
+        <p style={{ color: rec.status ? "green" : "red" }}>
+          {rec.status ? "Active" : "Inactive"}
+        </p>
+      ),
+    },
+    {
+      title: "",
+      key: "user_department_id",
+      action: ["approve", "update", "read", "delete"],
+    },
+  ];
+};

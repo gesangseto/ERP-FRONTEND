@@ -4,7 +4,6 @@ import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { userColumns } from "../../../constants/columnTable";
 import { deleteUser, getUser } from "../../../resource";
 import routes from "../../../routes";
 
@@ -56,7 +55,7 @@ const ListUser = () => {
     >
       <XTable
         rowKey="user_id"
-        columns={userColumns}
+        columns={userColumns()}
         items={listData}
         totalData={totalData}
         onChangePagination={(e) => setFilter({ ...e })}
@@ -67,3 +66,38 @@ const ListUser = () => {
 };
 
 export default ListUser;
+
+const userColumns = () => {
+  return [
+    {
+      title: "ID",
+      key: "user_id",
+    },
+    {
+      title: "Name",
+      key: "user_name",
+    },
+    {
+      title: "Email",
+      key: "user_email",
+    },
+    {
+      title: "Address",
+      key: "user_address",
+    },
+    {
+      title: "Status",
+      key: "status",
+      render: (i, rec) => (
+        <p style={{ color: rec.status ? "green" : "red" }}>
+          {rec.status ? "Active" : "Inactive"}
+        </p>
+      ),
+    },
+    {
+      title: "Action",
+      key: "user_id",
+      action: ["update", "read", "delete"],
+    },
+  ];
+};

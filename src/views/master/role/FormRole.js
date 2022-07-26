@@ -17,6 +17,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
+import { XFormApproval } from "../../../component";
 import {
   findOnArr,
   groupBy,
@@ -175,6 +176,7 @@ const FormRole = () => {
           </Button>
         </Form.Item>
       </Form>
+      <XFormApproval item={formData} />
     </Card>
   );
 };

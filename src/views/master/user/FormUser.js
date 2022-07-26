@@ -7,6 +7,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
+import { XFormApproval } from "../../../component";
 import { canApprove } from "../../../helper/utils";
 import {
   getUser,
@@ -219,6 +220,7 @@ const FormUser = () => {
           </Button>
         </Form.Item>
       </Form>
+      <XFormApproval item={formData} />
     </Card>
   );
 };
