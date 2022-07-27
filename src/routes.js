@@ -37,8 +37,8 @@ const ListItem = React.lazy(() => import("./views/masterData/item/ListItem"));
 // SYSTEM
 const LAppr = React.lazy(() => import("./views/system/approval/ListApproval"));
 const FAppr = React.lazy(() => import("./views/system/approval/FormApproval"));
-const LAudit = React.lazy(() => import("./views/system/audit/ListApproval"));
-const FAudit = React.lazy(() => import("./views/system/audit/FormApproval"));
+const LAudit = React.lazy(() => import("./views/system/audit/ListAudit"));
+const FAudit = React.lazy(() => import("./views/system/audit/FormAudit"));
 /*
 MODULE ADMINISTRATOR 
 */

@@ -9,11 +9,12 @@ import {
   deleteApproval,
   deleteDepartment,
   getApproval,
+  getAudit,
   getDepartment,
 } from "../../../resource";
 import routes from "../../../routes";
 
-const ListApproval = () => {
+const ListAudit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
@@ -26,7 +27,7 @@ const ListApproval = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getApproval(filter);
+    let _data = await getAudit(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -34,32 +35,22 @@ const ListApproval = () => {
   };
 
   const handleClickAction = async (action, id) => {
-    if (action == "delete") {
-      if (await deleteApproval({ approval_id: id })) {
-        loadData();
-        toast.success(`Delete id ${id} successfully`);
-      }
-      return;
-    }
     navigate(`${route.path}/${action}/${id}`);
-  };
-  const handleClickAdd = () => {
-    navigate(`${route.path}/create`);
   };
   return (
     <Card
       title={route.name}
       style={{ textTransform: "capitalize" }}
-      extra={
-        <XButton
-          popover="Create"
-          type="create"
-          onClick={() => handleClickAdd()}
-        />
-      }
+      // extra={
+      //   <XButton
+      //     popover="Create"
+      //     type="create"
+      //     onClick={() => handleClickAdd()}
+      //   />
+      // }
     >
       <XTable
-        rowKey="approval_id"
+        rowKey="id"
         columns={tableSchema()}
         items={listData}
         totalData={totalData}
@@ -70,51 +61,42 @@ const ListApproval = () => {
   );
 };
 
-export default ListApproval;
+export default ListAudit;
 
 const tableSchema = () => {
   return [
     {
       title: "ID",
-      key: "approval_id",
+      key: "id",
     },
     {
-      title: "Approval",
-      key: "approval_desc",
+      title: "Username",
+      key: "user_name",
     },
     {
-      title: "Approval 1",
-      key: "approval_user_name_1",
+      title: "Email",
+      key: "user_email",
     },
     {
-      title: "Approval 2",
-      key: "approval_user_name_2",
+      title: "PATH",
+      key: "path",
     },
     {
-      title: "Approval 3",
-      key: "approval_user_name_3",
+      title: "Type",
+      key: "type",
     },
     {
-      title: "Approval 4",
-      key: "approval_user_name_4",
+      title: "IP",
+      key: "ip_address",
     },
     {
-      title: "Approval 5",
-      key: "approval_user_name_5",
-    },
-    {
-      title: "Status",
-      key: "status",
-      render: (i, rec) => (
-        <p style={{ color: rec.status ? "green" : "red" }}>
-          {rec.status ? "Active" : "Inactive"}
-        </p>
-      ),
+      title: "Agent",
+      key: "user_agent",
     },
     {
       title: "",
-      key: "approval_id",
-      action: ["approve", "update", "read"],
+      key: "id",
+      action: ["read"],
     },
   ];
 };

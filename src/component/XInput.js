@@ -33,7 +33,7 @@ const XInput = (props) => {
       ]}
       {...props}
     >
-      <Input disabled={disabled} onChange={(e) => handleChange(e)} />
+      <Input disabled={disabled} onChange={(e) => handleChange(e)} {...props} />
     </Form.Item>
   );
 };

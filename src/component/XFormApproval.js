@@ -37,11 +37,12 @@ const XFormApproval = (props) => {
         setData({ ...app });
       }
     }
+    console.log(item);
   }, [item]);
 
   return (
     <>
-      {data.approval_flow_id ? (
+      {data.approval_ref_table ? (
         <Card style={{ margin: 10 }}>
           <h3>Approval Data</h3>
           <Row style={{ margin: 10 }}>
