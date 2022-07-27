@@ -5,6 +5,8 @@ import XModalApproval from "./XModalApproval";
 import XSwitch from "./XSwitch";
 import XTable from "./XTable";
 import XTextArea from "./XTextArea";
+import XFormItemVariant from "./XFormItemVariant";
+import XInputNumber from "./XInputNumber";
 
 export {
   XTable,
@@ -14,4 +16,6 @@ export {
   XInput,
   XTextArea,
   XSwitch,
+  XFormItemVariant,
+  XInputNumber,
 };

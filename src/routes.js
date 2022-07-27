@@ -6,7 +6,7 @@ const Profile = React.lazy(() => import("./views/Profile"));
 /* 
   MODULE ADMINSTRATOR
   -MASTER
-  -SETTING
+  -SYSTEM
 */
 // MASTER
 const LDepart = React.lazy(() => import("./views/master/depart/ListDepart"));
@@ -23,18 +23,22 @@ const FCust = React.lazy(() => import("./views/masterData/customer/FormCust"));
 const LSupp = React.lazy(() =>
   import("./views/masterData/supplier/ListSupplier")
 );
+const FSupp = React.lazy(() =>
+  import("./views/masterData/supplier/FormSupplier")
+);
 const FormPackaging = React.lazy(() =>
   import("./views/masterData/packaging/FormPackaging")
 );
 const ListPackaging = React.lazy(() =>
   import("./views/masterData/packaging/ListPackaging")
 );
-const FSupp = React.lazy(() =>
-  import("./views/masterData/supplier/FormSupplier")
-);
-// SETTING
-const LAppr = React.lazy(() => import("./views/setting/approval/ListApproval"));
-const FAppr = React.lazy(() => import("./views/setting/approval/FormApproval"));
+const FormItem = React.lazy(() => import("./views/masterData/item/FormItem"));
+const ListItem = React.lazy(() => import("./views/masterData/item/ListItem"));
+// SYSTEM
+const LAppr = React.lazy(() => import("./views/system/approval/ListApproval"));
+const FAppr = React.lazy(() => import("./views/system/approval/FormApproval"));
+const LAudit = React.lazy(() => import("./views/system/audit/ListApproval"));
+const FAudit = React.lazy(() => import("./views/system/audit/FormApproval"));
 /*
 MODULE ADMINISTRATOR 
 */
@@ -49,7 +53,7 @@ const routes = [
   /* 
   MODULE ADMINSTRATOR
   -MASTER
-  -SETTING
+  -SYSTEM
   */
   //  MASTER
   {
@@ -132,13 +136,37 @@ const routes = [
     name: "Detail Packaging",
     element: FormPackaging,
   },
-  // SETTING
-  { path: "/setting/approval", name: "Master Approval", element: LAppr },
-  { path: "/setting/approval/:type", name: "Create Approval", element: FAppr },
+  // PACKAGING
   {
-    path: "/setting/approval/:type/:id",
+    path: "/Masterdata/item",
+    name: "Master Data Product",
+    element: ListItem,
+  },
+  {
+    path: "/Masterdata/item/:type",
+    name: "Create Product",
+    element: FormItem,
+  },
+  {
+    path: "/Masterdata/item/:type/:id",
+    name: "Detail Product",
+    element: FormItem,
+  },
+  // SYSTEM
+  // APPROVAL
+  { path: "/system/approval", name: "Master Approval", element: LAppr },
+  { path: "/system/approval/:type", name: "Create Approval", element: FAppr },
+  {
+    path: "/system/approval/:type/:id",
     name: "Detail Approval",
     element: FAppr,
+  },
+  // AUDIT
+  { path: "/system/audit", name: "Master Audit", element: LAudit },
+  {
+    path: "/system/audit/:type/:id",
+    name: "Detail Audit",
+    element: FAudit,
   },
 ];
 

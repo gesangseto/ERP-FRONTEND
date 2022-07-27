@@ -1,3 +1,4 @@
+import { PercentageOutlined } from "@ant-design/icons";
 import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -7,7 +8,13 @@ import {
   useParams,
 } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XInput, XSwitch, XTextArea } from "../../../component";
+import {
+  XFormApproval,
+  XInput,
+  XInputNumber,
+  XSwitch,
+  XTextArea,
+} from "../../../component";
 
 import { getCustomer, insertCustomer, updateCustomer } from "../../../resource";
 import routes from "../../../routes";
@@ -120,17 +127,19 @@ const FormCust = () => {
           disabled={type == "read"}
           required
         />
-        <XInput
+        <XInputNumber
           title="PPN"
           name={"mst_customer_ppn"}
           initialValue={formData.mst_customer_ppn}
           disabled={type == "read"}
+          addonAfter={<PercentageOutlined />}
         />
-        <XInput
+        <XInputNumber
           title="Percentage"
           name={"price_percentage"}
           initialValue={formData.price_percentage}
           disabled={type == "read"}
+          addonAfter={<PercentageOutlined />}
         />
         <XSwitch
           title="Status"

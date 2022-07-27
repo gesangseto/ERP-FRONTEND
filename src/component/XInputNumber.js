@@ -1,16 +1,9 @@
-import { Form, Input } from "antd";
+import { Form, Input, InputNumber } from "antd";
 import React from "react";
 
-const XInput = (props) => {
-  const {
-    title,
-    name,
-    disabled,
-    required,
-    initialValue,
-    onChange,
-    typeInput = "string",
-  } = props;
+const XInputNumber = (props) => {
+  const { title, name, disabled, required, initialValue, onChange, min, max } =
+    props;
 
   const handleChange = (e) => {
     let val = e.target.value;
@@ -26,16 +19,21 @@ const XInput = (props) => {
       name={name}
       rules={[
         {
-          type: typeInput,
           required: required,
           message: `Please input your ${title}!`,
         },
       ]}
       {...props}
     >
-      <Input disabled={disabled} onChange={(e) => handleChange(e)} />
+      <InputNumber
+        disabled={disabled}
+        onChange={(e) => handleChange(e)}
+        min={min}
+        max={max}
+        {...props}
+      />
     </Form.Item>
   );
 };
 
-export default XInput;
+export default XInputNumber;
