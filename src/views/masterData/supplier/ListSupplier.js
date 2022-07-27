@@ -4,10 +4,10 @@ import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XButton, XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { deleteCustomer, getCustomer } from "../../../resource";
+import { deleteSupplier, getSupplier } from "../../../resource";
 import routes from "../../../routes";
 
-const ListCust = () => {
+const ListSupplier = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [{ route }] = matchRoutes(routes, location);
@@ -20,7 +20,7 @@ const ListCust = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getCustomer(filter);
+    let _data = await getSupplier(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -29,7 +29,7 @@ const ListCust = () => {
 
   const handleClickAction = async (action, id) => {
     if (action == "delete") {
-      if (await deleteCustomer({ mst_customer_id: id })) {
+      if (await deleteSupplier({ mst_supplier_id: id })) {
         loadData();
         toast.success(`Delete id ${id} successfully`);
       }
@@ -53,7 +53,7 @@ const ListCust = () => {
       }
     >
       <XTable
-        rowKey="mst_customer_id"
+        rowKey="mst_supplier_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -64,33 +64,33 @@ const ListCust = () => {
   );
 };
 
-export default ListCust;
+export default ListSupplier;
 
 const columns = () => {
   return [
     {
       title: "ID",
-      key: "mst_customer_id",
+      key: "mst_supplier_id",
     },
     {
       title: "PIC",
-      key: "mst_customer_pic",
+      key: "mst_supplier_pic",
     },
     {
       title: "Name",
-      key: "mst_customer_name",
+      key: "mst_supplier_name",
     },
     {
       title: "Email",
-      key: "mst_customer_email",
+      key: "mst_supplier_email",
     },
     {
       title: "Phone",
-      key: "mst_customer_phone",
+      key: "mst_supplier_phone",
     },
     {
       title: "Address",
-      key: "mst_customer_address",
+      key: "mst_supplier_address",
     },
     {
       title: "Status",
@@ -103,7 +103,7 @@ const columns = () => {
     },
     {
       title: "",
-      key: "mst_customer_id",
+      key: "mst_supplier_id",
       action: ["approve", "update", "read", "delete"],
     },
   ];

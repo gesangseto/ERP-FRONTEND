@@ -20,6 +20,18 @@ const FormUser = React.lazy(() => import("./views/master/user/FormUser"));
 // MASTER Data
 const LCust = React.lazy(() => import("./views/masterData/customer/ListCust"));
 const FCust = React.lazy(() => import("./views/masterData/customer/FormCust"));
+const LSupp = React.lazy(() =>
+  import("./views/masterData/supplier/ListSupplier")
+);
+const FormPackaging = React.lazy(() =>
+  import("./views/masterData/packaging/FormPackaging")
+);
+const ListPackaging = React.lazy(() =>
+  import("./views/masterData/packaging/ListPackaging")
+);
+const FSupp = React.lazy(() =>
+  import("./views/masterData/supplier/FormSupplier")
+);
 // SETTING
 const LAppr = React.lazy(() => import("./views/setting/approval/ListApproval"));
 const FAppr = React.lazy(() => import("./views/setting/approval/FormApproval"));
@@ -87,6 +99,38 @@ const routes = [
     path: "/Masterdata/customer/:type/:id",
     name: "Detail Customer",
     element: FCust,
+  },
+  // SUPPLIER
+  {
+    path: "/Masterdata/supplier",
+    name: "Master Data Supplier",
+    element: LSupp,
+  },
+  {
+    path: "/Masterdata/supplier/:type",
+    name: "Create Supplier",
+    element: FSupp,
+  },
+  {
+    path: "/Masterdata/supplier/:type/:id",
+    name: "Detail Supplier",
+    element: FSupp,
+  },
+  // PACKAGING
+  {
+    path: "/Masterdata/packaging",
+    name: "Master Data Packaging",
+    element: ListPackaging,
+  },
+  {
+    path: "/Masterdata/packaging/:type",
+    name: "Create Packaging",
+    element: FormPackaging,
+  },
+  {
+    path: "/Masterdata/packaging/:type/:id",
+    name: "Detail Packaging",
+    element: FormPackaging,
   },
   // SETTING
   { path: "/setting/approval", name: "Master Approval", element: LAppr },

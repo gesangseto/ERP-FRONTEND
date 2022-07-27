@@ -8,11 +8,10 @@ import {
 } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XFormApproval, XInput, XSwitch, XTextArea } from "../../../component";
-
-import { getCustomer, insertCustomer, updateCustomer } from "../../../resource";
+import { getSupplier, insertSupplier, updateSupplier } from "../../../resource";
 import routes from "../../../routes";
 
-const FormCust = () => {
+const FormSupplier = () => {
   let { type, id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,14 +19,12 @@ const FormCust = () => {
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    mst_customer_id: "",
-    mst_customer_pic: "",
-    mst_customer_name: "",
-    mst_customer_email: "",
-    mst_customer_address: "",
-    mst_customer_phone: "",
-    mst_customer_ppn: "",
-    mst_customer_percentage: "",
+    mst_supplier_id: "",
+    mst_supplier_pic: "",
+    mst_supplier_name: "",
+    mst_supplier_email: "",
+    mst_supplier_address: "",
+    mst_supplier_phone: "",
   });
 
   useEffect(() => {
@@ -43,7 +40,7 @@ const FormCust = () => {
   }, [formData]);
 
   const loadFormData = async (id) => {
-    let _data = await getCustomer({ mst_customer_id: id });
+    let _data = await getSupplier({ mst_supplier_id: id });
     _data = _data.data[0];
     setFormData({ ..._data });
   };
@@ -51,10 +48,10 @@ const FormCust = () => {
   const saveFormData = async (param = Object) => {
     let _data;
     if (id) {
-      param.mst_customer_id = id;
-      _data = await updateCustomer(param);
+      param.mst_supplier_id = id;
+      _data = await updateSupplier(param);
     } else {
-      _data = await insertCustomer(param);
+      _data = await insertSupplier(param);
     }
     if (_data) {
       toast.success("Success");
@@ -85,52 +82,40 @@ const FormCust = () => {
         size={"default"}
       >
         <XInput
-          title="Customer PIC"
-          name={"mst_customer_pic"}
-          initialValue={formData.mst_customer_pic}
+          title="Supplier PIC"
+          name={"mst_supplier_pic"}
+          initialValue={formData.mst_supplier_pic}
           disabled={type == "read"}
           required
         />
         <XInput
-          title="Customer Name"
-          name={"mst_customer_name"}
-          initialValue={formData.mst_customer_name}
+          title="Supplier Name"
+          name={"mst_supplier_name"}
+          initialValue={formData.mst_supplier_name}
           disabled={type == "read"}
           required
         />
         <XInput
-          title="Customer Email"
-          name={"mst_customer_email"}
-          initialValue={formData.mst_customer_email}
+          title="Supplier Email"
+          name={"mst_supplier_email"}
+          initialValue={formData.mst_supplier_email}
           disabled={type == "read"}
           required
           type="email"
         />
         <XInput
-          title="Customer Phone"
-          name={"mst_customer_phone"}
-          initialValue={formData.mst_customer_phone}
+          title="Supplier Phone"
+          name={"mst_supplier_phone"}
+          initialValue={formData.mst_supplier_phone}
           disabled={type == "read"}
           required
         />
         <XTextArea
-          title="Customer Address"
-          name={"mst_customer_address"}
-          initialValue={formData.mst_customer_address}
+          title="Supplier Address"
+          name={"mst_supplier_address"}
+          initialValue={formData.mst_supplier_address}
           disabled={type == "read"}
           required
-        />
-        <XInput
-          title="PPN"
-          name={"mst_customer_ppn"}
-          initialValue={formData.mst_customer_ppn}
-          disabled={type == "read"}
-        />
-        <XInput
-          title="Percentage"
-          name={"price_percentage"}
-          initialValue={formData.price_percentage}
-          disabled={type == "read"}
         />
         <XSwitch
           title="Status"
@@ -157,4 +142,4 @@ const FormCust = () => {
     </Card>
   );
 };
-export default FormCust;
+export default FormSupplier;
