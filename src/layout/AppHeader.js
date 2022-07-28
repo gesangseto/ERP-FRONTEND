@@ -5,7 +5,7 @@ import {
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Col, Dropdown, Layout, Menu, Row } from "antd";
+import { Avatar, Col, Dropdown, Layout, Menu, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -88,7 +88,7 @@ const AppHeader = (props) => {
       }}
     >
       <Row style={{ marginInline: 30 }}>
-        <Col span={12}>
+        <Col span={10}>
           {isCollapsed ? (
             <MenuUnfoldOutlined
               style={{ fontSize: "20px" }}
@@ -101,23 +101,19 @@ const AppHeader = (props) => {
             />
           )}
         </Col>
-        <Col span={12}>
-          {/* <Dropdown overlay={menu()} trigger={["click", "hover"]}>
-            <Avatar
-              icon={
-                <UserOutlined
-                  type="button"
-                  style={{ fontSize: "20px", color: "#08c" }}
-                  theme="outlined"
-                  onClick={(e) => e.preventDefault()}
-                />
-              }
-              style={{
-                margin: 15,
-                float: "right",
-              }}
-            />
-          </Dropdown> */}
+        <Col span={4}>
+          <Typography.Title level={4} style={{ marginTop: 15 }}>
+            {profile.app_name}
+          </Typography.Title>
+        </Col>
+        <Col span={10}>
+          <Avatar
+            icon={<img src={profile.app_logo} />}
+            style={{
+              margin: 15,
+              float: "right",
+            }}
+          />
         </Col>
       </Row>
     </Header>

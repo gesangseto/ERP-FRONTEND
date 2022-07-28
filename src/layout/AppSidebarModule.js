@@ -1,4 +1,8 @@
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Avatar, Layout, Menu, Popover } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +16,9 @@ const AppSidebarModule = (props) => {
   const { isCollapsed, changeMenu } = props;
   const [module, setModule] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([1]);
+  const [profile, setProfile] = useState({
+    ...JSON.parse(localStorage.getItem("profile")),
+  });
 
   useEffect(() => {
     let menu = JSON.parse(localStorage.getItem("menu"));
@@ -102,6 +109,23 @@ const AppSidebarModule = (props) => {
         items={module}
         onClick={(e) => handleClickMenu(e)}
       />
+      {profile.hasOwnProperty("user_id") && profile.user_id == "0" ? (
+        <Popover content="Configuration" placement="right" trigger="hover">
+          <SettingOutlined
+            type="button"
+            style={{
+              fontSize: "20px",
+              color: "#08c",
+              height: "60px",
+              justifyContent: "center",
+              display: "flex",
+              paddingTop: 20,
+            }}
+            theme="outlined"
+            onClick={(e) => navigate("/Configuration")}
+          />
+        </Popover>
+      ) : null}
     </Sider>
   );
 };
