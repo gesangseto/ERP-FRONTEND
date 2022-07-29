@@ -64,7 +64,6 @@ export const reformatMenu = (menu = Array) => {
 
     _res.push(item);
     // if (!haveRole(it) && it.children.length == 0) {
-    //   console.log("Punya", it);
     // } else {
     //   _res.push(item);
     // }
@@ -104,19 +103,16 @@ export const treeify = (list, idAttr, parentAttr, childrenAttr) => {
       if (lookup[obj[parentAttr]] !== undefined) {
         lookup[obj[parentAttr]][childrenAttr].push(obj);
       } else {
-        // console.log("Missing Parent Data: " + obj[parentAttr]);
         treeList.push(obj);
       }
     } else {
       treeList.push(obj);
     }
-    // console.log(obj);
   });
   return treeList;
 };
 
 export const removeEmptyChild = (arr = Array, key = String) => {
-  console.log(key);
   let _data = [];
   for (const it of arr) {
     if (Array.isArray(it[key]) && it[key].length == 0) {
@@ -124,10 +120,24 @@ export const removeEmptyChild = (arr = Array, key = String) => {
     } else {
       it[key] = removeEmptyChild(it[key], "children");
     }
-    console.log(it);
     _data.push(it);
   }
-  console.log(_data);
+  return _data;
+};
+
+export const removeEmptyObject = (arr = Array, key = String, key2 = String) => {
+  let _data = [];
+  for (const it of arr) {
+    if (key && key2) {
+      if (it[key] && it[key2]) {
+        _data.push(it);
+      }
+    } else if (key) {
+      if (it[key]) {
+        _data.push(it);
+      }
+    }
+  }
   return _data;
 };
 
@@ -145,6 +155,15 @@ export const canApprove = (approval) => {
   } catch (e) {
     return false;
   }
+};
+export const makeOption = (data = Array, value = "id", label = "name") => {
+  let _data = [];
+  for (const it of data) {
+    it.value = it[value];
+    it.label = it[label];
+    _data.push(it);
+  }
+  return _data;
 };
 
 export const getBase64 = (file) =>

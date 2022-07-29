@@ -19,7 +19,7 @@ import {
 import { getCustomer, insertCustomer, updateCustomer } from "../../../resource";
 import routes from "../../../routes";
 
-const FormCust = () => {
+const FormReceive = () => {
   let { type, id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -166,4 +166,4 @@ const FormCust = () => {
     </Card>
   );
 };
-export default FormCust;
+export default FormReceive;

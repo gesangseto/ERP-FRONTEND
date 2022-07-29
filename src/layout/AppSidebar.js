@@ -1,4 +1,4 @@
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { reformatMenu } from "../helper/utils";
@@ -43,7 +43,23 @@ const AppSidebar = (props) => {
         left: 0,
       }}
     >
-      <div className="logo" style={{ height: "60px" }} />
+      <div
+        className="logo"
+        style={{
+          height: "60px",
+          display: "flex",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          justifyItems: "center",
+        }}
+      >
+        <Typography.Title level={4} style={{ color: "white" }}>
+          {isCollapsed
+            ? menuItem[0].sys_menu_module_name.charAt(0)
+            : menuItem[0].sys_menu_module_name}
+        </Typography.Title>
+      </div>
       <Menu
         theme="dark"
         defaultSelectedKeys={selectedMenu}

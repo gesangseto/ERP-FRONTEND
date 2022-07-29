@@ -41,8 +41,14 @@ const FAppr = React.lazy(() => import("./views/system/approval/FormApproval"));
 const LAudit = React.lazy(() => import("./views/system/audit/ListAudit"));
 const FAudit = React.lazy(() => import("./views/system/audit/FormAudit"));
 /*
-MODULE ADMINISTRATOR 
+MODULE POINT OF SALES 
 */
+const LPReceive = React.lazy(() =>
+  import("./features/pos/views/receive/ListReceive")
+);
+const FPReceive = React.lazy(() =>
+  import("./features/pos/views/receive/FormReceive")
+);
 const routes = [
   // { path: "/master/user", name: "Master User", element: LUser },
   // { path: "/master/user/:type", name: "Master User", element: FUser },
@@ -169,6 +175,25 @@ const routes = [
     path: "/system/audit/:type/:id",
     name: "Detail Audit",
     element: FAudit,
+  },
+
+  // FEATURE
+  // MODULE POINT OF SALES
+  // RECEIVE
+  {
+    path: "/pos/transaction/receive",
+    name: "Receive [Poin Of Sales]",
+    element: LPReceive,
+  },
+  {
+    path: "/pos/transaction/receive/:type",
+    name: "Detail Receive [Poin Of Sales]",
+    element: FPReceive,
+  },
+  {
+    path: "/pos/transaction/receive/:type/:id",
+    name: "Detail Receive [Poin Of Sales]",
+    element: FPReceive,
   },
 ];
 

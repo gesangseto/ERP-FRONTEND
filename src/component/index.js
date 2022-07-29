@@ -7,9 +7,12 @@ import XTable from "./XTable";
 import XTextArea from "./XTextArea";
 import XFormItemVariant from "./XFormItemVariant";
 import XInputNumber from "./XInputNumber";
+import XSelect from "./XSelect";
+import XDebounceSelect from "./XDebounceSelect";
 
 export {
   XTable,
+  XSelect,
   XButton,
   XModalApproval,
   XFormApproval,
@@ -18,4 +21,5 @@ export {
   XSwitch,
   XFormItemVariant,
   XInputNumber,
+  XDebounceSelect,
 };

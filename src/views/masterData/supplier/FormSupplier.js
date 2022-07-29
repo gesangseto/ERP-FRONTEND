@@ -126,15 +126,15 @@ const FormSupplier = () => {
         <Form.Item>
           <Button
             loading={loading}
-            type="primary"
+            type="success"
             htmlType="submit"
             disabled={type == "read"}
           >
             Save
           </Button>
           &nbsp;
-          <Button type="danger" onClick={() => navigate(-1)}>
-            Cancel
+          <Button type="primary" onClick={() => navigate(-1)}>
+            Back
           </Button>
         </Form.Item>
       </Form>
