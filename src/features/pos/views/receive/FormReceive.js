@@ -12,7 +12,7 @@ import { makeOption } from "../../../../helper/utils";
 
 import { getSupplier } from "../../../../resource";
 import routes from "../../../../routes";
-import { XFormReceive } from "../../component";
+import { XFormReceive, XFormReadReceive } from "../../component";
 import { getReceive, insertReceive, updateReceive } from "../../resource";
 
 const FormReceive = () => {
@@ -110,12 +110,17 @@ const FormReceive = () => {
             name={"pos_receive_note"}
             initialValue={formData.pos_receive_note}
             disabled={formData.status != 0}
+            required
           />
         ) : null}
         <Card>
-          <XFormReceive
-            onChange={(data) => setFormData({ ...formData, item: data })}
-          />
+          {type == "create" ? (
+            <XFormReceive
+              onChange={(data) => setFormData({ ...formData, item: data })}
+            />
+          ) : (
+            <XFormReadReceive data={formData.item} />
+          )}
         </Card>
 
         <Form.Item>
