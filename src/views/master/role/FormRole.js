@@ -10,30 +10,24 @@ import {
   Tabs,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  matchRoutes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XFormApproval } from "../../../component";
 import {
   findOnArr,
+  getRoute,
   groupBy,
   mergeArray,
   removeEmptyChild,
   treeify,
 } from "../../../helper/utils";
 import { getRole, getSection, updateRole } from "../../../resource";
-import routes from "../../../routes";
 
 const { TabPane } = Tabs;
 const FormRole = () => {
+  const route = getRoute();
   let { type, id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({

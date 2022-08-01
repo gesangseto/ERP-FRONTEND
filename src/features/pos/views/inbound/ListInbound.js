@@ -1,26 +1,28 @@
 import { Card } from "antd";
 import React, { useEffect, useState } from "react";
-import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XButton, XTable } from "../../../component";
-import { defaultFilter } from "../../../constants";
-import { deleteCustomer, getCustomer } from "../../../resource";
-import routes from "../../../routes";
+import { XButton, XTable } from "../../../../component";
+import { defaultFilter } from "../../../../constants";
+import { getRoute } from "../../../../helper/utils";
+import { deleteCustomer } from "../../../../resource";
+import { getInbound } from "../../resource";
 
-const ListReceive = () => {
-  const location = useLocation();
+const ListInbound = () => {
+  const route = getRoute();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const [listData, setListData] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [filter, setFilter] = useState({ ...defaultFilter });
 
   useEffect(() => {
     loadData();
+    console.log(route);
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getCustomer(filter);
+    let _data = await getInbound(filter);
+    console.log(_data);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -64,7 +66,7 @@ const ListReceive = () => {
   );
 };
 
-export default ListReceive;
+export default ListInbound;
 
 const columns = () => {
   return [

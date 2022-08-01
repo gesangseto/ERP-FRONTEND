@@ -1,4 +1,6 @@
 import { icon } from "../constants";
+import { matchRoutes, useLocation } from "react-router-dom";
+import routes from "../routes";
 
 export const makeId = (length) => {
   var result = "";
@@ -63,20 +65,7 @@ export const reformatMenu = (menu = Array) => {
     }
 
     _res.push(item);
-    // if (!haveRole(it) && it.children.length == 0) {
-    // } else {
-    //   _res.push(item);
-    // }
   }
-
-  // let newMenu = [];
-  // _res.forEach(function (obj) {
-  //   if (obj.hasOwnProperty("children") && obj.children.length > 0) {
-  //     newMenu.push(obj);
-  //   } else if (obj.hasOwnProperty("to")) {
-  //     newMenu.push(obj);
-  //   }
-  // });
   return _res;
 };
 
@@ -175,3 +164,9 @@ export const getBase64 = (file) =>
 
     reader.onerror = (error) => reject(error);
   });
+
+export const getRoute = () => {
+  const location = useLocation();
+  const [{ route }] = matchRoutes(routes, location);
+  return route;
+};

@@ -49,6 +49,12 @@ const LPReceive = React.lazy(() =>
 const FPReceive = React.lazy(() =>
   import("./features/pos/views/receive/FormReceive")
 );
+const LPInbound = React.lazy(() =>
+  import("./features/pos/views/inbound/ListInbound")
+);
+const FPInbound = React.lazy(() =>
+  import("./features/pos/views/inbound/FormInbound")
+);
 const routes = [
   // { path: "/master/user", name: "Master User", element: LUser },
   // { path: "/master/user/:type", name: "Master User", element: FUser },
@@ -194,6 +200,17 @@ const routes = [
     path: "/pos/transaction/receive/:type/:id",
     name: "Detail Receive [Poin Of Sales]",
     element: FPReceive,
+  },
+  // INBOUND
+  {
+    path: "/pos/transaction/inbound",
+    name: "Inbound",
+    element: LPInbound,
+  },
+  {
+    path: "/pos/transaction/inbound/:type/:id",
+    name: "Detail Inbound",
+    element: FPInbound,
   },
 ];
 

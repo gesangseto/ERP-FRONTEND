@@ -5,16 +5,13 @@ import {
   EyeOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Popover, Tooltip } from "antd";
+import { Button, Popover } from "antd";
 import React, { useEffect, useState } from "react";
-import { matchRoutes, useLocation } from "react-router-dom";
-import { canApprove } from "../helper/utils";
-import routes from "../routes";
+import { canApprove, getRoute } from "../helper/utils";
 
 const XButton = (props) => {
   const { title, popover, type, record, use_permission = true } = props;
-  const location = useLocation();
-  const [{ route }] = matchRoutes(routes, location);
+  const route = getRoute();
   const [icon, setIcon] = useState();
   const [permission, setPermission] = useState({});
   const [isHidden, setIsHidden] = useState(false);

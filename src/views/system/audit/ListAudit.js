@@ -1,23 +1,14 @@
 import { Card } from "antd";
 import React, { useEffect, useState } from "react";
-import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { XButton, XTable } from "../../../component";
+import { useNavigate } from "react-router-dom";
+import { XTable } from "../../../component";
 import { defaultFilter } from "../../../constants";
-import { departColumns } from "../../../constants/columnTable";
-import {
-  deleteApproval,
-  deleteDepartment,
-  getApproval,
-  getAudit,
-  getDepartment,
-} from "../../../resource";
-import routes from "../../../routes";
+import { getRoute } from "../../../helper/utils";
+import { getAudit } from "../../../resource";
 
 const ListAudit = () => {
-  const location = useLocation();
+  const route = getRoute();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const [listData, setListData] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [filter, setFilter] = useState({ ...defaultFilter });

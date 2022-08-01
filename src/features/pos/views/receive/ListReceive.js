@@ -1,17 +1,16 @@
 import { Card } from "antd";
 import React, { useEffect, useState } from "react";
-import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { XButton, XTable } from "../../../../component";
 import { defaultFilter } from "../../../../constants";
-import routes from "../../../../routes";
 import { getReceive } from "../../resource";
 
 import moment from "moment";
+import { getRoute } from "../../../../helper/utils";
 
 const ListReceive = () => {
-  const location = useLocation();
+  const route = getRoute();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const [listData, setListData] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [filter, setFilter] = useState({ ...defaultFilter });

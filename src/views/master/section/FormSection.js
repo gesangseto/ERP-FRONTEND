@@ -1,30 +1,21 @@
 import { Button, Card, Form, Input, Select, Switch } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  matchRoutes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XFormApproval } from "../../../component";
-import { canApprove } from "../../../helper/utils";
+import { getRoute } from "../../../helper/utils";
 // import { updateDepartment } from "../../../resource/administrator/department";
 import {
   getDepartment,
   getSection,
-  insertDepartment,
   insertSection,
-  updateDepartment,
   updateSection,
 } from "../../../resource";
-import routes from "../../../routes";
 
 const FormSection = () => {
+  const route = getRoute();
   let { type, id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [listDepart, setListDepart] = useState([]);

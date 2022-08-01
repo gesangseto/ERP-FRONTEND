@@ -1,20 +1,14 @@
 import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  matchRoutes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { XFormApproval, XInput, XTextArea } from "../../../component";
+import { getRoute } from "../../../helper/utils";
 import { getAudit } from "../../../resource";
-import routes from "../../../routes";
 
 const FormAudit = () => {
+  const route = getRoute();
   let { type, id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [listUser, setListUser] = useState([]);

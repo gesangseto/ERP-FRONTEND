@@ -1,12 +1,7 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Popconfirm, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  matchRoutes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   XFormApproval,
@@ -15,6 +10,7 @@ import {
   XSwitch,
   XTextArea,
 } from "../../../component";
+import { getRoute } from "../../../helper/utils";
 
 import {
   deleteProduct,
@@ -22,13 +18,11 @@ import {
   insertProduct,
   updateProduct,
 } from "../../../resource";
-import routes from "../../../routes";
 
 const FormItem = () => {
+  const route = getRoute();
   let { type, id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [openFormVariant, setOpenFormVariant] = useState(false);

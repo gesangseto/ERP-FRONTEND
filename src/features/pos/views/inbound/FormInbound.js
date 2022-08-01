@@ -1,12 +1,7 @@
 import { PercentageOutlined } from "@ant-design/icons";
 import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  matchRoutes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   XFormApproval,
@@ -14,16 +9,19 @@ import {
   XInputNumber,
   XSwitch,
   XTextArea,
-} from "../../../component";
+} from "../../../../component";
+import { getRoute } from "../../../../helper/utils";
 
-import { getCustomer, insertCustomer, updateCustomer } from "../../../resource";
-import routes from "../../../routes";
+import {
+  getCustomer,
+  insertCustomer,
+  updateCustomer,
+} from "../../../../resource";
 
 const FormReceive = () => {
+  const route = getRoute();
   let { type, id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const [{ route }] = matchRoutes(routes, location);
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
