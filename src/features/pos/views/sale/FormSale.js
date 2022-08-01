@@ -9,7 +9,7 @@ import { getSupplier } from "../../../../resource";
 import { XFormReadReceive, XFormReceive } from "../../component";
 import { getReceive, insertReceive, updateReceive } from "../../resource";
 
-const FormReceive = () => {
+const FormSale = () => {
   const route = getRoute();
   let { type, id } = useParams();
   const navigate = useNavigate();
@@ -160,4 +160,4 @@ const FormReceive = () => {
     </Card>
   );
 };
-export default FormReceive;
+export default FormSale;

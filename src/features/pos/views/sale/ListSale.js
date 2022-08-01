@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XButton, XTable } from "../../../../component";
 import { defaultFilter } from "../../../../constants";
-import { getInbound, getReceive } from "../../resource";
+import { getReceive } from "../../resource";
 
 import moment from "moment";
 import { getRoute } from "../../../../helper/utils";
 
-const ListInbound = () => {
+const ListSale = () => {
   const route = getRoute();
   const navigate = useNavigate();
   const [listData, setListData] = useState([]);
@@ -20,7 +20,8 @@ const ListInbound = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getInbound(filter);
+    let _data = await getReceive(filter);
+    console.log(_data);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -37,16 +38,16 @@ const ListInbound = () => {
     <Card
       title={route.name}
       style={{ textTransform: "capitalize" }}
-      // extra={
-      //   <XButton
-      //     popover="Create"
-      //     type="create"
-      //     onClick={() => handleClickAdd()}
-      //   />
-      // }
+      extra={
+        <XButton
+          popover="Create"
+          type="create"
+          onClick={() => handleClickAdd()}
+        />
+      }
     >
       <XTable
-        rowKey="pos_trx_inbound_id"
+        rowKey="pos_receive_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -57,13 +58,13 @@ const ListInbound = () => {
   );
 };
 
-export default ListInbound;
+export default ListSale;
 
 const columns = () => {
   return [
     {
       title: "ID",
-      key: "pos_trx_inbound_id",
+      key: "pos_receive_id",
     },
     {
       title: "Date",
@@ -75,32 +76,43 @@ const columns = () => {
       key: "user_name",
     },
     {
-      title: "Type",
-      key: "pos_trx_inbound_type",
-    },
-    {
-      title: "Source",
-      key: "pos_trx_inbound_id",
-      render: (i, rec) => (
-        <p>
-          {rec.mst_supplier_name
-            ? rec.mst_supplier_name
-            : rec.mst_customer_name}
-        </p>
-      ),
-    },
-    {
       title: "Product",
       key: "mst_item_name",
+    },
+    {
+      title: "Supplier",
+      key: "mst_supplier_name",
+    },
+    {
+      title: "Batch",
+      key: "batch",
     },
     {
       title: "Quantity",
       key: "qty",
     },
     {
+      title: "Status",
+      key: "status",
+      render: (i, rec) => (
+        <p
+          style={{
+            color:
+              rec.status == 1 ? "green" : rec.status == -1 ? "blue" : "red",
+          }}
+        >
+          {rec.status == 1
+            ? "Active"
+            : rec.status == -1
+            ? "Rejected"
+            : "Inactive"}
+        </p>
+      ),
+    },
+    {
       title: "",
-      key: "pos_trx_inbound_id",
-      action: ["read"],
+      key: "pos_receive_id",
+      action: ["approve", "update", "read"],
     },
   ];
 };

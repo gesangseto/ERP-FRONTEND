@@ -24,15 +24,13 @@ const XTable = (props) => {
   const [filter, setFilter] = useState({ ...defaultFilter });
   const [search, setSearch] = useState([]);
   const [approvalId, setApprovalId] = useState(null);
-  const [data, setData] = useState({
-    items: [],
-    columns: [],
-  });
+  const [structureColumns, setStructureColumns] = useState([]);
 
   useEffect(() => {
-    if (columns && items) generateColumn(columns);
-    console.log("columns", columns);
-  }, [columns, items]);
+    if (columns) {
+      generateColumn(columns);
+    }
+  }, [columns]);
 
   useEffect(() => {
     console.log(`onChangePagination(${JSON.stringify(filter)});`);
@@ -83,7 +81,7 @@ const XTable = (props) => {
       }
       formatCol.push(obj);
     }
-    setData({ ...data, items: items, columns: formatCol });
+    setStructureColumns([...formatCol]);
   };
 
   const handleClickAction = (type, id, record) => {
@@ -133,15 +131,15 @@ const XTable = (props) => {
       <Table
         {...props}
         // rowKey="id"
-        columns={data.columns}
-        dataSource={data.items}
+        columns={structureColumns}
+        dataSource={[...items]}
         pagination={false}
       />
 
       <Row style={{ padding: 30 }}>
         <Col span={16}>
           <Pagination
-            defaultCurrent={filter.page}
+            current={filter.page}
             total={totalData}
             onChange={(page, limit) =>
               setFilter({ ...filter, page: page, limit: limit })

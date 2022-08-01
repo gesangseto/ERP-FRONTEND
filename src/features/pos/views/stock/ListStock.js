@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XButton, XTable } from "../../../../component";
 import { defaultFilter } from "../../../../constants";
-import { getInbound, getReceive } from "../../resource";
+import { getInbound, getReceive, getStock } from "../../resource";
 
 import moment from "moment";
 import { getRoute } from "../../../../helper/utils";
 
-const ListInbound = () => {
+const ListStock = () => {
   const route = getRoute();
   const navigate = useNavigate();
   const [listData, setListData] = useState([]);
@@ -20,7 +20,7 @@ const ListInbound = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getInbound(filter);
+    let _data = await getStock(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -57,41 +57,33 @@ const ListInbound = () => {
   );
 };
 
-export default ListInbound;
+export default ListStock;
 
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_trx_inbound_id",
-    },
-    {
-      title: "Date",
-      key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
-    },
-    {
-      title: "Created By",
-      key: "user_name",
-    },
-    {
-      title: "Type",
-      key: "pos_trx_inbound_type",
-    },
-    {
-      title: "Source",
-      key: "pos_trx_inbound_id",
-      render: (i, rec) => (
-        <p>
-          {rec.mst_supplier_name
-            ? rec.mst_supplier_name
-            : rec.mst_customer_name}
-        </p>
-      ),
-    },
-    {
       title: "Product",
       key: "mst_item_name",
+    },
+    {
+      title: "Item No",
+      key: "mst_item_no",
+    },
+    {
+      title: "Desc",
+      key: "mst_item_desc",
+    },
+    {
+      title: "Barcode",
+      key: "barcode",
+    },
+    {
+      title: "Variant",
+      key: "mst_item_variant_name",
+    },
+    {
+      title: "Price",
+      key: "price",
     },
     {
       title: "Quantity",
@@ -99,7 +91,7 @@ const columns = () => {
     },
     {
       title: "",
-      key: "pos_trx_inbound_id",
+      key: "pos_item_stock_id",
       action: ["read"],
     },
   ];

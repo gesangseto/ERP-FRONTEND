@@ -55,6 +55,12 @@ const LPInbound = React.lazy(() =>
 const FPInbound = React.lazy(() =>
   import("./features/pos/views/inbound/FormInbound")
 );
+const LPStock = React.lazy(() =>
+  import("./features/pos/views/stock/ListStock")
+);
+const FPStock = React.lazy(() =>
+  import("./features/pos/views/stock/FormStock")
+);
 const routes = [
   // { path: "/master/user", name: "Master User", element: LUser },
   // { path: "/master/user/:type", name: "Master User", element: FUser },
@@ -211,6 +217,17 @@ const routes = [
     path: "/pos/transaction/inbound/:type/:id",
     name: "Detail Inbound",
     element: FPInbound,
+  },
+  // STOCK
+  {
+    path: "/pos/transaction/stock",
+    name: "Stock",
+    element: LPStock,
+  },
+  {
+    path: "/pos/transaction/stock/:type/:id",
+    name: "Detail Stock",
+    element: FPStock,
   },
 ];
 

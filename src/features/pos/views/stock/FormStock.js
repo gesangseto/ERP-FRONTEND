@@ -7,16 +7,16 @@ import { getRoute } from "../../../../helper/utils";
 
 import moment from "moment";
 import { insertCustomer, updateCustomer } from "../../../../resource";
-import { getInbound } from "../../resource";
-import { XFormReadReceive } from "../../component";
+import { getInbound, getStock } from "../../resource";
+import { XFormDetailStock, XFormReadReceive } from "../../component";
 
-const FormInbound = () => {
+const FormStock = () => {
   const route = getRoute();
   let { type, id } = useParams();
   const navigate = useNavigate();
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ detail: [] });
+  const [formData, setFormData] = useState({ variant: [] });
 
   useEffect(() => {
     (async function () {
@@ -31,10 +31,12 @@ const FormInbound = () => {
   }, [formData]);
 
   const loadFormData = async (id) => {
-    let _data = await getInbound({ pos_trx_inbound_id: id });
-    _data = _data.data[0];
-    console.log(_data);
-    setFormData({ ..._data });
+    let _data = await getStock({ pos_item_stock_id: id });
+    if (_data.data.length > 0) {
+      console.log("===========", _data.data[0]);
+      _data = _data.data[0];
+      setFormData({ ..._data });
+    }
   };
 
   const saveFormData = async (param = Object) => {
@@ -74,43 +76,23 @@ const FormInbound = () => {
         size={"default"}
       >
         <XInput
-          title="Created At"
-          name={"created_at"}
-          initialValue={moment(formData.created_at).format(
-            "YYYY-MM-DD hh:mm:ss"
-          )}
-          disabled={type == "read"}
-          required
-        />
-        <XInput
-          title="Created By"
-          name={"user_name"}
-          initialValue={formData.user_name}
-          disabled={type == "read"}
-          required
-        />
-        <XInput
-          title="Type"
-          name={"pos_trx_inbound_type"}
-          initialValue={formData.pos_trx_inbound_type}
-          disabled={type == "read"}
-          required
-        />
-        <XInput
-          title="Source"
-          name={"pos_trx_inbound_id"}
-          initialValue={
-            formData.mst_supplier_name
-              ? formData.mst_supplier_name
-              : formData.mst_customer_name
-          }
-          disabled={type == "read"}
-          required
-        />
-        <XInput
           title="Product"
           name={"mst_item_name"}
           initialValue={formData.mst_item_name}
+          disabled={type == "read"}
+          required
+        />
+        <XInput
+          title="No"
+          name={"mst_item_no"}
+          initialValue={formData.mst_item_no}
+          disabled={type == "read"}
+          required
+        />
+        <XInput
+          title="Desc"
+          name={"mst_item_desc"}
+          initialValue={formData.mst_item_desc}
           disabled={type == "read"}
           required
         />
@@ -121,7 +103,8 @@ const FormInbound = () => {
           disabled={type == "read"}
         />
 
-        <XFormReadReceive data={formData.detail} />
+        {/* <XFormReadReceive data={formData.detail} /> */}
+        <XFormDetailStock data={formData.variant} />
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>
             Back
@@ -132,4 +115,4 @@ const FormInbound = () => {
     </Card>
   );
 };
-export default FormInbound;
+export default FormStock;
