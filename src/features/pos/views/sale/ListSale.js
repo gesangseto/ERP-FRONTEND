@@ -20,7 +20,7 @@ const ListSale = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getReceive(filter);
+    let _data = await getSale(filter);
     console.log(_data);
     if (_data) {
       setTotalData(_data.grand_total);

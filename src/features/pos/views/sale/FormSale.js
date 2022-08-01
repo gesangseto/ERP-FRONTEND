@@ -1,163 +1,292 @@
-import { Button, Card, Form } from "antd";
+import {
+  DeleteOutlined,
+  DownSquareOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  RightSquareOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Input,
+  InputNumber,
+  Popover,
+  Row,
+  Space,
+  Table,
+} from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { getRoute } from "../../../../helper/utils";
+import moment from "moment";
+import Countdown from "antd/lib/statistic/Countdown";
+import { getCashier, insertCashier, updateCashier } from "../../resource";
+import { XModalOpenCashier } from "../../component";
 import { toast } from "react-toastify";
-import { XFormApproval, XSelect, XTextArea } from "../../../../component";
-import { getRoute, makeOption } from "../../../../helper/utils";
+import XSelectSearch from "../../../../component/XSelectSearch";
+import { getCustomer, getProductVariant } from "../../../../resource";
 
-import { getSupplier } from "../../../../resource";
-import { XFormReadReceive, XFormReceive } from "../../component";
-import { getReceive, insertReceive, updateReceive } from "../../resource";
-
+const itemDef = () => {
+  return JSON.parse(
+    JSON.stringify({
+      mst_item_variant_id: "",
+      qty: "",
+      barcode: "",
+    })
+  );
+};
 const FormSale = () => {
   const route = getRoute();
-  let { type, id } = useParams();
-  const navigate = useNavigate();
-  const form = useRef(null);
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ ...{}, item: [] });
-  const [listSupplier, setListSupplier] = useState([]);
+  const profile = JSON.parse(localStorage.getItem("profile"));
+  let itemRef = useRef([]);
+  const [expandCashier, setExpandCashier] = useState(false);
+  const [visibleOpenCashier, setVisibleOpenCashier] = useState(false);
+  const [cashierData, setCashierData] = useState({});
+  const [listCustomer, setListCustomer] = useState([]);
+  const [listItem, setListItem] = useState([]);
+  const [formData, setFormData] = useState({ sale_item: [{ ...itemDef() }] });
 
   useEffect(() => {
-    (async function () {
-      loadSupplier();
-      if (id) {
-        loadFormData(id);
-      }
-    })();
+    loadCashier();
   }, []);
 
-  useEffect(() => {
-    form.current.resetFields();
-  }, [formData.pos_receive_id]);
-
-  const loadSupplier = async () => {
-    let _data = await getSupplier();
-    _data = _data.data;
-    _data = makeOption(_data, "mst_supplier_id", "mst_supplier_name");
-    setListSupplier([..._data]);
-  };
-
-  const loadFormData = async (id) => {
-    let _data = await getReceive({ pos_receive_id: id });
-    _data = _data.data[0];
-    setFormData({ ..._data, item: _data.detail });
-  };
-
-  const saveFormData = async (param = Object) => {
-    let _body = { ...formData, ...param };
-    let _item = [];
-    for (const it of _body.item) {
-      if (it.mst_item_variant_id) {
-        _item.push(it);
+  const loadCashier = async () => {
+    let _data = await getCashier({
+      created_by: profile.user_id,
+      is_cashier_open: true,
+    });
+    if (_data) {
+      if (_data.total == 0) {
+        setCashierData({});
+      } else {
+        setCashierData({ ..._data.data[0] });
       }
     }
-    _body.item = _item;
+  };
+
+  const handleSubmitCashier = async (item) => {
     let _data;
-    if (id) {
-      param.mst_customer_id = id;
-      _data = await updateReceive(_body);
+    if (item.pos_cashier_id) {
+      _data = await updateCashier(item);
+      if (_data) {
+        toast.success("Sucess close cashier");
+      }
     } else {
-      _data = await insertReceive(_body);
+      _data = await insertCashier(item);
+      if (_data) {
+        toast.success("Sucess open cashier");
+      }
     }
+    setVisibleOpenCashier(false);
+    loadCashier();
+  };
+
+  const loadCustomer = async (e) => {
+    let filter = { page: 1, limit: 10, search: e };
+    let _cust = await getCustomer(filter);
+    if (_cust.total > 1) {
+      setListCustomer([..._cust.data]);
+    }
+  };
+
+  const loadItem = async (text, type) => {
+    let filter = { page: 1, limit: 10 };
+    if (type == "barcode") {
+      filter.barcode = text;
+    } else {
+      filter.search = text;
+    }
+    let _data = await getProductVariant(filter);
     if (_data) {
-      toast.success("Success");
-      navigate(-1);
+      setListItem([..._data.data]);
+    } else {
+      setListItem([]);
+    }
+    return _data;
+  };
+
+  const handleDeleteRow = (index) => {
+    let _item = formData.item;
+    _item.splice(index, 1);
+    setFormData({ ...formData, item: [..._item] });
+  };
+
+  const handleChangeBarcode = async (val, index) => {
+    let _data = await loadItem(val, "barcode");
+    console.log(_data);
+    if (_data.data.length == 1) {
+      let id = _data.data[0].mst_item_variant_id;
+      changeItem(id, "mst_item_variant_id", index);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.status = e.status ? 1 : 0;
-    saveFormData(e);
+  const changeItem = (val, key, index) => {
+    let _item = formData.sale_item;
+    _item[index][key] = val;
+    if (val && key == "mst_item_variant_id") {
+      if (!_item[index + 1]) {
+        _item.push(itemDef());
+        itemRef.current[index + 1]?.focus();
+      }
+    }
+    if (val && key != "qty") {
+      _item[index].qty = 1;
+    }
+    setFormData({ ...formData, sale_item: [..._item] });
   };
 
-  return (
-    <Card title={route.name} style={{ textTransform: "capitalize" }}>
-      <Form
-        ref={form}
-        defaultValue={formData}
-        onFinish={(e) => handleSubmit(e)}
-        labelCol={{
-          span: 4,
-        }}
-        wrapperCol={{
-          span: 14,
-        }}
-        layout="horizontal"
-        initialValues={{
-          size: "default",
-        }}
-        size={"default"}
-      >
-        <XSelect
-          title="Supplier"
-          name={"mst_supplier_id"}
-          initialValue={formData.mst_supplier_id}
-          disabled={type != "create"}
-          required
-          option={listSupplier}
-        />
-        {type != "create" ? (
-          <XTextArea
-            title="Note"
-            name={"pos_receive_note"}
-            initialValue={formData.pos_receive_note}
-            disabled={formData.status != 0}
-            required
-          />
-        ) : null}
-        {type == "create" ? (
-          <XFormReceive
-            onChange={(data) => setFormData({ ...formData, item: data })}
-          />
-        ) : (
-          <XFormReadReceive data={formData.item} />
-        )}
-
-        <Form.Item>
-          {type == "create" ? (
-            <Button
-              loading={loading}
-              type="success"
-              htmlType="submit"
-              disabled={type == "read"}
-            >
-              Save
-            </Button>
-          ) : null}
-          {formData.status == 0 ? (
-            <>
-              <Button
-                loading={loading}
-                type="success"
-                htmlType="submit"
-                disabled={type == "read"}
-                onClick={() => setFormData({ ...formData, is_approve: "true" })}
-              >
-                Proccess
-              </Button>
-              &nbsp;
-              <Button
-                loading={loading}
-                type="danger"
-                htmlType="submit"
-                disabled={type == "read"}
-                onClick={() =>
-                  setFormData({ ...formData, is_approve: "false" })
+  const scheme = () => {
+    return [
+      {
+        title: "Barcode",
+        key: "mst_item_variant_id",
+        render: (i, rec, index) => {
+          return (
+            <Input
+              defaultValue={formData.sale_item[index].barcode}
+              onKeyDown={(e) => {
+                changeItem(e.target.value, "barcode", index);
+                if (e.key === "Enter") {
+                  handleChangeBarcode(e.target.value, index);
+                  e.preventDefault();
                 }
-              >
-                Reject
-              </Button>
-            </>
-          ) : null}
-          &nbsp;
-          <Button type="primary" onClick={() => navigate(-1)}>
-            Back
-          </Button>
-        </Form.Item>
-      </Form>
-      <XFormApproval item={formData} />
-    </Card>
+              }}
+              status={
+                !formData.sale_item[index].mst_item_variant_id ? "error" : null
+              }
+              ref={(el) => itemRef.current.push(el)}
+              autoFocus
+            />
+          );
+        },
+      },
+      {
+        title: "Product",
+        key: "mst_item_variant_id",
+        render: (i, rec, index) => {
+          return (
+            <XSelectSearch
+              allowClear
+              placeholder="input search text"
+              name="mst_item_variant_id"
+              onSearch={(e) => loadItem(e, "search")}
+              option={listItem.map((it) => {
+                return {
+                  text: `${it.mst_item_name} (${it.mst_packaging_code}) @${it.mst_item_variant_qty}`,
+                  value: it.mst_item_variant_id,
+                };
+              })}
+              //       // onChange={(val) => handleChangeRowProduct(val, index)}
+              initialValue={formData.sale_item[index].mst_item_variant_id}
+            />
+          );
+        },
+      },
+      {
+        title: "Quantity",
+        key: "qty",
+        render: (i, rec, index) => (
+          <InputNumber
+            defaultValue={1}
+            onChange={(e) => changeItem(e, "qty", index)}
+          />
+        ),
+      },
+      {
+        title: "",
+        key: "null",
+        render: (i, rec, index) => (
+          <>
+            {!index ? null : (
+              <DeleteOutlined onClick={() => handleDeleteRow(index)} />
+            )}
+          </>
+        ),
+      },
+    ];
+  };
+  return (
+    <>
+      <XModalOpenCashier
+        visible={visibleOpenCashier}
+        onSubmit={(item) => handleSubmitCashier(item)}
+        onCancel={() => setVisibleOpenCashier(false)}
+        initialValue={cashierData}
+      />
+      <Card
+        title={route.name}
+        style={{ textTransform: "capitalize" }}
+        extra={
+          <Space>
+            {Object.keys(cashierData).length == 0 ? (
+              <Popover content={"Open Cashier"}>
+                <Button onClick={() => setVisibleOpenCashier(true)}>
+                  <LoginOutlined />
+                </Button>
+              </Popover>
+            ) : (
+              <Popover content={"Close Cashier"}>
+                <Button onClick={() => setVisibleOpenCashier(true)}>
+                  <LogoutOutlined />
+                </Button>
+              </Popover>
+            )}
+            {expandCashier ? (
+              <DownSquareOutlined
+                onClick={() => setExpandCashier(!expandCashier)}
+              />
+            ) : (
+              <RightSquareOutlined
+                onClick={() => setExpandCashier(!expandCashier)}
+              />
+            )}
+          </Space>
+        }
+      >
+        {expandCashier ? (
+          <Divider orientation="right" orientationMargin={50}>
+            <Countdown
+              title="Count Down Working Time"
+              value={moment(cashierData.created_at).add(8, "hours").valueOf()}
+            />
+          </Divider>
+        ) : null}
+
+        {/* Start San Product */}
+        {Object.keys(cashierData).length == 0 ? null : (
+          <>
+            <Row style={{ marginBlock: 10, marginInline: 15 }}>
+              <Col span={10}>Customer</Col>
+              <Col span={10}>
+                <XSelectSearch
+                  allowClear
+                  placeholder="Customer Default"
+                  name="mst_customer_id"
+                  initialValue={formData.mst_customer_id}
+                  onSearch={(e) => loadCustomer(e, "search")}
+                  option={listCustomer.map((it) => {
+                    return {
+                      text: `${it.mst_customer_name}`,
+                      value: it.mst_customer_id,
+                    };
+                  })}
+                  onChange={(val) =>
+                    setFormData({ ...formData, mst_customer_id: val })
+                  }
+                />
+              </Col>
+            </Row>
+
+            <Table
+              columns={scheme()}
+              dataSource={[...formData.sale_item]}
+              pagination={false}
+            />
+          </>
+        )}
+      </Card>
+    </>
   );
 };
 export default FormSale;
