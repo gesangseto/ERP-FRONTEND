@@ -189,6 +189,7 @@ const XFormReceive = (props) => {
         columns={scheme()}
         dataSource={[...formData.item]}
         pagination={false}
+        size="small"
       />
     </Card>
   );

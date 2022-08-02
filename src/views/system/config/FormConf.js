@@ -55,7 +55,7 @@ const FormConf = () => {
     for (const it of _data) {
       let opt = {
         label: it[`${table}_name`],
-        value: it[`${table}_id`],
+        value: it[`${table}_id`] + "",
         ...it,
       };
       newData.push(opt);

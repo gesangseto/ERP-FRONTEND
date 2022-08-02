@@ -22,7 +22,7 @@ const XSelect = (props) => {
 
   return (
     <Form.Item
-      initialValue={initialValue.toString()}
+      initialValue={initialValue}
       label={title ?? "No Title"}
       name={name}
       rules={[
@@ -39,7 +39,7 @@ const XSelect = (props) => {
             return (
               <Select.Option
                 key={idx}
-                value={item.value.toString()}
+                value={item.value}
                 disabled={!item.status}
               >
                 {item.label}

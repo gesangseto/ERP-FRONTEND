@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Col,
+  Descriptions,
   Divider,
   Input,
   InputNumber,
@@ -17,34 +18,52 @@ import {
   Space,
   Table,
 } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  getRoute,
-  numberPercent,
-  numberWithComma,
-} from "../../../../helper/utils";
-import moment from "moment";
 import Countdown from "antd/lib/statistic/Countdown";
-import { getCashier, insertCashier, updateCashier } from "../../resource";
-import { XModalOpenCashier } from "../../component";
+import moment from "moment";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import XSelectSearch from "../../../../component/XSelectSearch";
-import { getCustomer, getProductVariant } from "../../../../resource";
+import {
+  getRoute,
+  makeId,
+  numberPercent,
+  numberWithComma,
+  removeEmptyObject,
+} from "../../../../helper/utils";
+import {
+  getConfigRelation,
+  getCustomer,
+  getProductVariant,
+} from "../../../../resource";
+import { XDrawerPayment, XModalOpenCashier } from "../../component";
+import {
+  getCashier,
+  getSale,
+  insertCashier,
+  insertSale,
+  updateCashier,
+  updateSale,
+} from "../../resource";
 
 const itemDef = () => {
   return JSON.parse(
     JSON.stringify({
+      key: makeId(5),
       mst_item_variant_id: "",
       qty: 1,
       barcode: "",
-      discount: 10,
+      discount: 0,
       mst_item_variant_price: 0,
     })
   );
 };
+
 const FormSale = () => {
   const route = getRoute();
+  let { type, id } = useParams();
   const profile = JSON.parse(localStorage.getItem("profile"));
+  const [customer, setCustomer] = useState({});
   let itemRef = useRef([]);
   const [expandCashier, setExpandCashier] = useState(false);
   const [visibleOpenCashier, setVisibleOpenCashier] = useState(false);
@@ -52,12 +71,106 @@ const FormSale = () => {
   const [listCustomer, setListCustomer] = useState([]);
   const [listItem, setListItem] = useState([]);
   const [formData, setFormData] = useState({ sale_item: [{ ...itemDef() }] });
+  const [visiblePayment, setVisiblePayment] = useState(false);
 
-  useEffect(() => {
-    loadCashier();
+  const sumItem = (arr = Array, key) => {
+    let sum = 0;
+    for (const it of arr) {
+      if (it[key]) {
+        sum += it[key];
+      }
+    }
+    return sum;
+  };
+
+  const disableForm = () => {
+    setFormData({ sale_item: [] });
+  };
+
+  const handleUserKeyPress = useCallback((event) => {
+    const { key, keyCode } = event;
+    if (key === "F12") {
+      handleClickCheckout();
+    }
+    console.log(keyCode, key);
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("keydown", handleUserKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleUserKeyPress);
+    };
+  }, [handleUserKeyPress]);
+
+  useEffect(() => {
+    if (Object.keys(cashierData).length == 0) loadCashier();
+    if (Object.keys(customer).length == 0) loadDefaultCust();
+    if (id) loadData(id);
+  }, []);
+
+  useEffect(() => {
+    if (formData.pos_trx_sale_id) {
+      setListCustomer([{ ...formData }]);
+      setCustomer({ ...formData });
+      setListItem([...formData.detail]);
+    }
+  }, [formData]);
+
+  const remapingDetail = (array) => {
+    let _data = [];
+    for (let it of array) {
+      it.key = makeId(5);
+      _data.push(it);
+    }
+    return _data;
+  };
+
+  const loadData = async (id) => {
+    console.log("GET DATA");
+    let _data = await getSale({ pos_trx_sale_id: id });
+    if (_data) {
+      _data = _data.data[0];
+      setFormData({
+        ...formData,
+        ..._data,
+        sale_item: remapingDetail(_data.detail),
+      });
+    }
+  };
+
+  const loadCustomer = async (e = "") => {
+    let filter = { page: 1, limit: 10, search: e };
+    let _cust = await getCustomer(filter);
+    if (_cust.total > 1) {
+      setListCustomer([..._cust.data]);
+    }
+  };
+
+  const loadDefaultCust = async () => {
+    if (id) return;
+    let _data = await getConfigRelation({
+      sys_relation_code: "mst_customer_default",
+    });
+    if (_data) {
+      _data = _data.data[0];
+      if (_data.hasOwnProperty("detail")) {
+        let cust = _data.detail;
+        setCustomer({ ...cust });
+        setFormData({
+          ...formData,
+          mst_customer_id: cust.mst_customer_id + "",
+        });
+        setListCustomer([{ ...cust }]);
+        localStorage.setItem("customer_default", JSON.stringify(cust));
+      } else {
+        disableForm();
+        return toast.error("Default customer not set, please contact Admin");
+      }
+    }
+  };
+
   const loadCashier = async () => {
+    console.log("GET CASHIER");
     let _data = await getCashier({
       created_by: profile.user_id,
       is_cashier_open: true,
@@ -88,14 +201,6 @@ const FormSale = () => {
     loadCashier();
   };
 
-  const loadCustomer = async (e) => {
-    let filter = { page: 1, limit: 10, search: e };
-    let _cust = await getCustomer(filter);
-    if (_cust.total > 1) {
-      setListCustomer([..._cust.data]);
-    }
-  };
-
   const loadItem = async (text, type) => {
     let filter = { page: 1, limit: 10 };
     if (type == "barcode") {
@@ -113,18 +218,37 @@ const FormSale = () => {
   };
 
   const handleDeleteRow = (index) => {
-    let _item = formData.item;
+    let _item = formData.sale_item;
     _item.splice(index, 1);
-    setFormData({ ...formData, item: [..._item] });
+    setFormData({ ...formData, sale_item: [..._item] });
   };
 
   const handleChangeBarcode = async (val, index) => {
     let _data = await loadItem(val, "barcode");
     if (_data.data.length == 1) {
       let id = _data.data[0].mst_item_variant_id;
-      let price = _data.data[0].mst_item_variant_price;
+      let price = numberPercent(
+        _data.data[0].mst_item_variant_price,
+        customer.price_percentage
+      );
       changeItem(id, "mst_item_variant_id", index);
       changeItem(price, "mst_item_variant_price", index);
+    }
+  };
+
+  const handleClickCheckout = async () => {
+    if (formData.pos_trx_sale_id) {
+      return;
+    }
+    let _body = formData;
+    _body.sale_item = removeEmptyObject(
+      formData.sale_item,
+      "mst_item_variant_id"
+    );
+    let _data = await insertSale(_body);
+    if (_data) {
+      let id = _data.data[0].pos_trx_sale_id;
+      loadData(id);
     }
   };
 
@@ -185,7 +309,8 @@ const FormSale = () => {
                 };
               })}
               //       // onChange={(val) => handleChangeRowProduct(val, index)}
-              initialValue={formData.sale_item[index].mst_item_variant_id}
+              // initialValue={formData.sale_item[index].mst_item_variant_id}
+              initialValue={rec.mst_item_variant_id}
             />
           );
         },
@@ -194,7 +319,12 @@ const FormSale = () => {
         title: "Price",
         key: "price",
         render: (i, rec, index) => {
-          return <>Rp. {numberWithComma(rec.mst_item_variant_price)}</>;
+          return (
+            <>
+              Rp.
+              {numberWithComma(rec.mst_item_variant_price)}
+            </>
+          );
         },
       },
       {
@@ -209,7 +339,7 @@ const FormSale = () => {
         key: "qty",
         render: (i, rec, index) => (
           <InputNumber
-            defaultValue={1}
+            defaultValue={rec.qty}
             onChange={(e) => changeItem(e, "qty", index)}
           />
         ),
@@ -219,12 +349,7 @@ const FormSale = () => {
         key: "total",
         render: (i, rec, index) => {
           return (
-            <>
-              Rp.{" "}
-              {numberWithComma(
-                numberPercent(rec.mst_item_variant_price, rec.discount)
-              )}
-            </>
+            <>Rp. {numberWithComma(rec.mst_item_variant_price * rec.qty)}</>
           );
         },
       },
@@ -292,35 +417,115 @@ const FormSale = () => {
         {Object.keys(cashierData).length == 0 ? null : (
           <>
             <Row style={{ marginBlock: 10, marginInline: 15 }}>
-              <Col span={10}>Customer</Col>
-              <Col span={10}>
-                <XSelectSearch
-                  allowClear
-                  placeholder="Customer Default"
-                  name="mst_customer_id"
-                  initialValue={formData.mst_customer_id}
-                  onSearch={(e) => loadCustomer(e, "search")}
-                  option={listCustomer.map((it) => {
-                    return {
-                      text: `${it.mst_customer_name}`,
-                      value: it.mst_customer_id,
-                    };
-                  })}
-                  onChange={(val) =>
-                    setFormData({ ...formData, mst_customer_id: val })
-                  }
-                />
+              <Col span={16}>
+                <Card>
+                  <Table
+                    rowKey={"key"}
+                    columns={scheme()}
+                    dataSource={[...formData.sale_item]}
+                    pagination={false}
+                    size="small"
+                  />
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card>
+                  <Descriptions
+                    column={1}
+                    title="Customer"
+                    size={1}
+                    extra={
+                      <XSelectSearch
+                        allowClear
+                        placeholder="Customer Default"
+                        name="mst_customer_id"
+                        initialValue={formData.mst_customer_id + ""}
+                        onSearch={(e) => loadCustomer(e, "search")}
+                        option={listCustomer.map((it) => {
+                          return {
+                            text: `${it.mst_customer_name}`,
+                            value: it.mst_customer_id + "",
+                            ...it,
+                          };
+                        })}
+                        onChange={(val, item) => {
+                          setCustomer({ ...item.item });
+                          setFormData({ ...formData, mst_customer_id: val });
+                        }}
+                      />
+                    }
+                  >
+                    <Descriptions.Item label="Name">
+                      {customer.mst_customer_name}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Email">
+                      {customer.mst_customer_email}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Phone">
+                      {customer.mst_customer_phone}
+                    </Descriptions.Item>
+                  </Descriptions>
+
+                  <Descriptions
+                    column={1}
+                    title="Total"
+                    size={1}
+                    extra={
+                      <>
+                        {formData.pos_trx_sale_id ? (
+                          <Button
+                            type="success"
+                            onClick={() => setVisiblePayment(true)}
+                          >
+                            Payment
+                          </Button>
+                        ) : (
+                          <Button
+                            type="primary"
+                            onClick={() => handleClickCheckout()}
+                          >
+                            Checkout
+                          </Button>
+                        )}
+                      </>
+                    }
+                  >
+                    <Descriptions.Item label="PPN">
+                      {customer.ppn ?? 0} %
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Discount">
+                      {formData.discount ?? 0} %
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Qty Item">
+                      {sumItem(formData.sale_item, "qty")}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Total Price">
+                      Rp.{" "}
+                      {numberWithComma(
+                        formData.total_price ??
+                          sumItem(formData.sale_item, "mst_item_variant_price")
+                      )}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Grand Total">
+                      RP.{" "}
+                      {numberWithComma(
+                        formData.total_price ??
+                          formData.grand_total ??
+                          sumItem(formData.sale_item, "mst_item_variant_price")
+                      )}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
               </Col>
             </Row>
-
-            <Table
-              columns={scheme()}
-              dataSource={[...formData.sale_item]}
-              pagination={false}
-            />
           </>
         )}
       </Card>
+      <XDrawerPayment
+        visible={visiblePayment}
+        onClose={() => setVisiblePayment(false)}
+        data={formData}
+      />
     </>
   );
 };

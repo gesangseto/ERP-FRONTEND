@@ -1,12 +1,16 @@
-import { Card } from "antd";
+import { Card, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XButton, XTable } from "../../../../component";
 import { defaultFilter } from "../../../../constants";
-import { getReceive } from "../../resource";
+import { getReceive, getSale } from "../../resource";
 
 import moment from "moment";
-import { getRoute } from "../../../../helper/utils";
+import {
+  getRoute,
+  numberPercent,
+  numberWithComma,
+} from "../../../../helper/utils";
 
 const ListSale = () => {
   const route = getRoute();
@@ -47,7 +51,7 @@ const ListSale = () => {
       }
     >
       <XTable
-        rowKey="pos_receive_id"
+        rowKey="pos_trx_sale_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -63,8 +67,8 @@ export default ListSale;
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_receive_id",
+      title: "INVOICE",
+      key: "pos_trx_sale_id",
     },
     {
       title: "Date",
@@ -76,20 +80,32 @@ const columns = () => {
       key: "user_name",
     },
     {
-      title: "Product",
-      key: "mst_item_name",
+      title: "Customer",
+      key: "mst_customer_name",
     },
     {
-      title: "Supplier",
-      key: "mst_supplier_name",
+      title: "Phone",
+      key: "mst_customer_phone",
     },
     {
-      title: "Batch",
-      key: "batch",
+      title: "Total Price",
+      key: "total_price",
+      render: (i, rec) => <>Rp. {numberWithComma(i)}</>,
     },
     {
-      title: "Quantity",
-      key: "qty",
+      title: "PPN",
+      key: "ppn",
+      render: (i, rec) => <>{i ?? 0} %</>,
+    },
+    {
+      title: "Discount",
+      key: "total_discount",
+      render: (i, rec) => <>{i ?? 0} %</>,
+    },
+    {
+      title: "Grand Total",
+      key: "grand_total",
+      render: (i, rec) => <>Rp. {numberWithComma(i)}</>,
     },
     {
       title: "Status",
@@ -110,8 +126,20 @@ const columns = () => {
       ),
     },
     {
+      title: "Pay Status",
+      key: "is_paid",
+      render: (i, rec) => {
+        let color = rec.is_paid ? "green" : "red";
+        return (
+          <Tag color={color} key={i}>
+            {rec.is_paid ? "Paid" : "Not Paid"}
+          </Tag>
+        );
+      },
+    },
+    {
       title: "",
-      key: "pos_receive_id",
+      key: "pos_trx_sale_id",
       action: ["approve", "update", "read"],
     },
   ];

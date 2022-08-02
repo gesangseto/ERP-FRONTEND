@@ -21,7 +21,6 @@ const ListReceive = () => {
 
   const loadData = async () => {
     let _data = await getReceive(filter);
-    console.log(_data);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);

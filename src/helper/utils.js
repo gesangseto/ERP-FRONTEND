@@ -75,7 +75,6 @@ export const groupBy = (array = Array, key) => {
     return rv;
   }, {});
 };
-
 export const treeify = (list, idAttr, parentAttr, childrenAttr) => {
   if (!idAttr) idAttr = "id";
   if (!parentAttr) parentAttr = "parent";
@@ -100,7 +99,6 @@ export const treeify = (list, idAttr, parentAttr, childrenAttr) => {
   });
   return treeList;
 };
-
 export const removeEmptyChild = (arr = Array, key = String) => {
   let _data = [];
   for (const it of arr) {
@@ -113,15 +111,10 @@ export const removeEmptyChild = (arr = Array, key = String) => {
   }
   return _data;
 };
-
-export const removeEmptyObject = (arr = Array, key = String, key2 = String) => {
+export const removeEmptyObject = (arr = Array, key = String) => {
   let _data = [];
   for (const it of arr) {
-    if (key && key2) {
-      if (it[key] && it[key2]) {
-        _data.push(it);
-      }
-    } else if (key) {
+    if (key) {
       if (it[key]) {
         _data.push(it);
       }
@@ -129,7 +122,6 @@ export const removeEmptyObject = (arr = Array, key = String, key2 = String) => {
   }
   return _data;
 };
-
 export const canApprove = (approval) => {
   let profile = JSON.parse(localStorage.getItem("profile"));
   try {
@@ -154,7 +146,6 @@ export const makeOption = (data = Array, value = "id", label = "name") => {
   }
   return _data;
 };
-
 export const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -164,16 +155,15 @@ export const getBase64 = (file) =>
 
     reader.onerror = (error) => reject(error);
   });
-
 export const getRoute = () => {
   const location = useLocation();
   const [{ route }] = matchRoutes(routes, location);
   return route;
 };
 export const numberWithComma = (x) => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return 0;
 };
-
 export const isInt = (value) => {
   return (
     !isNaN(value) &&
@@ -186,4 +176,13 @@ export const numberPercent = (num, percent) => {
   percent = parseFloat(isInt(percent) ? percent : 0);
   let result = num + num * (percent / 100);
   return result;
+};
+export const sumItem = (arr = Array, key) => {
+  let sum = 0;
+  for (const it of arr) {
+    if (it[key]) {
+      sum += it[key];
+    }
+  }
+  return sum;
 };

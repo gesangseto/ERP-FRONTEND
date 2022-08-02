@@ -25,7 +25,7 @@ const XSelectSearch = (props, ref) => {
   const handleChange = (newValue, item) => {
     setValue(newValue);
     if (onChange) {
-      onChange(newValue);
+      onChange(newValue, item);
     }
   };
 
@@ -40,13 +40,14 @@ const XSelectSearch = (props, ref) => {
   return (
     // <Form.Item ref={ref} name={name} initialValue={defaultValue}>
     <Select
+      style={{
+        maxWidth: 600,
+        width: 200,
+      }}
       {...props}
       showSearch
       value={value}
       placeholder={props.placeholder}
-      style={{
-        width: 200,
-      }}
       defaultActiveFirstOption={false}
       showArrow={false}
       filterOption={false}
@@ -56,7 +57,7 @@ const XSelectSearch = (props, ref) => {
       onInputKeyDown={(e) => handlePressKey(e.key)}
     >
       {data.map((d, index) => (
-        <Option key={index} value={d.value}>
+        <Option key={index} value={d.value} item={d}>
           {d.text}
         </Option>
       ))}

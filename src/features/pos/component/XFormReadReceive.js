@@ -72,7 +72,12 @@ const XFormReadReceive = (props) => {
 
   return (
     <Card style={{ margin: 40 }}>
-      <Table columns={scheme()} dataSource={[...data]} pagination={false} />
+      <Table
+        columns={scheme()}
+        dataSource={[...data]}
+        pagination={false}
+        size="small"
+      />
     </Card>
   );
 };
