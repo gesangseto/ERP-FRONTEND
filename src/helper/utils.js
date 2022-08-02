@@ -173,3 +173,17 @@ export const getRoute = () => {
 export const numberWithComma = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const isInt = (value) => {
+  return (
+    !isNaN(value) &&
+    parseInt(Number(value)) == value &&
+    !isNaN(parseInt(value, 20))
+  );
+};
+export const numberPercent = (num, percent) => {
+  num = parseFloat(isInt(num) ? num : 0);
+  percent = parseFloat(isInt(percent) ? percent : 0);
+  let result = num + num * (percent / 100);
+  return result;
+};

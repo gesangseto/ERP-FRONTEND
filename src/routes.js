@@ -40,6 +40,8 @@ const LAppr = React.lazy(() => import("./views/system/approval/ListApproval"));
 const FAppr = React.lazy(() => import("./views/system/approval/FormApproval"));
 const LAudit = React.lazy(() => import("./views/system/audit/ListAudit"));
 const FAudit = React.lazy(() => import("./views/system/audit/FormAudit"));
+const LConf = React.lazy(() => import("./views/system/config/ListConf"));
+const FConf = React.lazy(() => import("./views/system/config/FormConf"));
 /*
 MODULE POINT OF SALES 
 */
@@ -189,6 +191,13 @@ const routes = [
     path: "/system/audit/:type/:id",
     name: "Detail Audit",
     element: FAudit,
+  },
+  // RELATION CONFIG
+  { path: "/system/config-relation", name: "Config Relation", element: LConf },
+  {
+    path: "/system/config-relation/:type/:id",
+    name: "Config Relation",
+    element: FConf,
   },
 
   // FEATURE

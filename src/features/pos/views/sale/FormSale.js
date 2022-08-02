@@ -18,7 +18,11 @@ import {
   Table,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { getRoute } from "../../../../helper/utils";
+import {
+  getRoute,
+  numberPercent,
+  numberWithComma,
+} from "../../../../helper/utils";
 import moment from "moment";
 import Countdown from "antd/lib/statistic/Countdown";
 import { getCashier, insertCashier, updateCashier } from "../../resource";
@@ -31,8 +35,10 @@ const itemDef = () => {
   return JSON.parse(
     JSON.stringify({
       mst_item_variant_id: "",
-      qty: "",
+      qty: 1,
       barcode: "",
+      discount: 10,
+      mst_item_variant_price: 0,
     })
   );
 };
@@ -114,10 +120,11 @@ const FormSale = () => {
 
   const handleChangeBarcode = async (val, index) => {
     let _data = await loadItem(val, "barcode");
-    console.log(_data);
     if (_data.data.length == 1) {
       let id = _data.data[0].mst_item_variant_id;
+      let price = _data.data[0].mst_item_variant_price;
       changeItem(id, "mst_item_variant_id", index);
+      changeItem(price, "mst_item_variant_price", index);
     }
   };
 
@@ -184,6 +191,20 @@ const FormSale = () => {
         },
       },
       {
+        title: "Price",
+        key: "price",
+        render: (i, rec, index) => {
+          return <>Rp. {numberWithComma(rec.mst_item_variant_price)}</>;
+        },
+      },
+      {
+        title: "Discount",
+        key: "discount",
+        render: (i, rec, index) => {
+          return <>{rec.discount} %</>;
+        },
+      },
+      {
         title: "Quantity",
         key: "qty",
         render: (i, rec, index) => (
@@ -192,6 +213,20 @@ const FormSale = () => {
             onChange={(e) => changeItem(e, "qty", index)}
           />
         ),
+      },
+      {
+        title: "Total",
+        key: "total",
+        render: (i, rec, index) => {
+          return (
+            <>
+              Rp.{" "}
+              {numberWithComma(
+                numberPercent(rec.mst_item_variant_price, rec.discount)
+              )}
+            </>
+          );
+        },
       },
       {
         title: "",

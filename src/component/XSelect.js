@@ -1,5 +1,5 @@
-import { Form, Input, Select } from "antd";
-import React from "react";
+import { Form, Select } from "antd";
+import React, { useEffect } from "react";
 
 const XSelect = (props) => {
   const {
@@ -12,6 +12,8 @@ const XSelect = (props) => {
     onChange,
   } = props;
 
+  useEffect(() => {}, [option]);
+
   const handleChange = (e) => {
     if (onChange) {
       onChange(e);
@@ -20,7 +22,7 @@ const XSelect = (props) => {
 
   return (
     <Form.Item
-      initialValue={initialValue}
+      initialValue={initialValue.toString()}
       label={title ?? "No Title"}
       name={name}
       rules={[
@@ -37,7 +39,7 @@ const XSelect = (props) => {
             return (
               <Select.Option
                 key={idx}
-                value={item.value}
+                value={item.value.toString()}
                 disabled={!item.status}
               >
                 {item.label}
