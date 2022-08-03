@@ -10,6 +10,7 @@ const XInput = (props) => {
     initialValue,
     onChange,
     typeInput = "string",
+    rules,
   } = props;
 
   const handleChange = (e) => {
@@ -24,14 +25,15 @@ const XInput = (props) => {
       initialValue={initialValue}
       label={title ?? "No Title"}
       name={name}
-      rules={[
-        {
-          type: typeInput,
-          required: required,
-          message: `Please input your ${title}!`,
-        },
-      ]}
-      {...props}
+      rules={
+        rules ?? [
+          {
+            type: typeInput,
+            required: required,
+            message: `Please input your ${title}!`,
+          },
+        ]
+      }
     >
       <Input disabled={disabled} onChange={(e) => handleChange(e)} {...props} />
     </Form.Item>

@@ -2,7 +2,7 @@ import { Select } from "antd";
 import React, { useEffect, useState } from "react";
 const { Option } = Select;
 
-const XSelectSearch = (props, ref) => {
+const XSelectSearch = React.forwardRef((props, ref) => {
   const { option, onSearch, onChange, initialValue, initialText } = props;
   const [data, setData] = useState([]);
   const [value, setValue] = useState("");
@@ -40,6 +40,7 @@ const XSelectSearch = (props, ref) => {
   return (
     // <Form.Item ref={ref} name={name} initialValue={defaultValue}>
     <Select
+      ref={ref}
       style={{
         maxWidth: 600,
         width: 200,
@@ -64,6 +65,6 @@ const XSelectSearch = (props, ref) => {
     </Select>
     // </Form.Item>
   );
-};
+});
 
 export default XSelectSearch;

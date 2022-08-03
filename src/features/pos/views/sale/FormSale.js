@@ -20,8 +20,8 @@ import {
 } from "antd";
 import Countdown from "antd/lib/statistic/Countdown";
 import moment from "moment";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import XSelectSearch from "../../../../component/XSelectSearch";
 import {
@@ -40,10 +40,11 @@ import { XDrawerPayment, XModalOpenCashier } from "../../component";
 import {
   getCashier,
   getSale,
+  getStock,
   insertCashier,
   insertSale,
+  paymentSale,
   updateCashier,
-  updateSale,
 } from "../../resource";
 
 const itemDef = () => {
@@ -53,7 +54,7 @@ const itemDef = () => {
       mst_item_variant_id: "",
       qty: 1,
       barcode: "",
-      discount: 0,
+      pos_discount: 0,
       mst_item_variant_price: 0,
     })
   );
@@ -61,11 +62,15 @@ const itemDef = () => {
 
 const FormSale = () => {
   const route = getRoute();
+  const navigate = useNavigate();
   let { type, id } = useParams();
   const profile = JSON.parse(localStorage.getItem("profile"));
-  const [customer, setCustomer] = useState({});
+  let inputCust = useRef(null);
+  let inputCash = useRef(null);
   let itemRef = useRef([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [expandCashier, setExpandCashier] = useState(false);
+  const [customer, setCustomer] = useState({});
   const [visibleOpenCashier, setVisibleOpenCashier] = useState(false);
   const [cashierData, setCashierData] = useState({});
   const [listCustomer, setListCustomer] = useState([]);
@@ -87,20 +92,34 @@ const FormSale = () => {
     setFormData({ sale_item: [] });
   };
 
-  const handleUserKeyPress = useCallback((event) => {
-    const { key, keyCode } = event;
+  const handleUserKeyPress = (e) => {
+    const { key, keyCode } = e;
     if (key === "F12") {
+      if (formData.pos_trx_sale_id) showModalPayment();
+    } else if (key === "F11") {
       handleClickCheckout();
+    } else if (key === "F10") {
+      inputCust.current?.focus();
+    } else if (key === "F1") {
+      let item = formData.sale_item;
+      for (var i = 0; i < item.length; i++) {
+        if (!item[i].mst_item_variant_id) {
+          itemRef.current[i]?.focus();
+          break;
+        }
+      }
     }
-    console.log(keyCode, key);
-  }, []);
+    if (keyCode >= 112 && keyCode <= 123) {
+      e.preventDefault();
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("keydown", handleUserKeyPress);
     return () => {
       window.removeEventListener("keydown", handleUserKeyPress);
     };
-  }, [handleUserKeyPress]);
+  }, [formData]);
 
   useEffect(() => {
     if (Object.keys(cashierData).length == 0) loadCashier();
@@ -130,24 +149,27 @@ const FormSale = () => {
     let _data = await getSale({ pos_trx_sale_id: id });
     if (_data) {
       _data = _data.data[0];
+      console.log(_data);
       setFormData({
-        ...formData,
         ..._data,
         sale_item: remapingDetail(_data.detail),
       });
     }
   };
 
-  const loadCustomer = async (e = "") => {
+  const loadCustomer = async (e) => {
     let filter = { page: 1, limit: 10, search: e };
     let _cust = await getCustomer(filter);
     if (_cust.total > 1) {
       setListCustomer([..._cust.data]);
+    } else {
+      setListCustomer([]);
     }
   };
 
   const loadDefaultCust = async () => {
     if (id) return;
+    console.log("LOAD DEFAULT CUST");
     let _data = await getConfigRelation({
       sys_relation_code: "mst_customer_default",
     });
@@ -170,7 +192,6 @@ const FormSale = () => {
   };
 
   const loadCashier = async () => {
-    console.log("GET CASHIER");
     let _data = await getCashier({
       created_by: profile.user_id,
       is_cashier_open: true,
@@ -202,7 +223,7 @@ const FormSale = () => {
   };
 
   const loadItem = async (text, type) => {
-    let filter = { page: 1, limit: 10 };
+    let filter = { page: 1, limit: 10, status: 1 };
     if (type == "barcode") {
       filter.barcode = text;
     } else {
@@ -217,29 +238,31 @@ const FormSale = () => {
     return _data;
   };
 
+  const sendPayment = async (item) => {
+    console.log(item);
+    let _data = await paymentSale(item);
+    if (_data) {
+      toast.success("Success");
+      navigate(-1);
+    }
+  };
+
+  const showModalPayment = () => {
+    setVisiblePayment(true);
+    inputCash.current?.focus();
+  };
+
   const handleDeleteRow = (index) => {
     let _item = formData.sale_item;
     _item.splice(index, 1);
     setFormData({ ...formData, sale_item: [..._item] });
   };
 
-  const handleChangeBarcode = async (val, index) => {
-    let _data = await loadItem(val, "barcode");
-    if (_data.data.length == 1) {
-      let id = _data.data[0].mst_item_variant_id;
-      let price = numberPercent(
-        _data.data[0].mst_item_variant_price,
-        customer.price_percentage
-      );
-      changeItem(id, "mst_item_variant_id", index);
-      changeItem(price, "mst_item_variant_price", index);
-    }
-  };
-
   const handleClickCheckout = async () => {
     if (formData.pos_trx_sale_id) {
       return;
     }
+    setIsLoading(true);
     let _body = formData;
     _body.sale_item = removeEmptyObject(
       formData.sale_item,
@@ -250,19 +273,32 @@ const FormSale = () => {
       let id = _data.data[0].pos_trx_sale_id;
       loadData(id);
     }
+    setIsLoading(false);
+  };
+
+  const handleChangeBarcode = async (val, index) => {
+    let _data = await loadItem(val, "barcode");
+    if (_data.data.length == 1) {
+      changeItemV2(_data.data[0], index);
+    }
   };
 
   const changeItem = (val, key, index) => {
     let _item = formData.sale_item;
     _item[index][key] = val;
-    if (val && key == "mst_item_variant_id") {
-      if (!_item[index + 1]) {
-        _item.push(itemDef());
-        itemRef.current[index + 1]?.focus();
-      }
+    setFormData({ ...formData, sale_item: [..._item] });
+  };
+
+  const changeItemV2 = (item, index) => {
+    let _item = formData.sale_item;
+    if (Object.keys(item) == 0) {
+      _item[index] = itemDef();
+    } else {
+      _item[index] = { ...item, qty: 1 };
     }
-    if (val && key != "qty") {
-      _item[index].qty = 1;
+    if (!_item[index + 1]) {
+      _item.push(itemDef());
+      itemRef.current[index + 1]?.focus();
     }
     setFormData({ ...formData, sale_item: [..._item] });
   };
@@ -275,9 +311,10 @@ const FormSale = () => {
         render: (i, rec, index) => {
           return (
             <Input
+              ref={(el) => itemRef.current.push(el)}
+              autoFocus
               defaultValue={formData.sale_item[index].barcode}
               onKeyDown={(e) => {
-                changeItem(e.target.value, "barcode", index);
                 if (e.key === "Enter") {
                   handleChangeBarcode(e.target.value, index);
                   e.preventDefault();
@@ -286,8 +323,7 @@ const FormSale = () => {
               status={
                 !formData.sale_item[index].mst_item_variant_id ? "error" : null
               }
-              ref={(el) => itemRef.current.push(el)}
-              autoFocus
+              readOnly={formData.pos_trx_sale_id}
             />
           );
         },
@@ -298,6 +334,10 @@ const FormSale = () => {
         render: (i, rec, index) => {
           return (
             <XSelectSearch
+              style={{
+                maxWidth: 600,
+                width: 300,
+              }}
               allowClear
               placeholder="input search text"
               name="mst_item_variant_id"
@@ -305,12 +345,18 @@ const FormSale = () => {
               option={listItem.map((it) => {
                 return {
                   text: `${it.mst_item_name} (${it.mst_packaging_code}) @${it.mst_item_variant_qty}`,
-                  value: it.mst_item_variant_id,
+                  value: it.mst_item_variant_id + "",
+                  ...it,
                 };
               })}
-              //       // onChange={(val) => handleChangeRowProduct(val, index)}
-              // initialValue={formData.sale_item[index].mst_item_variant_id}
-              initialValue={rec.mst_item_variant_id}
+              onChange={(val, item) => {
+                changeItemV2(
+                  item.hasOwnProperty("item") ? item.item : {},
+                  index
+                );
+              }}
+              initialValue={rec.mst_item_variant_id + ""}
+              disabled={formData.pos_trx_sale_id}
             />
           );
         },
@@ -319,19 +365,23 @@ const FormSale = () => {
         title: "Price",
         key: "price",
         render: (i, rec, index) => {
+          let price = numberPercent(
+            rec.mst_item_variant_price,
+            customer.price_percentage
+          );
           return (
             <>
               Rp.
-              {numberWithComma(rec.mst_item_variant_price)}
+              {numberWithComma(price)}
             </>
           );
         },
       },
       {
         title: "Discount",
-        key: "discount",
+        key: "pos_discount",
         render: (i, rec, index) => {
-          return <>{rec.discount} %</>;
+          return <>{rec.pos_discount} %</>;
         },
       },
       {
@@ -348,9 +398,12 @@ const FormSale = () => {
         title: "Total",
         key: "total",
         render: (i, rec, index) => {
-          return (
-            <>Rp. {numberWithComma(rec.mst_item_variant_price * rec.qty)}</>
-          );
+          let total =
+            numberPercent(
+              rec.mst_item_variant_price,
+              customer.price_percentage
+            ) * rec.qty;
+          return <>Rp. {numberWithComma(total)}</>;
         },
       },
       {
@@ -358,7 +411,7 @@ const FormSale = () => {
         key: "null",
         render: (i, rec, index) => (
           <>
-            {!index ? null : (
+            {!index || formData.pos_trx_sale_id ? null : (
               <DeleteOutlined onClick={() => handleDeleteRow(index)} />
             )}
           </>
@@ -416,26 +469,27 @@ const FormSale = () => {
         {/* Start San Product */}
         {Object.keys(cashierData).length == 0 ? null : (
           <>
-            <Row style={{ marginBlock: 10, marginInline: 15 }}>
+            <Row style={{}}>
               <Col span={16}>
-                <Card>
-                  <Table
-                    rowKey={"key"}
-                    columns={scheme()}
-                    dataSource={[...formData.sale_item]}
-                    pagination={false}
-                    size="small"
-                  />
-                </Card>
+                <Table
+                  rowKey={"key"}
+                  columns={scheme()}
+                  dataSource={[...formData.sale_item]}
+                  pagination={false}
+                  size="small"
+                />
               </Col>
               <Col span={8}>
                 <Card>
                   <Descriptions
                     column={1}
-                    title="Customer"
+                    title="Customer [F10]"
                     size={1}
                     extra={
                       <XSelectSearch
+                        ref={inputCust}
+                        onFocus={(e) => e.persist()}
+                        // autoFocus
                         allowClear
                         placeholder="Customer Default"
                         name="mst_customer_id"
@@ -466,52 +520,59 @@ const FormSale = () => {
                     </Descriptions.Item>
                   </Descriptions>
 
-                  <Descriptions
-                    column={1}
-                    title="Total"
-                    size={1}
-                    extra={
-                      <>
-                        {formData.pos_trx_sale_id ? (
-                          <Button
-                            type="success"
-                            onClick={() => setVisiblePayment(true)}
-                          >
-                            Payment
-                          </Button>
-                        ) : (
-                          <Button
-                            type="primary"
-                            onClick={() => handleClickCheckout()}
-                          >
-                            Checkout
-                          </Button>
-                        )}
-                      </>
-                    }
-                  >
+                  <Divider orientation="center">
+                    <>
+                      {formData.pos_trx_sale_id ? (
+                        <Button
+                          type="success"
+                          onClick={() => showModalPayment()}
+                        >
+                          Payment [F12]
+                        </Button>
+                      ) : (
+                        <Button
+                          type="primary"
+                          onClick={() => handleClickCheckout()}
+                          addonbefore={"F12"}
+                          loading={isLoading}
+                        >
+                          Checkout [F11]
+                        </Button>
+                      )}
+                    </>
+                  </Divider>
+
+                  <Descriptions column={1} title="Total" size={1}>
                     <Descriptions.Item label="PPN">
-                      {customer.ppn ?? 0} %
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Discount">
-                      {formData.discount ?? 0} %
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Qty Item">
-                      {sumItem(formData.sale_item, "qty")}
+                      {customer.mst_customer_ppn ?? customer.ppn ?? 0} %
                     </Descriptions.Item>
                     <Descriptions.Item label="Total Price">
                       Rp.{" "}
                       {numberWithComma(
                         formData.total_price ??
-                          sumItem(formData.sale_item, "mst_item_variant_price")
+                          numberPercent(
+                            sumItem(
+                              formData.sale_item,
+                              "mst_item_variant_price"
+                            ),
+                            customer.price_percentage
+                          )
                       )}
                     </Descriptions.Item>
                     <Descriptions.Item label="Grand Total">
                       RP.{" "}
                       {numberWithComma(
-                        formData.total_price ??
-                          formData.grand_total ??
-                          sumItem(formData.sale_item, "mst_item_variant_price")
+                        formData.grand_total ??
+                          numberPercent(
+                            numberPercent(
+                              sumItem(
+                                formData.sale_item,
+                                "mst_item_variant_price"
+                              ),
+                              customer.price_percentage
+                            ),
+                            customer.mst_customer_ppn
+                          )
                       )}
                     </Descriptions.Item>
                   </Descriptions>
@@ -524,7 +585,9 @@ const FormSale = () => {
       <XDrawerPayment
         visible={visiblePayment}
         onClose={() => setVisiblePayment(false)}
+        onClickPaid={(item) => sendPayment(item)}
         data={formData}
+        ref={inputCash}
       />
     </>
   );
