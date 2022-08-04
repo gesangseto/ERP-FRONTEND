@@ -18,7 +18,7 @@ const XDrawerPayment = React.forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    setFormData({ ...formData, ...data });
+    setFormData({ ...formData, ...data, payment_type: "Cash" });
   }, [data]);
 
   useEffect(() => {
@@ -86,6 +86,12 @@ const XDrawerPayment = React.forwardRef((props, ref) => {
               payment_cash: value,
               payment_change: value - formData.grand_total,
             });
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleClickPaid();
+              e.preventDefault();
+            }
           }}
           status={formData.payment_change >= 0 ? null : "error"}
         />

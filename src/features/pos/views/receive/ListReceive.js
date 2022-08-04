@@ -91,6 +91,10 @@ const columns = () => {
       key: "qty",
     },
     {
+      title: "@ Quantity",
+      key: "qty_stock",
+    },
+    {
       title: "Status",
       key: "status",
       render: (i, rec) => (

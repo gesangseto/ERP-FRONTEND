@@ -186,3 +186,31 @@ export const sumItem = (arr = Array, key) => {
   }
   return sum;
 };
+export const sumByKey = ({ key, sum, array }) => {
+  // let obj = {};
+  // for (const it of array) {
+  //   if (!obj[it[key]]) {
+  //     obj[it[key]] = [];
+  //   }
+  //   obj[it[key]].push(it);
+  // }
+  // let newArr = [];
+  // for (const k in obj) {
+  //   let total = 0;
+  //   for (const it of obj[k]) {
+  //     total += parseInt(it[sum]);
+  //   }
+  //   let item = obj[k][0];
+  //   item[sum] = total;
+  //   newArr.push(item);
+  // }
+  // return newArr;
+  let result = Object.values(
+    array.reduce((map, r) => {
+      if (!map[r[key]]) map[r[key]] = { ...r, _id: r[key], qty: 0 };
+      map[r[key]][sum] += parseInt(r[sum]);
+      return map;
+    }, {})
+  );
+  return result;
+};

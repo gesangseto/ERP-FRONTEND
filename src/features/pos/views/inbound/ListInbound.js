@@ -94,7 +94,7 @@ const columns = () => {
       key: "mst_item_name",
     },
     {
-      title: "Quantity",
+      title: "Quantity Item",
       key: "qty",
     },
     {

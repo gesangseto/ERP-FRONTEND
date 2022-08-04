@@ -36,6 +36,11 @@ const XFormReadReceive = (props) => {
       //   render: (i, rec, ) => <p>{rec.barcode}</p>,
       // },
       {
+        title: "Barcode",
+        key: "barcode",
+        render: (i, rec) => <p>{`${rec.barcode}`}</p>,
+      },
+      {
         title: "Product",
         key: "mst_item_id",
         render: (i, rec) => <p>{`${rec.mst_item_name}`}</p>,
@@ -66,6 +71,11 @@ const XFormReadReceive = (props) => {
         title: "Quantity",
         key: "qty",
         render: (i, rec) => <p>{rec.qty}</p>,
+      },
+      {
+        title: "Quantity Stock",
+        key: "qty_stock",
+        render: (i, rec) => <p>{rec.qty_stock}</p>,
       },
     ];
   };

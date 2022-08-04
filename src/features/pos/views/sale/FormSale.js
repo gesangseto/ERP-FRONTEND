@@ -1,4 +1,6 @@
 import {
+  CheckCircleOutlined,
+  CheckOutlined,
   DeleteOutlined,
   DownSquareOutlined,
   LoginOutlined,
@@ -13,6 +15,7 @@ import {
   Divider,
   Input,
   InputNumber,
+  Popconfirm,
   Popover,
   Row,
   Space,
@@ -30,6 +33,7 @@ import {
   numberPercent,
   numberWithComma,
   removeEmptyObject,
+  sumByKey,
 } from "../../../../helper/utils";
 import {
   getConfigRelation,
@@ -40,17 +44,17 @@ import { XDrawerPayment, XModalOpenCashier } from "../../component";
 import {
   getCashier,
   getSale,
-  getStock,
   insertCashier,
   insertSale,
   paymentSale,
   updateCashier,
+  updateSale,
 } from "../../resource";
 
 const itemDef = () => {
   return JSON.parse(
     JSON.stringify({
-      key: makeId(5),
+      key: makeId(10),
       mst_item_variant_id: "",
       qty: 1,
       barcode: "",
@@ -97,7 +101,7 @@ const FormSale = () => {
     if (key === "F12") {
       if (formData.pos_trx_sale_id) showModalPayment();
     } else if (key === "F11") {
-      handleClickCheckout();
+      checkout();
     } else if (key === "F10") {
       inputCust.current?.focus();
     } else if (key === "F1") {
@@ -145,7 +149,6 @@ const FormSale = () => {
   };
 
   const loadData = async (id) => {
-    console.log("GET DATA");
     let _data = await getSale({ pos_trx_sale_id: id });
     if (_data) {
       _data = _data.data[0];
@@ -169,7 +172,6 @@ const FormSale = () => {
 
   const loadDefaultCust = async () => {
     if (id) return;
-    console.log("LOAD DEFAULT CUST");
     let _data = await getConfigRelation({
       sys_relation_code: "mst_customer_default",
     });
@@ -238,8 +240,35 @@ const FormSale = () => {
     return _data;
   };
 
+  const checkout = async () => {
+    if (formData.pos_trx_sale_id) return;
+    setIsLoading(true);
+    let _body = formData;
+    _body.sale_item = removeEmptyObject(
+      formData.sale_item,
+      "mst_item_variant_id"
+    );
+    let _data = await insertSale(_body);
+    if (_data) {
+      let id = _data.data[0].pos_trx_sale_id;
+      loadData(id);
+    }
+    setIsLoading(false);
+  };
+
+  const updateCheckout = async (rec) => {
+    if (!rec) return;
+    setIsLoading(true);
+    let body = { ...rec, pos_trx_sale_id: formData.pos_trx_sale_id };
+    let _res = await updateSale(body);
+    if (_res) {
+      let id = _res.data[0].pos_trx_sale_id;
+      loadData(id);
+    }
+    setIsLoading(false);
+  };
+
   const sendPayment = async (item) => {
-    console.log(item);
     let _data = await paymentSale(item);
     if (_data) {
       toast.success("Success");
@@ -258,49 +287,43 @@ const FormSale = () => {
     setFormData({ ...formData, sale_item: [..._item] });
   };
 
-  const handleClickCheckout = async () => {
-    if (formData.pos_trx_sale_id) {
-      return;
-    }
-    setIsLoading(true);
-    let _body = formData;
-    _body.sale_item = removeEmptyObject(
-      formData.sale_item,
-      "mst_item_variant_id"
-    );
-    let _data = await insertSale(_body);
-    if (_data) {
-      let id = _data.data[0].pos_trx_sale_id;
-      loadData(id);
-    }
-    setIsLoading(false);
-  };
-
   const handleChangeBarcode = async (val, index) => {
     let _data = await loadItem(val, "barcode");
     if (_data.data.length == 1) {
-      changeItemV2(_data.data[0], index);
+      changeItem(_data.data[0], index);
     }
   };
 
-  const changeItem = (val, key, index) => {
-    let _item = formData.sale_item;
-    _item[index][key] = val;
-    setFormData({ ...formData, sale_item: [..._item] });
-  };
-
-  const changeItemV2 = (item, index) => {
+  const changeItem = (item, index) => {
+    item.key = makeId(5);
     let _item = formData.sale_item;
     if (Object.keys(item) == 0) {
       _item[index] = itemDef();
     } else {
       _item[index] = { ...item, qty: 1 };
     }
+    _item = sumByKey({ sum: "qty", key: "mst_item_variant_id", array: _item });
     if (!_item[index + 1]) {
       _item.push(itemDef());
       itemRef.current[index + 1]?.focus();
     }
     setFormData({ ...formData, sale_item: [..._item] });
+  };
+
+  const getTotal = (index) => {
+    let _total = 0;
+    if (index >= 0) {
+      let _item = formData.sale_item[index];
+      _total =
+        numberPercent(_item.mst_item_variant_price, customer.price_percentage) *
+        _item.qty;
+    } else {
+      let _items = formData.sale_item;
+      for (var i = 0; i < _items.length; i++) {
+        _total += getTotal(i);
+      }
+    }
+    return _total;
   };
 
   const scheme = () => {
@@ -313,16 +336,14 @@ const FormSale = () => {
             <Input
               ref={(el) => itemRef.current.push(el)}
               autoFocus
-              defaultValue={formData.sale_item[index].barcode}
+              defaultValue={rec.barcode}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleChangeBarcode(e.target.value, index);
                   e.preventDefault();
                 }
               }}
-              status={
-                !formData.sale_item[index].mst_item_variant_id ? "error" : null
-              }
+              status={!rec.mst_item_variant_id ? "error" : null}
               readOnly={formData.pos_trx_sale_id}
             />
           );
@@ -336,7 +357,7 @@ const FormSale = () => {
             <XSelectSearch
               style={{
                 maxWidth: 600,
-                width: 300,
+                width: 250,
               }}
               allowClear
               placeholder="input search text"
@@ -350,10 +371,7 @@ const FormSale = () => {
                 };
               })}
               onChange={(val, item) => {
-                changeItemV2(
-                  item.hasOwnProperty("item") ? item.item : {},
-                  index
-                );
+                changeItem(item.hasOwnProperty("item") ? item.item : {}, index);
               }}
               initialValue={rec.mst_item_variant_id + ""}
               disabled={formData.pos_trx_sale_id}
@@ -378,7 +396,7 @@ const FormSale = () => {
         },
       },
       {
-        title: "Discount",
+        title: "Disc",
         key: "pos_discount",
         render: (i, rec, index) => {
           return <>{rec.pos_discount} %</>;
@@ -387,23 +405,26 @@ const FormSale = () => {
       {
         title: "Quantity",
         key: "qty",
-        render: (i, rec, index) => (
-          <InputNumber
-            defaultValue={rec.qty}
-            onChange={(e) => changeItem(e, "qty", index)}
-          />
-        ),
+        render: (i, rec, index) => {
+          return (
+            <InputNumber
+              value={rec.qty}
+              onChange={(e) => {
+                let _item = formData.sale_item;
+                _item[index].qty = e;
+                setFormData({ ...formData, sale_item: _item });
+              }}
+              min={0}
+              readOnly={formData.is_paid}
+            />
+          );
+        },
       },
       {
         title: "Total",
         key: "total",
         render: (i, rec, index) => {
-          let total =
-            numberPercent(
-              rec.mst_item_variant_price,
-              customer.price_percentage
-            ) * rec.qty;
-          return <>Rp. {numberWithComma(total)}</>;
+          return <span>Rp. {numberWithComma(getTotal(index))}</span>;
         },
       },
       {
@@ -411,8 +432,19 @@ const FormSale = () => {
         key: "null",
         render: (i, rec, index) => (
           <>
-            {!index || formData.pos_trx_sale_id ? null : (
-              <DeleteOutlined onClick={() => handleDeleteRow(index)} />
+            {index + 1 !== formData.sale_item.length &&
+              !formData.pos_trx_sale_id && (
+                <DeleteOutlined onClick={() => handleDeleteRow(index)} />
+              )}
+            {formData.pos_trx_sale_id && !formData.is_paid && (
+              <Popconfirm
+                title="Are you sure to change this data?"
+                onConfirm={() => updateCheckout(rec)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <CheckOutlined />
+              </Popconfirm>
             )}
           </>
         ),
@@ -470,7 +502,7 @@ const FormSale = () => {
         {Object.keys(cashierData).length == 0 ? null : (
           <>
             <Row style={{}}>
-              <Col span={16}>
+              <Col span={18}>
                 <Table
                   rowKey={"key"}
                   columns={scheme()}
@@ -479,13 +511,10 @@ const FormSale = () => {
                   size="small"
                 />
               </Col>
-              <Col span={8}>
+              <Col span={6}>
                 <Card>
-                  <Descriptions
-                    column={1}
-                    title="Customer [F10]"
-                    size={1}
-                    extra={
+                  <Divider orientation="center">
+                    {!formData.is_paid ? (
                       <XSelectSearch
                         ref={inputCust}
                         onFocus={(e) => e.persist()}
@@ -507,8 +536,11 @@ const FormSale = () => {
                           setFormData({ ...formData, mst_customer_id: val });
                         }}
                       />
-                    }
-                  >
+                    ) : (
+                      formData.mst_customer_name
+                    )}
+                  </Divider>
+                  <Descriptions column={1} title="Customer [F10]" size={1}>
                     <Descriptions.Item label="Name">
                       {customer.mst_customer_name}
                     </Descriptions.Item>
@@ -523,16 +555,21 @@ const FormSale = () => {
                   <Divider orientation="center">
                     <>
                       {formData.pos_trx_sale_id ? (
-                        <Button
-                          type="success"
-                          onClick={() => showModalPayment()}
-                        >
-                          Payment [F12]
-                        </Button>
-                      ) : (
+                        !formData.is_paid ? (
+                          <Button
+                            type="success"
+                            onClick={() => showModalPayment()}
+                          >
+                            Payment [F12]
+                          </Button>
+                        ) : (
+                          "Paid"
+                        )
+                      ) : null}
+                      {!formData.pos_trx_sale_id && (
                         <Button
                           type="primary"
-                          onClick={() => handleClickCheckout()}
+                          onClick={() => checkout()}
                           addonbefore={"F12"}
                           loading={isLoading}
                         >
@@ -547,32 +584,13 @@ const FormSale = () => {
                       {customer.mst_customer_ppn ?? customer.ppn ?? 0} %
                     </Descriptions.Item>
                     <Descriptions.Item label="Total Price">
-                      Rp.{" "}
-                      {numberWithComma(
-                        formData.total_price ??
-                          numberPercent(
-                            sumItem(
-                              formData.sale_item,
-                              "mst_item_variant_price"
-                            ),
-                            customer.price_percentage
-                          )
-                      )}
+                      Rp. {numberWithComma(formData.total_price ?? getTotal())}
                     </Descriptions.Item>
                     <Descriptions.Item label="Grand Total">
                       RP.{" "}
                       {numberWithComma(
                         formData.grand_total ??
-                          numberPercent(
-                            numberPercent(
-                              sumItem(
-                                formData.sale_item,
-                                "mst_item_variant_price"
-                              ),
-                              customer.price_percentage
-                            ),
-                            customer.mst_customer_ppn
-                          )
+                          numberPercent(getTotal(), customer.mst_customer_ppn)
                       )}
                     </Descriptions.Item>
                   </Descriptions>

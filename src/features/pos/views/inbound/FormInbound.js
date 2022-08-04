@@ -115,7 +115,7 @@ const FormInbound = () => {
           required
         />
         <XInputNumber
-          title="Quantity"
+          title="Quantity Item"
           name={"qty"}
           initialValue={formData.qty}
           disabled={type == "read"}
