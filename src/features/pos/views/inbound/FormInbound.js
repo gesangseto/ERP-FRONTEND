@@ -34,7 +34,7 @@ const FormInbound = () => {
     let _data = await getInbound({ pos_trx_inbound_id: id });
     _data = _data.data[0];
     console.log(_data);
-    setFormData({ ..._data });
+    setFormData({ ...formData, _data });
   };
 
   const saveFormData = async (param = Object) => {
