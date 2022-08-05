@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XButton, XTable } from "../../../../component";
@@ -100,17 +100,32 @@ const columns = () => {
       render: (i, rec) => (
         <p
           style={{
-            color:
-              rec.status == 1 ? "green" : rec.status == -1 ? "blue" : "red",
+            color: rec.status == 1 ? "green" : "red",
           }}
         >
-          {rec.status == 1
-            ? "Active"
-            : rec.status == -1
-            ? "Rejected"
-            : "Inactive"}
+          {rec.status == 1 ? "Active" : "Inactive"}
         </p>
       ),
+    },
+    {
+      title: "Received Status",
+      key: "is_received",
+      render: (i, rec) => {
+        let color = "yellow";
+        let title = "Not Received";
+        if (rec.is_received) {
+          color = "green";
+          title = "Received";
+        } else if (rec.is_received == false) {
+          color = "red";
+          title = "Rejected";
+        }
+        return (
+          <Tag color={color} key={i}>
+            {title}
+          </Tag>
+        );
+      },
     },
     {
       title: "",

@@ -18,7 +18,7 @@ const itemDef = () => {
   );
 };
 
-const XFormReadReceive = (props) => {
+const XFormReadTrx = (props) => {
   const { data } = props;
   const [formData, setFormData] = useState({ item: [{ ...itemDef() }] });
   const [listItem, setListItem] = useState([]);
@@ -92,4 +92,4 @@ const XFormReadReceive = (props) => {
   );
 };
 
-export default XFormReadReceive;
+export default XFormReadTrx;

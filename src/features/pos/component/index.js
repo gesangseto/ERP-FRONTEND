@@ -1,5 +1,5 @@
 import XFormDetailStock from "./XFormDetailStock";
-import XFormReadReceive from "./XFormReadReceive";
+import XTableDetailTrx from "./XTableDetailTrx";
 import XFormReceive from "./XFormReceive";
 import XModalProduct from "./XModalProduct";
 import XModalOpenCashier from "./XModalOpenCashier";
@@ -8,7 +8,7 @@ import XDrawerPayment from "./XDrawerPayment";
 export {
   XModalProduct,
   XFormReceive,
-  XFormReadReceive,
+  XTableDetailTrx,
   XFormDetailStock,
   XModalOpenCashier,
   XDrawerPayment,

@@ -8,7 +8,7 @@ import { getRoute } from "../../../../helper/utils";
 import moment from "moment";
 import { insertCustomer, updateCustomer } from "../../../../resource";
 import { getInbound } from "../../resource";
-import { XFormReadReceive } from "../../component";
+import { XTableDetailTrx } from "../../component";
 
 const FormInbound = () => {
   const route = getRoute();
@@ -121,7 +121,7 @@ const FormInbound = () => {
           disabled={type == "read"}
         />
 
-        <XFormReadReceive data={formData.detail} />
+        <XTableDetailTrx data={formData.detail} />
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>
             Back

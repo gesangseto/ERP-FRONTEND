@@ -9,6 +9,7 @@ import XFormItemVariant from "./XFormItemVariant";
 import XInputNumber from "./XInputNumber";
 import XSelect from "./XSelect";
 import XDebounceSelect from "./XDebounceSelect";
+import XSelectSearchForm from "./XSelectSearchForm";
 
 export {
   XTable,
@@ -22,4 +23,5 @@ export {
   XFormItemVariant,
   XInputNumber,
   XDebounceSelect,
+  XSelectSearchForm,
 };

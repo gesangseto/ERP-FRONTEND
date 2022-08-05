@@ -2,25 +2,36 @@ import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XSelect, XTextArea } from "../../../../component";
+import {
+  XFormApproval,
+  XSelect,
+  XSelectSearchForm,
+} from "../../../../component";
+import moment from "moment";
 import { getRoute, makeOption } from "../../../../helper/utils";
 
-import { getSupplier } from "../../../../resource";
-import { XTableDetailTrx, XFormReceive } from "../../component";
-import { getReceive, insertReceive, updateReceive } from "../../resource";
+import { getCustomer } from "../../../../resource";
+import { XTableDetailTrx } from "../../component";
+import {
+  getReturn,
+  getSale,
+  insertReceive,
+  updateReceive,
+} from "../../resource";
 
-const FormReceive = () => {
+const FormReturn = () => {
   const route = getRoute();
   let { type, id } = useParams();
   const navigate = useNavigate();
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ ...{}, item: [] });
-  const [listSupplier, setListSupplier] = useState([]);
+  const [formData, setFormData] = useState({ ...{}, detail: [] });
+  const [listCustomer, setListCustomer] = useState([]);
+  const [listSale, setListSale] = useState([]);
 
   useEffect(() => {
     (async function () {
-      loadSupplier();
+      loadCustomer();
       if (id) {
         loadFormData(id);
       }
@@ -29,19 +40,27 @@ const FormReceive = () => {
 
   useEffect(() => {
     form.current.resetFields();
-  }, [formData.pos_receive_id]);
+  }, [formData.pos_trx_return_id]);
 
-  const loadSupplier = async () => {
-    let _data = await getSupplier();
+  const loadCustomer = async () => {
+    let _data = await getCustomer();
     _data = _data.data;
-    _data = makeOption(_data, "mst_supplier_id", "mst_supplier_name");
-    setListSupplier([..._data]);
+    _data = makeOption(_data, "mst_customer_id", "mst_customer_name");
+    setListCustomer([..._data]);
+  };
+
+  const loadSale = async (e) => {
+    let filter = { page: 1, limit: 10, search: e };
+    let _data = await getSale(filter);
+    if (_data) {
+      setListSale([..._data.data]);
+    }
   };
 
   const loadFormData = async (id) => {
-    let _data = await getReceive({ pos_receive_id: id });
+    let _data = await getReturn({ pos_trx_return_id: id });
     _data = _data.data[0];
-    setFormData({ ..._data, item: _data.detail });
+    setFormData({ ..._data });
   };
 
   const saveFormData = async (param = Object) => {
@@ -90,29 +109,35 @@ const FormReceive = () => {
         size={"default"}
       >
         <XSelect
-          title="Supplier"
-          name={"mst_supplier_id"}
-          initialValue={formData.mst_supplier_id}
+          title="Customer"
+          name={"mst_customer_id"}
+          initialValue={formData.mst_customer_id}
           disabled={type != "create"}
           required
-          option={listSupplier}
+          option={listCustomer}
         />
-        {type != "create" ? (
-          <XTextArea
-            title="Note"
-            name={"pos_receive_note"}
-            initialValue={formData.pos_receive_note}
-            disabled={formData.status != 0}
-            required
-          />
-        ) : null}
-        {type == "create" ? (
-          <XFormReceive
-            onChange={(data) => setFormData({ ...formData, item: data })}
-          />
-        ) : (
-          <XTableDetailTrx data={formData.item} />
-        )}
+        <XSelectSearchForm
+          allowClear
+          required
+          title="INVOICE"
+          placeholder="input search text"
+          name="pos_trx_sale_id"
+          onSearch={(e) => loadSale(e)}
+          option={listSale.map((it) => {
+            return {
+              text: `(${it.pos_trx_sale_id}) ${moment(it.created_at).format(
+                "YY/MM/DD hh:mm:ss"
+              )}`,
+              value: it.pos_trx_sale_id,
+            };
+          })}
+          // onChange={(val) => handleChangeRowProduct(val, index)}
+          // initialValue={"1"}
+        />
+        {/* {type == "create" ? null : ( // /> //   onChange={(data) => setFormData({ ...formData, item: data })} // <XFormReceive
+          
+        )} */}
+        {id && <XTableDetailTrx data={formData.detail} />}
 
         <Form.Item>
           {type == "create" ? (
@@ -160,4 +185,4 @@ const FormReceive = () => {
     </Card>
   );
 };
-export default FormReceive;
+export default FormReturn;

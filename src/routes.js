@@ -59,6 +59,12 @@ const FPInbound = React.lazy(() =>
 );
 const LPSale = React.lazy(() => import("./features/pos/views/sale/ListSale"));
 const FPSale = React.lazy(() => import("./features/pos/views/sale/FormSale"));
+const LPReturn = React.lazy(() =>
+  import("./features/pos/views/return/ListReturn")
+);
+const FPReturn = React.lazy(() =>
+  import("./features/pos/views/return/FormReturn")
+);
 const LPStock = React.lazy(() =>
   import("./features/pos/views/stock/ListStock")
 );
@@ -244,6 +250,22 @@ const routes = [
     path: "/pos/transaction/sale/:type/:id",
     name: "Detail Sale",
     element: FPSale,
+  },
+  // SALE
+  {
+    path: "/pos/transaction/return",
+    name: "Return List",
+    element: LPReturn,
+  },
+  {
+    path: "/pos/transaction/return/:type",
+    name: "Create Return",
+    element: FPReturn,
+  },
+  {
+    path: "/pos/transaction/return/:type/:id",
+    name: "Detail Return",
+    element: FPReturn,
   },
   // STOCK
   {
