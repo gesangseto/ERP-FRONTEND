@@ -1,12 +1,11 @@
 import { Card } from "antd";
-import React, { useEffect, useState } from "react";
+import { XTable } from "component";
+import { defaultFilter } from "constants";
+import { getStock } from "features/pos/resource";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { XButton, XTable } from "../../../../component";
-import { defaultFilter } from "../../../../constants";
-import { getInbound, getReceive, getStock } from "../../resource";
 
-import moment from "moment";
-import { getRoute } from "../../../../helper/utils";
+import { getRoute } from "helper/utils";
 
 const ListStock = () => {
   const route = getRoute();

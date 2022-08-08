@@ -1,9 +1,9 @@
 import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { XFormApproval, XInput, XTextArea } from "../../../component";
-import { getRoute } from "../../../helper/utils";
-import { getAudit } from "../../../resource";
+import { XFormApproval, XInput, XTextArea } from "component";
+import { getRoute } from "helper/utils";
+import { getAudit } from "resource";
 
 const FormAudit = () => {
   const route = getRoute();

@@ -1,14 +1,14 @@
 import { Button, Card, Form } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import { XFormApproval, XInput } from "component";
+import { getRoute } from "helper/utils";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XInput, XInputNumber } from "../../../../component";
-import { getRoute } from "../../../../helper/utils";
 
+import { XTableDetailTrx } from "features/pos/component";
+import { getInbound } from "features/pos/resource";
 import moment from "moment";
-import { insertCustomer, updateCustomer } from "../../../../resource";
-import { getInbound } from "../../resource";
-import { XTableDetailTrx } from "../../component";
+import { insertCustomer, updateCustomer } from "resource";
 
 const FormInbound = () => {
   const route = getRoute();

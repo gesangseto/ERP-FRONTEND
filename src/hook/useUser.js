@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { defaultFilter } from "../constants";
-import { getUser } from "../resource";
+import { defaultFilter } from "constants";
+import { getUser } from "resource";
 
 export const useUser = () => {
   const [isLoading, setIsLoading] = useState(false);

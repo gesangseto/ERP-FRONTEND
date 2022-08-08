@@ -1,13 +1,17 @@
 import { Button, Card, Form } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import { XFormApproval, XTextArea } from "component";
+import { getRoute, makeOption } from "helper/utils";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XTextArea } from "../../../../component";
-import { getRoute, makeOption } from "../../../../helper/utils";
 
-import { getSupplier } from "../../../../resource";
-import { XFormReceive, XTableDetailTrx } from "../../component";
-import { getDestroy, insertDestroy, updateDestroy } from "../../resource";
+import { XFormReceive, XTableDetailTrx } from "features/pos/component";
+import {
+  getDestroy,
+  insertDestroy,
+  updateDestroy,
+} from "features/pos/resource";
+import { getSupplier } from "resource";
 
 const FormDestroy = () => {
   const route = getRoute();

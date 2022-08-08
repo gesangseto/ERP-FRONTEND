@@ -2,15 +2,15 @@ import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XInput, XSelect } from "../../../component";
-import XSelectSearch from "../../../component/XSelectSearch";
-import { getRoute } from "../../../helper/utils";
+import { XFormApproval, XInput, XSelect } from "component";
+import XSelectSearch from "component/XSelectSearch";
+import { getRoute } from "helper/utils";
 
 import {
   getConfigRelation,
   getConfigRelationList,
   updateConfigRelation,
-} from "../../../resource";
+} from "resource";
 
 const FormConf = () => {
   const route = getRoute();

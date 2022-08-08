@@ -1,24 +1,34 @@
+import { PercentageOutlined } from "@ant-design/icons";
 import { Button, Card, Form } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  XFormApproval,
+  XInput,
+  XInputNumber,
+  XSwitch,
+  XTextArea,
+} from "component";
+import { getRoute } from "helper/utils";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XInput, XSwitch, XTextArea } from "component";
-import { getRoute } from "helper/utils";
-import { getSupplier, insertSupplier, updateSupplier } from "resource";
 
-const FormSupplier = () => {
+import { getCustomer, insertCustomer, updateCustomer } from "resource";
+
+const FormDiscount = () => {
   const route = getRoute();
   let { type, id } = useParams();
   const navigate = useNavigate();
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    mst_supplier_id: "",
-    mst_supplier_pic: "",
-    mst_supplier_name: "",
-    mst_supplier_email: "",
-    mst_supplier_address: "",
-    mst_supplier_phone: "",
+    mst_customer_id: "",
+    mst_customer_pic: "",
+    mst_customer_name: "",
+    mst_customer_email: "",
+    mst_customer_address: "",
+    mst_customer_phone: "",
+    mst_customer_ppn: "",
+    mst_customer_percentage: "",
   });
 
   useEffect(() => {
@@ -34,7 +44,7 @@ const FormSupplier = () => {
   }, [formData]);
 
   const loadFormData = async (id) => {
-    let _data = await getSupplier({ mst_supplier_id: id });
+    let _data = await getCustomer({ mst_customer_id: id });
     _data = _data.data[0];
     setFormData({ ..._data });
   };
@@ -42,10 +52,10 @@ const FormSupplier = () => {
   const saveFormData = async (param = Object) => {
     let _data;
     if (id) {
-      param.mst_supplier_id = id;
-      _data = await updateSupplier(param);
+      param.mst_customer_id = id;
+      _data = await updateCustomer(param);
     } else {
-      _data = await insertSupplier(param);
+      _data = await insertCustomer(param);
     }
     if (_data) {
       toast.success("Success");
@@ -76,40 +86,54 @@ const FormSupplier = () => {
         size={"default"}
       >
         <XInput
-          title="Supplier PIC"
-          name={"mst_supplier_pic"}
-          initialValue={formData.mst_supplier_pic}
+          title="Customer PIC"
+          name={"mst_customer_pic"}
+          initialValue={formData.mst_customer_pic}
           disabled={type == "read"}
           required
         />
         <XInput
-          title="Supplier Name"
-          name={"mst_supplier_name"}
-          initialValue={formData.mst_supplier_name}
+          title="Customer Name"
+          name={"mst_customer_name"}
+          initialValue={formData.mst_customer_name}
           disabled={type == "read"}
           required
         />
         <XInput
-          title="Supplier Email"
-          name={"mst_supplier_email"}
-          initialValue={formData.mst_supplier_email}
+          title="Customer Email"
+          name={"mst_customer_email"}
+          initialValue={formData.mst_customer_email}
           disabled={type == "read"}
           required
           type="email"
         />
         <XInput
-          title="Supplier Phone"
-          name={"mst_supplier_phone"}
-          initialValue={formData.mst_supplier_phone}
+          title="Customer Phone"
+          name={"mst_customer_phone"}
+          initialValue={formData.mst_customer_phone}
           disabled={type == "read"}
           required
         />
         <XTextArea
-          title="Supplier Address"
-          name={"mst_supplier_address"}
-          initialValue={formData.mst_supplier_address}
+          title="Customer Address"
+          name={"mst_customer_address"}
+          initialValue={formData.mst_customer_address}
           disabled={type == "read"}
           required
+        />
+        <XInputNumber
+          title="PPN"
+          name={"mst_customer_ppn"}
+          initialValue={formData.mst_customer_ppn}
+          disabled={type == "read"}
+          addonAfter={<PercentageOutlined />}
+        />
+        <XInputNumber
+          title="Percentage"
+          name={"price_percentage"}
+          initialValue={formData.price_percentage}
+          disabled={type == "read"}
+          addonAfter={<PercentageOutlined />}
         />
         <XSwitch
           title="Status"
@@ -136,4 +160,4 @@ const FormSupplier = () => {
     </Card>
   );
 };
-export default FormSupplier;
+export default FormDiscount;

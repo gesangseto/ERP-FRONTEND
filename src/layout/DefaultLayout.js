@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import React, { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import routes from "../routes";
+import routes from "routes";
 import AppFooter from "./AppFooter";
 import AppHeader from "./AppHeader";
 import AppSidebar from "./AppSidebar";

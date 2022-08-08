@@ -2,8 +2,8 @@ import { Button, Checkbox, Form, Input } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { loginUser } from "../resource/oauth/login";
-import { menuUser } from "../resource/oauth/menu";
+import { loginUser } from "resource/oauth/login";
+import { menuUser } from "resource/oauth/menu";
 
 const Login = () => {
   let navigate = useNavigate();

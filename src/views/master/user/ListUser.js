@@ -2,10 +2,10 @@ import { Card } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XButton, XTable } from "../../../component";
-import { defaultFilter } from "../../../constants";
-import { getRoute } from "../../../helper/utils";
-import { deleteUser, getUser } from "../../../resource";
+import { XButton, XTable } from "component";
+import { defaultFilter } from "constants";
+import { getRoute } from "helper/utils";
+import { deleteUser, getUser } from "resource";
 
 const ListUser = () => {
   const route = getRoute();

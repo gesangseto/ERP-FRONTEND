@@ -1,11 +1,11 @@
 import { Button, Input, Form, Card, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { canApprove } from "../helper/utils";
-import { updateFlowApproval } from "../resource";
+import { canApprove } from "helper/utils";
+import { updateFlowApproval } from "resource";
 import XButton from "./XButton";
 import XModalApproval from "./XModalApproval";
-// import { updateDepartment } from "../../../resource/administrator/department";
+// import { updateDepartment } from "resource/administrator/department";
 
 const XFormApproval = (props) => {
   const { item, onApprove } = props;

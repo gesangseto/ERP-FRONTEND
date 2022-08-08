@@ -1,7 +1,7 @@
-import { Button, Drawer, Form, InputNumber, Space } from "antd";
+import { Button, Drawer, Form, Space } from "antd";
+import { XInput, XInputNumber } from "component";
+import { numberWithComma } from "helper/utils";
 import React, { useEffect, useRef, useState } from "react";
-import { XInput, XInputNumber } from "../../../component";
-import { numberWithComma } from "../../../helper/utils";
 
 const XDrawerPayment = React.forwardRef((props, ref) => {
   const { data, onClose, onClickPaid } = props;

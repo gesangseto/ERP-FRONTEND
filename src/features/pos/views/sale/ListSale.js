@@ -1,16 +1,12 @@
 import { Card, Tag } from "antd";
-import React, { useEffect, useState } from "react";
+import { XButton, XTable } from "component";
+import { defaultFilter } from "constants";
+import { getSale } from "features/pos/resource";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { XButton, XTable } from "../../../../component";
-import { defaultFilter } from "../../../../constants";
-import { getReceive, getSale } from "../../resource";
 
+import { getRoute, numberWithComma } from "helper/utils";
 import moment from "moment";
-import {
-  getRoute,
-  numberPercent,
-  numberWithComma,
-} from "../../../../helper/utils";
 
 const ListSale = () => {
   const route = getRoute();

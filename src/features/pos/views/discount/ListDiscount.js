@@ -1,14 +1,14 @@
-import { Card, Tag } from "antd";
+import { Card } from "antd";
 import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getDestroy } from "features/pos/resource";
+import { getDiscount } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getRoute } from "helper/utils";
 import moment from "moment";
 
-const ListDestroy = () => {
+const ListDiscount = () => {
   const route = getRoute();
   const navigate = useNavigate();
   const [listData, setListData] = useState([]);
@@ -20,7 +20,7 @@ const ListDestroy = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getDestroy(filter);
+    let _data = await getDiscount(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -46,7 +46,7 @@ const ListDestroy = () => {
       }
     >
       <XTable
-        rowKey="pos_trx_destroy_id"
+        rowKey="pos_receive_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -57,14 +57,10 @@ const ListDestroy = () => {
   );
 };
 
-export default ListDestroy;
+export default ListDiscount;
 
 const columns = () => {
   return [
-    {
-      title: "ID",
-      key: "pos_trx_destroy_id",
-    },
     {
       title: "Date",
       key: "created_at",
@@ -78,21 +74,23 @@ const columns = () => {
       title: "Product",
       key: "mst_item_name",
     },
-    // {
-    //   title: "Supplier",
-    //   key: "mst_supplier_name",
-    // },
-    // {
-    //   title: "Batch",
-    //   key: "batch",
-    // },
     {
-      title: "Quantity",
-      key: "qty",
+      title: "Barcode",
+      key: "barcode",
     },
     {
-      title: "@ Quantity",
-      key: "qty_stock",
+      title: "Variant",
+      key: "mst_item_variant_name",
+    },
+    {
+      title: "Start",
+      key: "pos_discount_starttime",
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
+    },
+    {
+      title: "End",
+      key: "pos_discount_endtime",
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
     },
     {
       title: "Status",
@@ -108,29 +106,9 @@ const columns = () => {
       ),
     },
     {
-      title: "Destroyed Status",
-      key: "is_destroyed",
-      render: (i, rec) => {
-        let color = "yellow";
-        let title = "Not Destroyed";
-        if (rec.is_destroyed) {
-          color = "green";
-          title = "Destroyed";
-        } else if (rec.is_destroyed == false) {
-          color = "red";
-          title = "Rejected";
-        }
-        return (
-          <Tag color={color} key={i}>
-            {title}
-          </Tag>
-        );
-      },
-    },
-    {
       title: "",
-      key: "pos_trx_destroy_id",
-      action: ["approve", "update", "read"],
+      key: "pos_receive_id",
+      action: ["approve", "update", "read", "delete"],
     },
   ];
 };

@@ -1,7 +1,7 @@
 import { PercentageOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, Form, Modal, Select } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { getPackaging } from "../resource";
+import { getPackaging } from "resource";
 import XInput from "./XInput";
 import XInputNumber from "./XInputNumber";
 import XSwitch from "./XSwitch";

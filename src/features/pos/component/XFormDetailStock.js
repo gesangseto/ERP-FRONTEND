@@ -1,6 +1,6 @@
 import { Card, Table } from "antd";
-import React, { useEffect } from "react";
-import { numberWithComma } from "../../../helper/utils";
+import { numberWithComma } from "helper/utils";
+import { useEffect } from "react";
 
 const XFormDetailStock = (props) => {
   const { data } = props;

@@ -1,10 +1,10 @@
 import { Card } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { XTable } from "../../../component";
-import { defaultFilter } from "../../../constants";
-import { getRoute } from "../../../helper/utils";
-import { getAudit } from "../../../resource";
+import { XTable } from "component";
+import { defaultFilter } from "constants";
+import { getRoute } from "helper/utils";
+import { getAudit } from "resource";
 
 const ListAudit = () => {
   const route = getRoute();

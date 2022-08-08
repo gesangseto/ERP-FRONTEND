@@ -1,9 +1,9 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { Card, DatePicker, Input, InputNumber, Table } from "antd";
+import XSelectSearch from "component/XSelectSearch";
 import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
-import XSelectSearch from "../../../component/XSelectSearch";
-import { getProductVariant } from "../../../resource";
+import { useEffect, useRef, useState } from "react";
+import { getProductVariant } from "resource";
 
 const itemDef = () => {
   return JSON.parse(

@@ -3,9 +3,9 @@ import ImgCrop from "antd-img-crop";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XInput, XInputNumber, XSwitch } from "../component";
-import { getBase64 } from "../helper/utils";
-import { getConfiguration, updateConfiguration } from "../resource";
+import { XInput, XInputNumber, XSwitch } from "component";
+import { getBase64 } from "helper/utils";
+import { getConfiguration, updateConfiguration } from "resource";
 
 const Configuration = () => {
   const navigate = useNavigate();

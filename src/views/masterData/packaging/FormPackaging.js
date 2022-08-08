@@ -2,13 +2,9 @@ import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval, XInput, XSwitch, XTextArea } from "../../../component";
-import { getRoute } from "../../../helper/utils";
-import {
-  getPackaging,
-  insertPackaging,
-  updatePackaging,
-} from "../../../resource";
+import { XFormApproval, XInput, XSwitch, XTextArea } from "component";
+import { getRoute } from "helper/utils";
+import { getPackaging, insertPackaging, updatePackaging } from "resource";
 
 const FormPackaging = () => {
   const route = getRoute();

@@ -2,11 +2,11 @@ import { Card } from "antd";
 import React, { useEffect, useState } from "react";
 import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XButton, XTable } from "../../../component";
-import { defaultFilter } from "../../../constants";
-import { getRoute } from "../../../helper/utils";
-import { deleteCustomer, getCustomer } from "../../../resource";
-import routes from "../../../routes";
+import { XButton, XTable } from "component";
+import { defaultFilter } from "constants";
+import { getRoute } from "helper/utils";
+import { deleteCustomer, getCustomer } from "resource";
+import routes from "routes";
 
 const ListCust = () => {
   const route = getRoute();

@@ -1,26 +1,12 @@
 import { Button, Card, Form } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import { XFormApproval, XInput } from "component";
+import { getRoute } from "helper/utils";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  XFormApproval,
-  XInput,
-  XSelect,
-  XSelectSearchForm,
-} from "../../../../component";
-import moment from "moment";
-import { getRoute, makeOption } from "../../../../helper/utils";
 
-import { getCustomer } from "../../../../resource";
-import { XTableDetailTrx } from "../../component";
-import {
-  approveReturn,
-  getReturn,
-  getSale,
-  insertReceive,
-  updateReceive,
-  updateReturn,
-} from "../../resource";
+import { XTableDetailTrx } from "features/pos/component";
+import { approveReturn, getReturn } from "features/pos/resource";
 
 const FormReturn = () => {
   const route = getRoute();

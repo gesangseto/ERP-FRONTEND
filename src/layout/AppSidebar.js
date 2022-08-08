@@ -1,7 +1,7 @@
 import { Layout, Menu, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { reformatMenu } from "../helper/utils";
+import { reformatMenu } from "helper/utils";
 
 const { Sider } = Layout;
 

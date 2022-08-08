@@ -9,10 +9,10 @@ import {
   XInputNumber,
   XSwitch,
   XTextArea,
-} from "../../../component";
-import { getRoute } from "../../../helper/utils";
+} from "component";
+import { getRoute } from "helper/utils";
 
-import { getCustomer, insertCustomer, updateCustomer } from "../../../resource";
+import { getCustomer, insertCustomer, updateCustomer } from "resource";
 
 const FormCust = () => {
   const route = getRoute();

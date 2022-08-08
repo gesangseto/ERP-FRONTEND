@@ -1,8 +1,8 @@
 import { Button, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { updateFlowApproval } from "../resource";
-// import { updateDepartment } from "../../../resource/administrator/department";
+import { updateFlowApproval } from "resource";
+// import { updateDepartment } from "resource/administrator/department";
 
 const XModalApproval = (props) => {
   const { approval_flow_id, item, onApprove, showDetail = false } = props;

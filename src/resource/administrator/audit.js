@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import $axios from "../../Api";
+import $axios from "Api";
 
 export const getAudit = async (property = {}, useAlert = true) => {
   if (property.hasOwnProperty("search")) {

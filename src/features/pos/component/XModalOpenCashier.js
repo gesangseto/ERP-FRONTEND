@@ -1,9 +1,7 @@
-import { Button, Form, Input, Modal } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { XInput, XInputNumber } from "../../../component";
-import { updateFlowApproval } from "../../../resource";
-// import { updateDepartment } from "../../../resource/administrator/department";
+import { Button, Form, Modal } from "antd";
+import { XInputNumber } from "component";
+import { useEffect, useRef, useState } from "react";
+// import { updateDepartment } from "resource/administrator/department";
 
 const XModalOpenCashier = (props) => {
   const { initialValue, onSubmit } = props;

@@ -2,15 +2,15 @@ import { Button, Card, Form, Input, Select, Switch } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval } from "../../../component";
-import { getRoute } from "../../../helper/utils";
+import { XFormApproval } from "component";
+import { getRoute } from "helper/utils";
 import {
   getDepartment,
   getSection,
   getUser,
   insertUser,
   updateUser,
-} from "../../../resource";
+} from "resource";
 
 const FormUser = () => {
   const route = getRoute();

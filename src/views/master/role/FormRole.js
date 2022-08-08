@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { XFormApproval } from "../../../component";
+import { XFormApproval } from "component";
 import {
   findOnArr,
   getRoute,
@@ -20,8 +20,8 @@ import {
   mergeArray,
   removeEmptyChild,
   treeify,
-} from "../../../helper/utils";
-import { getRole, getSection, updateRole } from "../../../resource";
+} from "helper/utils";
+import { getRole, getSection, updateRole } from "resource";
 
 const { TabPane } = Tabs;
 const FormRole = () => {

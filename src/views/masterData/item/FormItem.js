@@ -9,15 +9,15 @@ import {
   XInput,
   XSwitch,
   XTextArea,
-} from "../../../component";
-import { getRoute } from "../../../helper/utils";
+} from "component";
+import { getRoute } from "helper/utils";
 
 import {
   deleteProduct,
   getProduct,
   insertProduct,
   updateProduct,
-} from "../../../resource";
+} from "resource";
 
 const FormItem = () => {
   const route = getRoute();

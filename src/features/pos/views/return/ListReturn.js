@@ -1,12 +1,12 @@
 import { Button, Card, Modal, Tag } from "antd";
-import React, { useEffect, useState } from "react";
+import { XButton, XSelectSearchForm, XTable } from "component";
+import { defaultFilter } from "constants";
+import { getReturn, getSale, insertReturn } from "features/pos/resource";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { XButton, XSelectSearchForm, XTable } from "../../../../component";
-import { defaultFilter } from "../../../../constants";
-import { getReturn, getSale, insertReturn } from "../../resource";
 
+import { getRoute, numberWithComma } from "helper/utils";
 import moment from "moment";
-import { getRoute, numberWithComma } from "../../../../helper/utils";
 import { toast } from "react-toastify";
 
 const ListReturn = () => {

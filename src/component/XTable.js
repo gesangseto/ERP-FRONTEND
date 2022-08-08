@@ -9,7 +9,7 @@ import {
   Table,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { defaultFilter } from "../constants";
+import { defaultFilter } from "constants";
 import XButton from "./XButton";
 import XModalApproval from "./XModalApproval";
 

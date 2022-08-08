@@ -1,5 +1,4 @@
 import {
-  CheckCircleOutlined,
   CheckOutlined,
   DeleteOutlined,
   DownSquareOutlined,
@@ -22,25 +21,8 @@ import {
   Table,
 } from "antd";
 import Countdown from "antd/lib/statistic/Countdown";
-import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import XSelectSearch from "../../../../component/XSelectSearch";
-import {
-  getRoute,
-  makeId,
-  numberPercent,
-  numberWithComma,
-  removeEmptyObject,
-  sumByKey,
-} from "../../../../helper/utils";
-import {
-  getConfigRelation,
-  getCustomer,
-  getProductVariant,
-} from "../../../../resource";
-import { XDrawerPayment, XModalOpenCashier } from "../../component";
+import XSelectSearch from "component/XSelectSearch";
+import { XDrawerPayment, XModalOpenCashier } from "features/pos/component";
 import {
   getCashier,
   getSale,
@@ -49,7 +31,20 @@ import {
   paymentSale,
   updateCashier,
   updateSale,
-} from "../../resource";
+} from "features/pos/resource";
+import {
+  getRoute,
+  makeId,
+  numberPercent,
+  numberWithComma,
+  removeEmptyObject,
+  sumByKey,
+} from "helper/utils";
+import moment from "moment";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getConfigRelation, getCustomer, getProductVariant } from "resource";
 
 const itemDef = () => {
   return JSON.parse(

@@ -6,8 +6,8 @@ import {
 import { Avatar, Layout, Menu, Popover } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { icon } from "../constants";
-import { groupBy, reformatMenu } from "../helper/utils";
+import { icon } from "constants";
+import { groupBy, reformatMenu } from "helper/utils";
 
 const { Sider } = Layout;
 

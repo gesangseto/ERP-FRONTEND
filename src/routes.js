@@ -45,6 +45,12 @@ const FConf = React.lazy(() => import("./views/system/config/FormConf"));
 /*
 MODULE POINT OF SALES 
 */
+const LPDiscount = React.lazy(() =>
+  import("./features/pos/views/discount/ListDiscount")
+);
+const FPDiscount = React.lazy(() =>
+  import("./features/pos/views/discount/FormDiscount")
+);
 const LPReceive = React.lazy(() =>
   import("./features/pos/views/receive/ListReceive")
 );
@@ -214,6 +220,22 @@ const routes = [
 
   // FEATURE
   // MODULE POINT OF SALES
+  // DISCOUNT
+  {
+    path: "/pos/master/discount",
+    name: "Discount List",
+    element: LPDiscount,
+  },
+  {
+    path: "/pos/master/discount/:type",
+    name: "Discount Detail",
+    element: FPDiscount,
+  },
+  {
+    path: "/pos/master/discount/:type/:id",
+    name: "Discount Detail",
+    element: FPDiscount,
+  },
   // RECEIVE
   {
     path: "/pos/transaction/receive",

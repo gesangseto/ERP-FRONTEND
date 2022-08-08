@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Popover } from "antd";
 import React, { useEffect, useState } from "react";
-import { canApprove, getRoute } from "../helper/utils";
+import { canApprove, getRoute } from "helper/utils";
 
 const XButton = (props) => {
   const { title, popover, type, record, use_permission = true } = props;

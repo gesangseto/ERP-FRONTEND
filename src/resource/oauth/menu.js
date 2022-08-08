@@ -1,4 +1,4 @@
-import $axios from "../../Api";
+import $axios from "Api";
 import { toast } from "react-toastify";
 
 export const menuUser = async (property = {}, useAlert = true) => {
