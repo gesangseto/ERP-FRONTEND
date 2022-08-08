@@ -190,10 +190,18 @@ const columns = () => {
       title: "Return Status",
       key: "is_returned",
       render: (i, rec) => {
-        let color = rec.is_paid ? "green" : "red";
+        let color = "yellow";
+        let title = "Not Returned";
+        if (rec.is_returned) {
+          color = "green";
+          title = "Returned";
+        } else if (rec.is_returned == false) {
+          color = "red";
+          title = "Rejected";
+        }
         return (
           <Tag color={color} key={i}>
-            {rec.is_paid ? "Return" : "Not Return"}
+            {title}
           </Tag>
         );
       },

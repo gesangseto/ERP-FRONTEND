@@ -45,18 +45,18 @@ const XFormReadTrx = (props) => {
         key: "mst_item_id",
         render: (i, rec) => <p>{`${rec.mst_item_name}`}</p>,
       },
-      {
-        title: "Batch No",
-        key: "mst_item_id",
-        render: (i, rec) => {
-          let color = rec.status ? "green" : "red";
-          return (
-            <Tag color={color} key={i}>
-              {rec.batch_no}
-            </Tag>
-          );
-        },
-      },
+      // {
+      //   title: "Batch No",
+      //   key: "mst_item_id",
+      //   render: (i, rec) => {
+      //     let color = rec.status ? "green" : "red";
+      //     return (
+      //       <Tag color={color} key={i}>
+      //         {rec.batch_no}
+      //       </Tag>
+      //     );
+      //   },
+      // },
       {
         title: "Mfg Date",
         key: "mfg_date",

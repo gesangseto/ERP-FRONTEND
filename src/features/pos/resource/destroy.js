@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import $axios from "../../../Api";
 
-export const getReturn = async (property = {}, useAlert = true) => {
+export const getDestroy = async (property = {}, useAlert = true) => {
   if (property.hasOwnProperty("search")) {
     if (Array.isArray(property.search)) {
       property.search = JSON.stringify(property.search);
@@ -10,7 +10,7 @@ export const getReturn = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/return?${query_string}`)
+      .get(`/api/transaction/pos/destroy?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -26,10 +26,10 @@ export const getReturn = async (property = {}, useAlert = true) => {
   });
 };
 
-export const insertReturn = async (body = {}, useAlert = true) => {
+export const insertDestroy = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/return`, body)
+      .put(`/api/transaction/pos/destroy`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -44,10 +44,10 @@ export const insertReturn = async (body = {}, useAlert = true) => {
       });
   });
 };
-export const approveReturn = async (body = {}, useAlert = true) => {
+export const updateDestroy = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/return`, body)
+      .post(`/api/transaction/pos/destroy`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

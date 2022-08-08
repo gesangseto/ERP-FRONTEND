@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XButton, XTable } from "../../../../component";
 import { defaultFilter } from "../../../../constants";
-import { getReceive } from "../../resource";
+import { getDestroy } from "../../resource";
 
 import moment from "moment";
 import { getRoute } from "../../../../helper/utils";
 
-const ListReceive = () => {
+const ListDestroy = () => {
   const route = getRoute();
   const navigate = useNavigate();
   const [listData, setListData] = useState([]);
@@ -20,7 +20,7 @@ const ListReceive = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getReceive(filter);
+    let _data = await getDestroy(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -46,7 +46,7 @@ const ListReceive = () => {
       }
     >
       <XTable
-        rowKey="pos_receive_id"
+        rowKey="pos_trx_destroy_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -57,13 +57,13 @@ const ListReceive = () => {
   );
 };
 
-export default ListReceive;
+export default ListDestroy;
 
 const columns = () => {
   return [
     {
       title: "ID",
-      key: "pos_receive_id",
+      key: "pos_trx_destroy_id",
     },
     {
       title: "Date",
@@ -78,10 +78,10 @@ const columns = () => {
       title: "Product",
       key: "mst_item_name",
     },
-    {
-      title: "Supplier",
-      key: "mst_supplier_name",
-    },
+    // {
+    //   title: "Supplier",
+    //   key: "mst_supplier_name",
+    // },
     // {
     //   title: "Batch",
     //   key: "batch",
@@ -108,15 +108,15 @@ const columns = () => {
       ),
     },
     {
-      title: "Received Status",
-      key: "is_received",
+      title: "Destroyed Status",
+      key: "is_destroyed",
       render: (i, rec) => {
         let color = "yellow";
-        let title = "Not Received";
-        if (rec.is_received) {
+        let title = "Not Destroyed";
+        if (rec.is_destroyed) {
           color = "green";
-          title = "Received";
-        } else if (rec.is_received == false) {
+          title = "Destroyed";
+        } else if (rec.is_destroyed == false) {
           color = "red";
           title = "Rejected";
         }
@@ -129,7 +129,7 @@ const columns = () => {
     },
     {
       title: "",
-      key: "pos_receive_id",
+      key: "pos_trx_destroy_id",
       action: ["approve", "update", "read"],
     },
   ];

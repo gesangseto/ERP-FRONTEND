@@ -27,14 +27,16 @@ const FormInbound = () => {
   }, []);
 
   useEffect(() => {
-    form.current.resetFields();
+    console.log("LEWAT SINI", formData);
+    if (formData.hasOwnProperty("pos_trx_inbound_id"))
+      form.current.resetFields();
   }, [formData]);
 
   const loadFormData = async (id) => {
     let _data = await getInbound({ pos_trx_inbound_id: id });
     _data = _data.data[0];
     console.log(_data);
-    setFormData({ ...formData, _data });
+    setFormData({ ..._data });
   };
 
   const saveFormData = async (param = Object) => {
@@ -107,20 +109,6 @@ const FormInbound = () => {
           disabled={type == "read"}
           required
         />
-        <XInput
-          title="Product"
-          name={"mst_item_name"}
-          initialValue={formData.mst_item_name}
-          disabled={type == "read"}
-          required
-        />
-        <XInputNumber
-          title="Quantity Item"
-          name={"qty"}
-          initialValue={formData.qty}
-          disabled={type == "read"}
-        />
-
         <XTableDetailTrx data={formData.detail} />
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>

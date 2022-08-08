@@ -4,3 +4,4 @@ export * from "./receive";
 export * from "./sale";
 export * from "./stock";
 export * from "./return";
+export * from "./destroy";

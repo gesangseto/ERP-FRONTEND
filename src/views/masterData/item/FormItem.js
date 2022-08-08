@@ -45,7 +45,7 @@ const FormItem = () => {
   }, []);
 
   useEffect(() => {
-    form.current.resetFields();
+    if (formData.mst_item_id) form.current.resetFields();
   }, [formData]);
 
   const loadFormData = async (id) => {

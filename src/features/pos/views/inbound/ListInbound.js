@@ -90,14 +90,6 @@ const columns = () => {
       ),
     },
     {
-      title: "Product",
-      key: "mst_item_name",
-    },
-    {
-      title: "Quantity Item",
-      key: "qty",
-    },
-    {
       title: "",
       key: "pos_trx_inbound_id",
       action: ["read"],

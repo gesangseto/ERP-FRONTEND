@@ -19,7 +19,7 @@ const itemDef = () => {
 };
 
 const XFormReceive = (props) => {
-  const { onChange } = props;
+  const { onChange, hiddenBatch } = props;
   const [formData, setFormData] = useState({ item: [{ ...itemDef() }] });
   const [listItem, setListItem] = useState([]);
   let itemRef = useRef([]);
@@ -125,16 +125,16 @@ const XFormReceive = (props) => {
           );
         },
       },
-      {
-        title: "Batch No",
-        key: "batch_no",
-        render: (i, rec, index) => (
-          <Input
-            defaultValue={rec.batch_no}
-            onChange={(e) => changeItem(e.target.value, "batch_no", index)}
-          />
-        ),
-      },
+      // {
+      //   title: "Batch No",
+      //   key: "batch_no",
+      //   render: (i, rec, index) => (
+      //     <Input
+      //       defaultValue={rec.batch_no}
+      //       onChange={(e) => changeItem(e.target.value, "batch_no", index)}
+      //     />
+      //   ),
+      // },
       {
         title: "Mfg Date",
         key: "mfg_date",

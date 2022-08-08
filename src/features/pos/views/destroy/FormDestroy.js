@@ -2,36 +2,25 @@ import { Button, Card, Form } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  XFormApproval,
-  XInput,
-  XSelect,
-  XSelectSearchForm,
-} from "../../../../component";
-import moment from "moment";
+import { XFormApproval, XTextArea } from "../../../../component";
 import { getRoute, makeOption } from "../../../../helper/utils";
 
-import { getCustomer } from "../../../../resource";
-import { XTableDetailTrx } from "../../component";
-import {
-  approveReturn,
-  getReturn,
-  getSale,
-  insertReceive,
-  updateReceive,
-  updateReturn,
-} from "../../resource";
+import { getSupplier } from "../../../../resource";
+import { XFormReceive, XTableDetailTrx } from "../../component";
+import { getDestroy, insertDestroy, updateDestroy } from "../../resource";
 
-const FormReturn = () => {
+const FormDestroy = () => {
   const route = getRoute();
   let { type, id } = useParams();
   const navigate = useNavigate();
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ ...{}, detail: [] });
+  const [formData, setFormData] = useState({ ...{}, item: [] });
+  const [listSupplier, setListSupplier] = useState([]);
 
   useEffect(() => {
     (async function () {
+      loadSupplier();
       if (id) {
         loadFormData(id);
       }
@@ -40,19 +29,35 @@ const FormReturn = () => {
 
   useEffect(() => {
     form.current.resetFields();
-  }, [formData.pos_trx_return_id]);
+  }, [formData.pos_trx_destroy_id]);
+
+  const loadSupplier = async () => {
+    let _data = await getSupplier();
+    _data = _data.data;
+    _data = makeOption(_data, "mst_supplier_id", "mst_supplier_name");
+    setListSupplier([..._data]);
+  };
 
   const loadFormData = async (id) => {
-    let _data = await getReturn({ pos_trx_return_id: id });
+    let _data = await getDestroy({ pos_trx_destroy_id: id });
     _data = _data.data[0];
-    setFormData({ ..._data });
+    setFormData({ ..._data, item: _data.detail });
   };
 
   const saveFormData = async (param = Object) => {
     let _body = { ...formData, ...param };
-    let _data = false;
+    let _item = [];
+    for (const it of _body.item) {
+      if (it.mst_item_variant_id) {
+        _item.push(it);
+      }
+    }
+    _body.item = _item;
+    let _data;
     if (id) {
-      _data = await approveReturn(_body);
+      _data = await updateDestroy(_body);
+    } else {
+      _data = await insertDestroy(_body);
     }
     if (_data) {
       toast.success("Success");
@@ -83,21 +88,22 @@ const FormReturn = () => {
         }}
         size={"default"}
       >
-        <XInput
-          title="Customer"
-          name={"mst_customer_name"}
-          initialValue={formData.mst_customer_name}
-          disabled={type != "create"}
-          required
-        />
-        <XInput
-          title="INVOICE"
-          name={"pos_trx_sale_id"}
-          initialValue={formData.pos_trx_sale_id}
-          disabled={type != "create"}
-          required
-        />
-        {id && <XTableDetailTrx data={formData.detail} />}
+        {type != "create" ? (
+          <XTextArea
+            title="Note"
+            name={"pos_trx_destroy_note"}
+            initialValue={formData.pos_trx_destroy_note}
+            disabled={formData.status != 0}
+            required
+          />
+        ) : null}
+        {type == "create" ? (
+          <XFormReceive
+            onChange={(data) => setFormData({ ...formData, item: data })}
+          />
+        ) : (
+          <XTableDetailTrx data={formData.item} />
+        )}
 
         <Form.Item>
           {type == "create" ? (
@@ -145,4 +151,4 @@ const FormReturn = () => {
     </Card>
   );
 };
-export default FormReturn;
+export default FormDestroy;

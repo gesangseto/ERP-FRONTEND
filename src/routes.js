@@ -65,6 +65,12 @@ const LPReturn = React.lazy(() =>
 const FPReturn = React.lazy(() =>
   import("./features/pos/views/return/FormReturn")
 );
+const LPDestroy = React.lazy(() =>
+  import("./features/pos/views/destroy/ListDestroy")
+);
+const FPDestroy = React.lazy(() =>
+  import("./features/pos/views/destroy/FormDestroy")
+);
 const LPStock = React.lazy(() =>
   import("./features/pos/views/stock/ListStock")
 );
@@ -251,7 +257,7 @@ const routes = [
     name: "Detail Sale",
     element: FPSale,
   },
-  // SALE
+  // RETURN
   {
     path: "/pos/transaction/return",
     name: "Return List",
@@ -266,6 +272,22 @@ const routes = [
     path: "/pos/transaction/return/:type/:id",
     name: "Detail Return",
     element: FPReturn,
+  },
+  // DESTROY
+  {
+    path: "/pos/transaction/destroy",
+    name: "Destroy List",
+    element: LPDestroy,
+  },
+  {
+    path: "/pos/transaction/destroy/:type",
+    name: "Create Destroy",
+    element: FPDestroy,
+  },
+  {
+    path: "/pos/transaction/destroy/:type/:id",
+    name: "Detail Destroy",
+    element: FPDestroy,
   },
   // STOCK
   {
