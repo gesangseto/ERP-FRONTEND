@@ -10,6 +10,7 @@ import XInputNumber from "./XInputNumber";
 import XSelect from "./XSelect";
 import XDebounceSelect from "./XDebounceSelect";
 import XSelectSearchForm from "./XSelectSearchForm";
+import XDateRangePicker from "./XDateRangePicker";
 
 export {
   XTable,
@@ -24,4 +25,5 @@ export {
   XInputNumber,
   XDebounceSelect,
   XSelectSearchForm,
+  XDateRangePicker,
 };

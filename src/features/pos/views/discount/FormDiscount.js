@@ -1,17 +1,18 @@
-import { PercentageOutlined } from "@ant-design/icons";
 import { Button, Card, Form } from "antd";
 import {
+  XDateRangePicker,
   XFormApproval,
-  XInput,
   XInputNumber,
+  XSelectSearchForm,
   XSwitch,
-  XTextArea,
 } from "component";
+import { insertDiscount, updateDiscount } from "features/pos/resource";
+import { getProductVariant } from "features/pos/resource/product";
 import { getRoute } from "helper/utils";
+import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { getCustomer, insertCustomer, updateCustomer } from "resource";
 
 const FormDiscount = () => {
@@ -20,16 +21,8 @@ const FormDiscount = () => {
   const navigate = useNavigate();
   const form = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    mst_customer_id: "",
-    mst_customer_pic: "",
-    mst_customer_name: "",
-    mst_customer_email: "",
-    mst_customer_address: "",
-    mst_customer_phone: "",
-    mst_customer_ppn: "",
-    mst_customer_percentage: "",
-  });
+  const [formData, setFormData] = useState({});
+  const [listProduct, setListProduct] = useState([]);
 
   useEffect(() => {
     (async function () {
@@ -40,7 +33,7 @@ const FormDiscount = () => {
   }, []);
 
   useEffect(() => {
-    form.current.resetFields();
+    if (formData.pos_discount_id) form.current.resetFields();
   }, [formData]);
 
   const loadFormData = async (id) => {
@@ -49,13 +42,21 @@ const FormDiscount = () => {
     setFormData({ ..._data });
   };
 
+  const loadProduct = async (e) => {
+    let filter = { page: 1, limit: 10, search: e };
+    let _data = await getProductVariant(filter);
+    if (_data) {
+      setListProduct([..._data.data]);
+    } else {
+      setListProduct([]);
+    }
+  };
   const saveFormData = async (param = Object) => {
     let _data;
     if (id) {
-      param.mst_customer_id = id;
-      _data = await updateCustomer(param);
+      _data = await updateDiscount(param);
     } else {
-      _data = await insertCustomer(param);
+      _data = await insertDiscount(param);
     }
     if (_data) {
       toast.success("Success");
@@ -64,6 +65,8 @@ const FormDiscount = () => {
   };
 
   const handleSubmit = async (e) => {
+    e.pos_discount_starttime = moment(e.date_time[0]).format("YYYY-MM-DD");
+    e.pos_discount_endtime = moment(e.date_time[1]).format("YYYY-MM-DD");
     e.status = e.status ? 1 : 0;
     saveFormData(e);
   };
@@ -85,56 +88,43 @@ const FormDiscount = () => {
         }}
         size={"default"}
       >
-        <XInput
-          title="Customer PIC"
-          name={"mst_customer_pic"}
-          initialValue={formData.mst_customer_pic}
+        <XSelectSearchForm
+          allowClear
+          required
+          title="Variant"
+          placeholder="Input search text"
+          name="mst_item_variant_id"
+          onSearch={(e) => loadProduct(e)}
+          option={listProduct.map((it) => {
+            return {
+              text: `(${it.mst_item_name}) ${it.mst_item_variant_name} @${it.mst_item_variant_qty}`,
+              value: it.mst_item_variant_id,
+            };
+          })}
+          onChange={(val) =>
+            setFormData({ ...formData, mst_item_variant_id: val })
+          }
+          initialValue={formData.mst_item_variant_id}
+        />
+        <XDateRangePicker
+          title="Discount Time"
+          name={"date_time"}
+          initialValue={formData.date_time}
           disabled={type == "read"}
           required
         />
-        <XInput
-          title="Customer Name"
-          name={"mst_customer_name"}
-          initialValue={formData.mst_customer_name}
-          disabled={type == "read"}
-          required
-        />
-        <XInput
-          title="Customer Email"
-          name={"mst_customer_email"}
-          initialValue={formData.mst_customer_email}
-          disabled={type == "read"}
-          required
-          type="email"
-        />
-        <XInput
-          title="Customer Phone"
-          name={"mst_customer_phone"}
-          initialValue={formData.mst_customer_phone}
-          disabled={type == "read"}
-          required
-        />
-        <XTextArea
-          title="Customer Address"
-          name={"mst_customer_address"}
-          initialValue={formData.mst_customer_address}
-          disabled={type == "read"}
-          required
-        />
+
         <XInputNumber
-          title="PPN"
-          name={"mst_customer_ppn"}
-          initialValue={formData.mst_customer_ppn}
+          title="Discount"
+          name={"pos_discount"}
+          initialValue={formData.pos_discount}
           disabled={type == "read"}
-          addonAfter={<PercentageOutlined />}
+          addonAfter={"%"}
+          min={0}
+          max={100}
+          required
         />
-        <XInputNumber
-          title="Percentage"
-          name={"price_percentage"}
-          initialValue={formData.price_percentage}
-          disabled={type == "read"}
-          addonAfter={<PercentageOutlined />}
-        />
+
         <XSwitch
           title="Status"
           name={"status"}
