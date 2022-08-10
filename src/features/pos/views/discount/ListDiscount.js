@@ -46,7 +46,7 @@ const ListDiscount = () => {
       }
     >
       <XTable
-        rowKey="pos_receive_id"
+        rowKey="pos_discount_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -64,7 +64,7 @@ const columns = () => {
     {
       title: "Date",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
     },
     {
       title: "Created By",
@@ -85,12 +85,12 @@ const columns = () => {
     {
       title: "Start",
       key: "pos_discount_starttime",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
     },
     {
       title: "End",
       key: "pos_discount_endtime",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
     },
     {
       title: "Status",
@@ -107,8 +107,8 @@ const columns = () => {
     },
     {
       title: "",
-      key: "pos_receive_id",
-      action: ["approve", "update", "read", "delete"],
+      key: "pos_discount_id",
+      action: ["approve", "update", "read"],
     },
   ];
 };

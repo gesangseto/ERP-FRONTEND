@@ -109,7 +109,7 @@ const ListReturn = () => {
           option={listSale.map((it) => {
             return {
               text: `(${it.pos_trx_sale_id}) ${moment(it.created_at).format(
-                "YY/MM/DD hh:mm:ss"
+                "YY/MM/DD HH:mm:ss"
               )}`,
               value: it.pos_trx_sale_id,
             };
@@ -134,7 +134,7 @@ const columns = () => {
     {
       title: "Date",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
     },
     {
       title: "Created By",

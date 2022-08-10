@@ -44,7 +44,7 @@ const ListSale = () => {
       {
         title: "Date",
         key: "created_at",
-        render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD hh:mm:ss")}</p>,
+        render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
       },
       {
         title: "Created By",

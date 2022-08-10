@@ -16,9 +16,6 @@ const XInputNumber = React.forwardRef((props, ref) => {
 
   const handleChange = (e) => {
     let val = e;
-    if (val.hasOwnProperty("target")) {
-      val = e.target.value;
-    }
     if (onChange) {
       onChange(val, e);
     }

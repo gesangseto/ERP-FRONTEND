@@ -11,6 +11,7 @@ import XSelect from "./XSelect";
 import XDebounceSelect from "./XDebounceSelect";
 import XSelectSearchForm from "./XSelectSearchForm";
 import XDateRangePicker from "./XDateRangePicker";
+import XRadio from "./XRadio";
 
 export {
   XTable,
@@ -26,4 +27,5 @@ export {
   XDebounceSelect,
   XSelectSearchForm,
   XDateRangePicker,
+  XRadio,
 };

@@ -79,7 +79,7 @@ const FormInbound = () => {
           title="Created At"
           name={"created_at"}
           initialValue={moment(formData.created_at).format(
-            "YYYY-MM-DD hh:mm:ss"
+            "YYYY-MM-DD HH:mm:ss"
           )}
           disabled={type == "read"}
           required

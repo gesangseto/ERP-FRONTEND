@@ -53,7 +53,7 @@ const itemDef = () => {
       mst_item_variant_id: "",
       qty: 1,
       barcode: "",
-      pos_discount: 0,
+      discount: 0,
       mst_item_variant_price: 0,
     })
   );
@@ -378,23 +378,35 @@ const FormSale = () => {
         title: "Price",
         key: "price",
         render: (i, rec, index) => {
-          let price = numberPercent(
-            rec.mst_item_variant_price,
-            customer.price_percentage
-          );
-          return (
-            <>
-              Rp.
-              {numberWithComma(price)}
-            </>
-          );
+          let price = rec.price;
+          if (!price) {
+            price = numberPercent(
+              rec.mst_item_variant_price,
+              customer.price_percentage
+            );
+          }
+          return <> Rp. {numberWithComma(price)} </>;
         },
       },
       {
-        title: "Disc",
-        key: "pos_discount",
+        title: "Promo",
+        key: "discount",
         render: (i, rec, index) => {
-          return <>{rec.pos_discount} %</>;
+          if (rec.discount_free_qty) {
+            return (
+              <>
+                Buy {rec.discount_min_qty} Free {rec.discount_free_qty}{" "}
+                {rec.discount_max_qty ? `(Max ${rec.discount_max_qty})` : ""}
+              </>
+            );
+          } else {
+            return (
+              <>
+                {rec.discount} %{" "}
+                {rec.discount_max_qty ? `(Max ${rec.discount_max_qty})` : ""}
+              </>
+            );
+          }
         },
       },
       {
@@ -419,7 +431,9 @@ const FormSale = () => {
         title: "Total",
         key: "total",
         render: (i, rec, index) => {
-          return <span>Rp. {numberWithComma(getTotal(index))}</span>;
+          let total = rec.total;
+          if (!total) total = getTotal(index);
+          return <> Rp. {numberWithComma(total)} </>;
         },
       },
       {

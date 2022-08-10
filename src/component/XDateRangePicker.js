@@ -3,7 +3,7 @@ import React from "react";
 import moment from "moment";
 const { RangePicker } = DatePicker;
 
-const dateFormat = "YYYY-MM-DD";
+// const dateFormat = "YYYY-MM-DD HH:mm:ss";
 const XDateRangePicker = (props) => {
   const {
     title,
@@ -18,8 +18,8 @@ const XDateRangePicker = (props) => {
 
   const handleChange = (e) => {
     var date = [];
-    date[0] = moment(e[0]).format("YYYY-MM-DD hh:mm:ss");
-    date[1] = moment(e[1]).format("YYYY-MM-DD hh:mm:ss");
+    date[0] = moment(e[0]).format("YYYY-MM-DD HH:mm:ss");
+    date[1] = moment(e[1]).format("YYYY-MM-DD HH:mm:ss");
     // console.log(date);
     if (onChange) {
       onChange(date, e);
@@ -43,7 +43,7 @@ const XDateRangePicker = (props) => {
       <RangePicker
         disabled={disabled}
         onChange={(e) => handleChange(e)}
-        format={dateFormat}
+        // format={dateFormat}
         {...props}
       />
     </Form.Item>
