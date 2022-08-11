@@ -26,7 +26,7 @@ const XModalOpenCashier = (props) => {
   };
   return (
     <>
-      <Modal title="Approval Form" okText="Approve" footer={null} {...props}>
+      <Modal title="Form Cashier" okText="Approve" footer={null} {...props}>
         <p>
           The applicant tries to open a dialog to open or close cashier data on
           your own responsibility.

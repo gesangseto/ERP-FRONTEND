@@ -1,10 +1,8 @@
 import {
   CheckOutlined,
   DeleteOutlined,
-  DownSquareOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-  RightSquareOutlined,
+  DownOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -15,21 +13,18 @@ import {
   Input,
   InputNumber,
   Popconfirm,
-  Popover,
   Row,
   Space,
   Table,
 } from "antd";
 import Countdown from "antd/lib/statistic/Countdown";
 import XSelectSearch from "component/XSelectSearch";
-import { XDrawerPayment, XModalOpenCashier } from "features/pos/component";
+import { XDrawerPayment } from "features/pos/component";
 import {
   getCashier,
   getSale,
-  insertCashier,
   insertSale,
   paymentSale,
-  updateCashier,
   updateSale,
 } from "features/pos/resource";
 import {
@@ -70,22 +65,11 @@ const FormSale = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [expandCashier, setExpandCashier] = useState(false);
   const [customer, setCustomer] = useState({});
-  const [visibleOpenCashier, setVisibleOpenCashier] = useState(false);
   const [cashierData, setCashierData] = useState({});
   const [listCustomer, setListCustomer] = useState([]);
   const [listItem, setListItem] = useState([]);
   const [formData, setFormData] = useState({ sale_item: [{ ...itemDef() }] });
   const [visiblePayment, setVisiblePayment] = useState(false);
-
-  const sumItem = (arr = Array, key) => {
-    let sum = 0;
-    for (const it of arr) {
-      if (it[key]) {
-        sum += it[key];
-      }
-    }
-    return sum;
-  };
 
   const disableForm = () => {
     setFormData({ sale_item: [] });
@@ -200,23 +184,6 @@ const FormSale = () => {
         setCashierData({ ..._data.data[0] });
       }
     }
-  };
-
-  const handleSubmitCashier = async (item) => {
-    let _data;
-    if (item.pos_cashier_id) {
-      _data = await updateCashier(item);
-      if (_data) {
-        toast.success("Sucess close cashier");
-      }
-    } else {
-      _data = await insertCashier(item);
-      if (_data) {
-        toast.success("Sucess open cashier");
-      }
-    }
-    setVisibleOpenCashier(false);
-    loadCashier();
   };
 
   const loadItem = async (text, type) => {
@@ -462,38 +429,19 @@ const FormSale = () => {
   };
   return (
     <>
-      <XModalOpenCashier
-        visible={visibleOpenCashier}
-        onSubmit={(item) => handleSubmitCashier(item)}
-        onCancel={() => setVisibleOpenCashier(false)}
-        initialValue={cashierData}
-      />
       <Card
         title={route.name}
         style={{ textTransform: "capitalize" }}
         extra={
           <Space>
-            {Object.keys(cashierData).length == 0 ? (
-              <Popover content={"Open Cashier"}>
-                <Button onClick={() => setVisibleOpenCashier(true)}>
-                  <LoginOutlined />
-                </Button>
-              </Popover>
-            ) : (
-              <Popover content={"Close Cashier"}>
-                <Button onClick={() => setVisibleOpenCashier(true)}>
-                  <LogoutOutlined />
-                </Button>
-              </Popover>
-            )}
             {expandCashier ? (
-              <DownSquareOutlined
-                onClick={() => setExpandCashier(!expandCashier)}
-              />
+              <Button onClick={() => setExpandCashier(!expandCashier)}>
+                <DownOutlined />
+              </Button>
             ) : (
-              <RightSquareOutlined
-                onClick={() => setExpandCashier(!expandCashier)}
-              />
+              <Button onClick={() => setExpandCashier(!expandCashier)}>
+                <RightOutlined />
+              </Button>
             )}
           </Space>
         }

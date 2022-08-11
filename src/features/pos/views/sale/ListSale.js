@@ -1,12 +1,20 @@
-import { Card, Tag } from "antd";
+import { Button, Card, Popover, Space, Tag } from "antd";
 import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getSale } from "features/pos/resource";
+import {
+  getCashier,
+  getSale,
+  insertCashier,
+  updateCashier,
+} from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getRoute, numberWithComma } from "helper/utils";
 import moment from "moment";
+import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
+import { XModalOpenCashier } from "features/pos/component";
+import { toast } from "react-toastify";
 
 const ListSale = () => {
   const route = getRoute();
@@ -14,10 +22,17 @@ const ListSale = () => {
   const [listData, setListData] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [filter, setFilter] = useState({ ...defaultFilter });
+  const [cashierData, setCashierData] = useState({});
+  const [visibleOpenCashier, setVisibleOpenCashier] = useState(false);
+  const profile = JSON.parse(localStorage.getItem("profile"));
 
   useEffect(() => {
     loadData();
   }, [filter]);
+
+  useEffect(() => {
+    if (Object.keys(cashierData).length == 0) loadCashier();
+  }, []);
 
   const loadData = async () => {
     let _data = await getSale(filter);
@@ -26,6 +41,37 @@ const ListSale = () => {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
     }
+  };
+
+  const loadCashier = async () => {
+    let _data = await getCashier({
+      created_by: profile.user_id,
+      is_cashier_open: true,
+    });
+    if (_data) {
+      if (_data.total == 0) {
+        setCashierData({});
+      } else {
+        setCashierData({ ..._data.data[0] });
+      }
+    }
+  };
+
+  const handleSubmitCashier = async (item) => {
+    let _data;
+    if (item.pos_cashier_id) {
+      _data = await updateCashier(item);
+      if (_data) {
+        toast.success("Sucess close cashier");
+      }
+    } else {
+      _data = await insertCashier(item);
+      if (_data) {
+        toast.success("Sucess open cashier");
+      }
+    }
+    setVisibleOpenCashier(false);
+    loadCashier();
   };
 
   const handleClickAction = async (action, id) => {
@@ -142,13 +188,36 @@ const ListSale = () => {
       title={route.name}
       style={{ textTransform: "capitalize" }}
       extra={
-        <XButton
-          popover="Create"
-          type="create"
-          onClick={() => handleClickAdd()}
-        />
+        <>
+          {Object.keys(cashierData).length == 0 ? (
+            <Popover content={"Open Cashier"}>
+              <Button onClick={() => setVisibleOpenCashier(true)}>
+                <LoginOutlined />
+              </Button>
+            </Popover>
+          ) : (
+            <Space>
+              <Popover content={"Close Cashier"}>
+                <Button onClick={() => setVisibleOpenCashier(true)}>
+                  <LogoutOutlined style={{ color: "red" }} />
+                </Button>
+              </Popover>
+              <XButton
+                popover="Create"
+                type="create"
+                onClick={() => handleClickAdd()}
+              />
+            </Space>
+          )}
+        </>
       }
     >
+      <XModalOpenCashier
+        visible={visibleOpenCashier}
+        onSubmit={(item) => handleSubmitCashier(item)}
+        onCancel={() => setVisibleOpenCashier(false)}
+        initialValue={cashierData}
+      />
       <XTable
         rowKey="pos_trx_sale_id"
         columns={columns()}

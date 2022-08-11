@@ -83,6 +83,12 @@ const LPStock = React.lazy(() =>
 const FPStock = React.lazy(() =>
   import("./features/pos/views/stock/FormStock")
 );
+const LPRSale = React.lazy(() =>
+  import("./features/pos/views/reportSale/ListReportSale")
+);
+const FPRSale = React.lazy(() =>
+  import("./features/pos/views/reportSale/FormReportSale")
+);
 const routes = [
   // { path: "/master/user", name: "Master User", element: LUser },
   // { path: "/master/user/:type", name: "Master User", element: FUser },
@@ -321,6 +327,17 @@ const routes = [
     path: "/pos/transaction/stock/:type/:id",
     name: "Detail Stock",
     element: FPStock,
+  },
+  // STOCK
+  {
+    path: "/pos/report/sale",
+    name: "Report Sale",
+    element: LPRSale,
+  },
+  {
+    path: "/pos/report/sale/:type/:id",
+    name: "Detail Report Sale",
+    element: FPRSale,
   },
 ];
 
