@@ -4,14 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { XInput, XInputNumber, XSwitch } from "component";
-import { getBase64 } from "helper/utils";
+import { getBase64, isJsonString } from "helper/utils";
 import { getConfiguration, updateConfiguration } from "resource";
 
 const Configuration = () => {
   const navigate = useNavigate();
   const form = useRef(null);
   const [fileList, setFileList] = useState([]);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ barcode_config: {} });
 
   useEffect(() => {
     loadData();
@@ -25,7 +25,11 @@ const Configuration = () => {
     let _data = await getConfiguration();
     if (_data) {
       _data = _data.data[0];
-      setFormData({ ..._data });
+      let barcode_cfg = _data.barcode_config;
+      if (isJsonString(barcode_cfg)) {
+        barcode_cfg = JSON.parse(barcode_cfg);
+      }
+      setFormData({ ..._data, barcode_config: barcode_cfg });
       setFileList([
         {
           uid: "-1",
@@ -60,7 +64,11 @@ const Configuration = () => {
   };
 
   const handleSubmit = async (e) => {
-    let body = { ...formData, ...e };
+    let body = {
+      ...formData,
+      ...e,
+      barcode_config: JSON.stringify(formData.barcode_config),
+    };
     let img = "";
     if (fileList[0].hasOwnProperty("url")) {
       img = fileList[0].url;
@@ -77,6 +85,12 @@ const Configuration = () => {
       toast.success("Success");
       // navigate(-1);
     }
+  };
+
+  const handleChangeConfigBarcode = (val, key) => {
+    let config = formData.barcode_config;
+    config[key] = val;
+    setFormData({ ...formData, barcode_config: config });
   };
   return (
     <Card title={"Configuration"} style={{ textTransform: "capitalize" }}>
@@ -115,16 +129,6 @@ const Configuration = () => {
                 {fileList.length < 5 && "+ Upload"}
               </Upload>
             </ImgCrop>
-            {/* <Upload
-              listType="picture-card"
-              fileList={fileList}
-              maxCount={1}
-              onPreview={(e) => handlePreview(e)}
-              onChange={(e) => handleChange(e)}
-              action={null}
-            >
-              <PlusOutlined />
-            </Upload> */}
           </Col>
         </Row>
         <XInput
@@ -150,6 +154,27 @@ const Configuration = () => {
           name={"multi_login"}
           initialValue={formData.multi_login}
         />
+        <Card title="Barcode Print Config">
+          <Row>
+            {Object.keys(formData.barcode_config).map((key, index) => {
+              return (
+                <Col span={12} key={index}>
+                  <XInput
+                    useForm={false}
+                    title={key}
+                    name={key}
+                    required={false}
+                    initialValue={formData.barcode_config[key] ?? ""}
+                    onChange={(e) =>
+                      handleChangeConfigBarcode(e.target.value, key)
+                    }
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+        </Card>
+        <br />
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Save

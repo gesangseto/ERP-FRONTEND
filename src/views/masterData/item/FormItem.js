@@ -1,5 +1,5 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Popconfirm, Table } from "antd";
+import { BarcodeOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Card, Form, Popconfirm, Space, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -157,7 +157,7 @@ const FormItem = () => {
         key: "mst_item_variant_id",
         dataIndex: "barcode",
         render: (_, record, dataIndex) => (
-          <>
+          <Space>
             <Popconfirm
               title="Are you sure to delete this data?"
               onConfirm={() => handleDeleteVariant(record, dataIndex)}
@@ -168,14 +168,24 @@ const FormItem = () => {
                 Delete
               </Button>
             </Popconfirm>
-            &nbsp;
             <Button
               size="small"
               onClick={() => handleClickVariant(record, dataIndex)}
             >
               Change
             </Button>
-          </>
+            <Button
+              size="small"
+              onClick={() =>
+                window.open(
+                  `${process.env.REACT_APP_API}api/generate-barcode?text=${record.barcode}`,
+                  "_blank"
+                )
+              }
+            >
+              Print <BarcodeOutlined />
+            </Button>
+          </Space>
         ),
       },
     ];

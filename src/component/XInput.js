@@ -1,4 +1,4 @@
-import { Form, Input } from "antd";
+import { Col, Form, Input, Row, Space } from "antd";
 import React from "react";
 
 const XInput = (props) => {
@@ -11,6 +11,7 @@ const XInput = (props) => {
     onChange,
     typeInput = "string",
     rules,
+    useForm = true,
   } = props;
 
   const handleChange = (e) => {
@@ -21,22 +22,43 @@ const XInput = (props) => {
   };
 
   return (
-    <Form.Item
-      initialValue={initialValue}
-      label={title ?? "No Title"}
-      name={name}
-      rules={
-        rules ?? [
-          {
-            type: typeInput,
-            required: required,
-            message: `Please input your ${title}!`,
-          },
-        ]
-      }
-    >
-      <Input disabled={disabled} onChange={(e) => handleChange(e)} {...props} />
-    </Form.Item>
+    <>
+      {useForm ? (
+        <Form.Item
+          initialValue={initialValue}
+          label={title ?? "No Title"}
+          name={name}
+          rules={
+            rules ?? [
+              {
+                type: typeInput,
+                required: required,
+                message: `Please input your ${title}!`,
+              },
+            ]
+          }
+        >
+          <Input
+            disabled={disabled}
+            onChange={(e) => handleChange(e)}
+            {...props}
+          />
+        </Form.Item>
+      ) : (
+        <Row style={{ margin: 5 }}>
+          <Col span={10}> {title}</Col>
+          <Col span={10}>
+            <Input
+              defaultValue={initialValue}
+              placeholder={title ?? "No Title"}
+              disabled={disabled}
+              onChange={(e) => handleChange(e)}
+              {...props}
+            />
+          </Col>
+        </Row>
+      )}
+    </>
   );
 };
 
