@@ -1,105 +1,102 @@
-import { cilPlus } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
-import { useEffect, useState } from 'react'
-import { matchRoutes, useLocation, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { FilterTable, Table } from 'src/component'
-import { getUser } from 'src/resource/administrator'
-import routes from 'src/routes'
+import { Card } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { XButton, XTable } from "component";
+import { defaultFilter } from "constants";
+import { getRoute } from "helper/utils";
+import { deleteUser, getUser } from "resource";
 
 const ListUser = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [{ route }] = matchRoutes(routes, location)
-  const [listTable, setListTable] = useState([])
-  const [pagination, setPagination] = useState({
-    activePage: 1,
-    limitPage: 10,
-  })
-  const [totalPage, setTotalPage] = useState(1)
+  const route = getRoute();
+  const navigate = useNavigate();
+  const [listData, setListData] = useState([]);
+  const [totalData, setTotalData] = useState(0);
+  const [filter, setFilter] = useState({ ...defaultFilter });
 
   useEffect(() => {
-    loadData()
-  }, [])
+    console.log("filter", filter);
+    loadData();
+  }, [filter]);
 
   const loadData = async () => {
-    let _data = await getUser(pagination)
+    let _data = await getUser(filter);
     if (_data) {
-      setTotalPage(_data.grand_total ? _data.grand_total : 1)
-      setListTable([..._data.data])
+      setTotalData(_data.grand_total);
+      setListData([..._data.data]);
     }
-  }
+  };
 
-  useEffect(() => {
-    loadData()
-    console.log('pagination', pagination)
-  }, [pagination])
-
+  const handleClickAction = async (action, id) => {
+    if (action == "delete") {
+      if (await deleteUser({ user_id: id })) {
+        loadData();
+        toast.success(`Delete id ${id} successfully`);
+      }
+      return;
+    }
+    navigate(`${route.path}/${action}/${id}`);
+  };
   const handleClickAdd = () => {
-    navigate(`${route.path}/create`)
-  }
-  const handleClickRow = (id, action) => {
-    if (action == 'delete') {
-      return toast.success(`Delete id ${id} successfully`)
-    }
-    navigate(`${route.path}/${action}/${id}`)
-  }
-
+    navigate(`${route.path}/create`);
+  };
   return (
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Default</strong>
-            <span className="float-end">
-              <CButton size="sm" variant="outline" color="success" onClick={() => handleClickAdd()}>
-                <CIcon key={0} icon={cilPlus} className="text-dark" />
-              </CButton>
-            </span>
-          </CCardHeader>
-          <CCardBody>
-            <FilterTable onChange={(objFilter) => setPagination({ ...pagination, ...objFilter })} />
-            <Table
-              columns={fields()}
-              items={listTable}
-              activePage={pagination.activePage}
-              totalPage={totalPage}
-              onPageChange={(page) => setPagination({ ...page })}
-              pageActive={7}
-              onClickAction={(id, action) => handleClickRow(id, action)}
-            />
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
-  )
-}
+    <Card
+      title={route.name}
+      style={{ textTransform: "capitalize" }}
+      extra={
+        <XButton
+          popover="Create"
+          type="create"
+          onClick={() => handleClickAdd()}
+        />
+      }
+    >
+      <XTable
+        rowKey="user_id"
+        columns={userColumns()}
+        items={listData}
+        totalData={totalData}
+        onChangePagination={(e) => setFilter({ ...e })}
+        onClickAction={(type, id) => handleClickAction(type, id)}
+      />
+    </Card>
+  );
+};
 
-export default ListUser
+export default ListUser;
 
-const fields = () => {
+const userColumns = () => {
   return [
     {
-      key: 'user_name',
-      label: 'Name',
+      title: "ID",
+      key: "user_id",
     },
     {
-      key: 'user_email',
-      label: 'Email',
+      title: "Name",
+      key: "user_name",
     },
     {
-      key: 'user_department_name',
-      label: 'Department',
+      title: "Email",
+      key: "user_email",
     },
     {
-      key: 'user_section_name',
-      label: 'Section',
+      title: "Address",
+      key: "user_address",
     },
     {
-      key: 'user_id',
-      label: 'Action',
-      action: ['update', 'read', 'delete'],
+      title: "Status",
+      key: "status",
+      render: (i, rec) => (
+        <p style={{ color: rec.status ? "green" : "red" }}>
+          {rec.status ? "Active" : "Inactive"}
+        </p>
+      ),
     },
-  ]
-}
+    {
+      title: "Action",
+      key: "user_id",
+      action: ["update", "read", "delete"],
+    },
+  ];
+};

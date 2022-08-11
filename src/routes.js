@@ -1,107 +1,344 @@
-import React from 'react'
+import React from "react";
 
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
-const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
+const Dashboard = React.lazy(() => import("./views/Dashboard"));
+const Profile = React.lazy(() => import("./views/Profile"));
+const Configuration = React.lazy(() => import("./views/Configuration"));
 
-// Base
-const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
-const Breadcrumbs = React.lazy(() => import('./views/base/breadcrumbs/Breadcrumbs'))
-const Cards = React.lazy(() => import('./views/base/cards/Cards'))
-const Carousels = React.lazy(() => import('./views/base/carousels/Carousels'))
-const Collapses = React.lazy(() => import('./views/base/collapses/Collapses'))
-const ListGroups = React.lazy(() => import('./views/base/list-groups/ListGroups'))
-const Navs = React.lazy(() => import('./views/base/navs/Navs'))
-const Paginations = React.lazy(() => import('./views/base/paginations/Paginations'))
-const Placeholders = React.lazy(() => import('./views/base/placeholders/Placeholders'))
-const Popovers = React.lazy(() => import('./views/base/popovers/Popovers'))
-const Progress = React.lazy(() => import('./views/base/progress/Progress'))
-const Spinners = React.lazy(() => import('./views/base/spinners/Spinners'))
-const Tables = React.lazy(() => import('./views/base/tables/Tables'))
-const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'))
-
-// Buttons
-const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
-const ButtonGroups = React.lazy(() => import('./views/buttons/button-groups/ButtonGroups'))
-const Dropdowns = React.lazy(() => import('./views/buttons/dropdowns/Dropdowns'))
-
-//Forms
-const ChecksRadios = React.lazy(() => import('./views/forms/checks-radios/ChecksRadios'))
-const FloatingLabels = React.lazy(() => import('./views/forms/floating-labels/FloatingLabels'))
-const FormControl = React.lazy(() => import('./views/forms/form-control/FormControl'))
-const InputGroup = React.lazy(() => import('./views/forms/input-group/InputGroup'))
-const Layout = React.lazy(() => import('./views/forms/layout/Layout'))
-const Range = React.lazy(() => import('./views/forms/range/Range'))
-const Select = React.lazy(() => import('./views/forms/select/Select'))
-const Validation = React.lazy(() => import('./views/forms/validation/Validation'))
-
-const Charts = React.lazy(() => import('./views/charts/Charts'))
-
-// Icons
-const CoreUIIcons = React.lazy(() => import('./views/icons/coreui-icons/CoreUIIcons'))
-const Flags = React.lazy(() => import('./views/icons/flags/Flags'))
-const Brands = React.lazy(() => import('./views/icons/brands/Brands'))
-
-// Notifications
-const Alerts = React.lazy(() => import('./views/notifications/alerts/Alerts'))
-const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
-const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
-const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
-
-const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
-
-// MY ROUTES
-const LUser = React.lazy(() => import('./views/master/user/ListUser'))
-const FUser = React.lazy(() => import('./views/master/user/FormUser'))
-
+/* 
+  MODULE ADMINSTRATOR
+  -MASTER
+  -SYSTEM
+*/
+// MASTER
+const LDepart = React.lazy(() => import("./views/master/depart/ListDepart"));
+const FDepart = React.lazy(() => import("./views/master/depart/FormDepart"));
+const LSection = React.lazy(() => import("./views/master/section/ListSection"));
+const FSection = React.lazy(() => import("./views/master/section/FormSection"));
+const FRole = React.lazy(() => import("./views/master/role/FormRole"));
+const LRole = React.lazy(() => import("./views/master/role/ListRole"));
+const ListUser = React.lazy(() => import("./views/master/user/ListUser"));
+const FormUser = React.lazy(() => import("./views/master/user/FormUser"));
+// MASTER Data
+const LCust = React.lazy(() => import("./views/masterData/customer/ListCust"));
+const FCust = React.lazy(() => import("./views/masterData/customer/FormCust"));
+const LSupp = React.lazy(() =>
+  import("./views/masterData/supplier/ListSupplier")
+);
+const FSupp = React.lazy(() =>
+  import("./views/masterData/supplier/FormSupplier")
+);
+const FormPackaging = React.lazy(() =>
+  import("./views/masterData/packaging/FormPackaging")
+);
+const ListPackaging = React.lazy(() =>
+  import("./views/masterData/packaging/ListPackaging")
+);
+const FormItem = React.lazy(() => import("./views/masterData/item/FormItem"));
+const ListItem = React.lazy(() => import("./views/masterData/item/ListItem"));
+// SYSTEM
+const LAppr = React.lazy(() => import("./views/system/approval/ListApproval"));
+const FAppr = React.lazy(() => import("./views/system/approval/FormApproval"));
+const LAudit = React.lazy(() => import("./views/system/audit/ListAudit"));
+const FAudit = React.lazy(() => import("./views/system/audit/FormAudit"));
+const LConf = React.lazy(() => import("./views/system/config/ListConf"));
+const FConf = React.lazy(() => import("./views/system/config/FormConf"));
+/*
+MODULE POINT OF SALES 
+*/
+const LPDiscount = React.lazy(() =>
+  import("./features/pos/views/discount/ListDiscount")
+);
+const FPDiscount = React.lazy(() =>
+  import("./features/pos/views/discount/FormDiscount")
+);
+const LPReceive = React.lazy(() =>
+  import("./features/pos/views/receive/ListReceive")
+);
+const FPReceive = React.lazy(() =>
+  import("./features/pos/views/receive/FormReceive")
+);
+const LPInbound = React.lazy(() =>
+  import("./features/pos/views/inbound/ListInbound")
+);
+const FPInbound = React.lazy(() =>
+  import("./features/pos/views/inbound/FormInbound")
+);
+const LPSale = React.lazy(() => import("./features/pos/views/sale/ListSale"));
+const FPSale = React.lazy(() => import("./features/pos/views/sale/FormSale"));
+const LPReturn = React.lazy(() =>
+  import("./features/pos/views/return/ListReturn")
+);
+const FPReturn = React.lazy(() =>
+  import("./features/pos/views/return/FormReturn")
+);
+const LPDestroy = React.lazy(() =>
+  import("./features/pos/views/destroy/ListDestroy")
+);
+const FPDestroy = React.lazy(() =>
+  import("./features/pos/views/destroy/FormDestroy")
+);
+const LPStock = React.lazy(() =>
+  import("./features/pos/views/stock/ListStock")
+);
+const FPStock = React.lazy(() =>
+  import("./features/pos/views/stock/FormStock")
+);
+const LPRSale = React.lazy(() =>
+  import("./features/pos/views/reportSale/ListReportSale")
+);
+const FPRSale = React.lazy(() =>
+  import("./features/pos/views/reportSale/FormReportSale")
+);
 const routes = [
-  { path: '/master/user', name: 'Master User', element: LUser },
-  { path: '/master/user/:type', name: 'Master User', element: FUser },
-  { path: '/master/user/:type/:id', name: 'Master User', element: FUser },
-  { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/theme', name: 'Theme', element: Colors, exact: true },
-  { path: '/theme/colors', name: 'Colors', element: Colors },
-  { path: '/theme/typography', name: 'Typography', element: Typography },
-  { path: '/base', name: 'Base', element: Cards, exact: true },
-  { path: '/base/accordion', name: 'Accordion', element: Accordion },
-  { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
-  { path: '/base/cards', name: 'Cards', element: Cards },
-  { path: '/base/carousels', name: 'Carousel', element: Carousels },
-  { path: '/base/collapses', name: 'Collapse', element: Collapses },
-  { path: '/base/list-groups', name: 'List Groups', element: ListGroups },
-  { path: '/base/navs', name: 'Navs', element: Navs },
-  { path: '/base/paginations', name: 'Paginations', element: Paginations },
-  { path: '/base/placeholders', name: 'Placeholders', element: Placeholders },
-  { path: '/base/popovers', name: 'Popovers', element: Popovers },
-  { path: '/base/progress', name: 'Progress', element: Progress },
-  { path: '/base/spinners', name: 'Spinners', element: Spinners },
-  { path: '/base/tables', name: 'Tables', element: Tables },
-  { path: '/base/tooltips', name: 'Tooltips', element: Tooltips },
-  { path: '/buttons', name: 'Buttons', element: Buttons, exact: true },
-  { path: '/buttons/buttons', name: 'Buttons', element: Buttons },
-  { path: '/buttons/dropdowns', name: 'Dropdowns', element: Dropdowns },
-  { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
-  { path: '/charts', name: 'Charts', element: Charts },
-  { path: '/forms', name: 'Forms', element: FormControl, exact: true },
-  { path: '/forms/form-control', name: 'Form Control', element: FormControl },
-  { path: '/forms/select', name: 'Select', element: Select },
-  { path: '/forms/checks-radios', name: 'Checks & Radios', element: ChecksRadios },
-  { path: '/forms/range', name: 'Range', element: Range },
-  { path: '/forms/input-group', name: 'Input Group', element: InputGroup },
-  { path: '/forms/floating-labels', name: 'Floating Labels', element: FloatingLabels },
-  { path: '/forms/layout', name: 'Layout', element: Layout },
-  { path: '/forms/validation', name: 'Validation', element: Validation },
-  { path: '/icons', exact: true, name: 'Icons', element: CoreUIIcons },
-  { path: '/icons/coreui-icons', name: 'CoreUI Icons', element: CoreUIIcons },
-  { path: '/icons/flags', name: 'Flags', element: Flags },
-  { path: '/icons/brands', name: 'Brands', element: Brands },
-  { path: '/notifications', name: 'Notifications', element: Alerts, exact: true },
-  { path: '/notifications/alerts', name: 'Alerts', element: Alerts },
-  { path: '/notifications/badges', name: 'Badges', element: Badges },
-  { path: '/notifications/modals', name: 'Modals', element: Modals },
-  { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
-  { path: '/widgets', name: 'Widgets', element: Widgets },
-]
+  // { path: "/master/user", name: "Master User", element: LUser },
+  // { path: "/master/user/:type", name: "Master User", element: FUser },
+  // { path: "/master/user/:type/:id", name: "Master User", element: FUser },
+  { path: "/", exact: true, name: "Home" },
+  { path: "/dashboard", name: "Dashboard", element: Dashboard },
+  { path: "/profile", name: "Profile", element: Profile },
+  { path: "/configuration", name: "Configuration", element: Configuration },
 
-export default routes
+  /* 
+  MODULE ADMINSTRATOR
+  -MASTER
+  -SYSTEM
+  */
+  //  MASTER
+  {
+    path: "/master/department",
+    name: "Master Department",
+    element: LDepart,
+  },
+  {
+    path: "/master/department/:type",
+    name: "Create Department",
+    element: FDepart,
+  },
+  {
+    path: "/master/department/:type/:id",
+    name: "Detail Department",
+    element: FDepart,
+  },
+  // Master Section
+  { path: "/master/section", name: "Master Section", element: LSection },
+  { path: "/master/section/:type", name: "Create Section", element: FSection },
+  {
+    path: "/master/section/:type/:id",
+    name: "Detail Section",
+    element: FSection,
+  },
+  // Master Role
+  { path: "/master/role", name: "Master Role", element: LRole },
+  { path: "/master/role/:type", name: "Create Role", element: FRole },
+  { path: "/master/role/:type/:id", name: "Detail Role", element: FRole },
+  // Master User
+  { path: "/master/user", name: "Master User", element: ListUser },
+  { path: "/master/user/:type", name: "Create User", element: FormUser },
+  { path: "/master/user/:type/:id", name: "Detail User", element: FormUser },
+  // MASTER DATA
+  // CUSTOMER
+  {
+    path: "/Masterdata/customer",
+    name: "Master Data Customer",
+    element: LCust,
+  },
+  {
+    path: "/Masterdata/customer/:type",
+    name: "Create Customer",
+    element: FCust,
+  },
+  {
+    path: "/Masterdata/customer/:type/:id",
+    name: "Detail Customer",
+    element: FCust,
+  },
+  // SUPPLIER
+  {
+    path: "/Masterdata/supplier",
+    name: "Master Data Supplier",
+    element: LSupp,
+  },
+  {
+    path: "/Masterdata/supplier/:type",
+    name: "Create Supplier",
+    element: FSupp,
+  },
+  {
+    path: "/Masterdata/supplier/:type/:id",
+    name: "Detail Supplier",
+    element: FSupp,
+  },
+  // PACKAGING
+  {
+    path: "/Masterdata/packaging",
+    name: "Master Data Packaging",
+    element: ListPackaging,
+  },
+  {
+    path: "/Masterdata/packaging/:type",
+    name: "Create Packaging",
+    element: FormPackaging,
+  },
+  {
+    path: "/Masterdata/packaging/:type/:id",
+    name: "Detail Packaging",
+    element: FormPackaging,
+  },
+  // PACKAGING
+  {
+    path: "/Masterdata/item",
+    name: "Master Data Product",
+    element: ListItem,
+  },
+  {
+    path: "/Masterdata/item/:type",
+    name: "Create Product",
+    element: FormItem,
+  },
+  {
+    path: "/Masterdata/item/:type/:id",
+    name: "Detail Product",
+    element: FormItem,
+  },
+  // SYSTEM
+  // APPROVAL
+  { path: "/system/approval", name: "Master Approval", element: LAppr },
+  { path: "/system/approval/:type", name: "Create Approval", element: FAppr },
+  {
+    path: "/system/approval/:type/:id",
+    name: "Detail Approval",
+    element: FAppr,
+  },
+  // AUDIT
+  { path: "/system/audit", name: "Master Audit", element: LAudit },
+  {
+    path: "/system/audit/:type/:id",
+    name: "Detail Audit",
+    element: FAudit,
+  },
+  // RELATION CONFIG
+  { path: "/system/config-relation", name: "Config Relation", element: LConf },
+  {
+    path: "/system/config-relation/:type/:id",
+    name: "Config Relation",
+    element: FConf,
+  },
+
+  // FEATURE
+  // MODULE POINT OF SALES
+  // DISCOUNT
+  {
+    path: "/pos/master/discount",
+    name: "Discount List",
+    element: LPDiscount,
+  },
+  {
+    path: "/pos/master/discount/:type",
+    name: "Discount Detail",
+    element: FPDiscount,
+  },
+  {
+    path: "/pos/master/discount/:type/:id",
+    name: "Discount Detail",
+    element: FPDiscount,
+  },
+  // RECEIVE
+  {
+    path: "/pos/transaction/receive",
+    name: "Receive [Poin Of Sales]",
+    element: LPReceive,
+  },
+  {
+    path: "/pos/transaction/receive/:type",
+    name: "Detail Receive [Poin Of Sales]",
+    element: FPReceive,
+  },
+  {
+    path: "/pos/transaction/receive/:type/:id",
+    name: "Detail Receive [Poin Of Sales]",
+    element: FPReceive,
+  },
+  // INBOUND
+  {
+    path: "/pos/transaction/inbound",
+    name: "Inbound",
+    element: LPInbound,
+  },
+  {
+    path: "/pos/transaction/inbound/:type/:id",
+    name: "Detail Inbound",
+    element: FPInbound,
+  },
+  // SALE
+  {
+    path: "/pos/transaction/sale",
+    name: "Sale List",
+    element: LPSale,
+  },
+  {
+    path: "/pos/transaction/sale/:type",
+    name: "Create Sale",
+    element: FPSale,
+  },
+  {
+    path: "/pos/transaction/sale/:type/:id",
+    name: "Detail Sale",
+    element: FPSale,
+  },
+  // RETURN
+  {
+    path: "/pos/transaction/return",
+    name: "Return List",
+    element: LPReturn,
+  },
+  {
+    path: "/pos/transaction/return/:type",
+    name: "Create Return",
+    element: FPReturn,
+  },
+  {
+    path: "/pos/transaction/return/:type/:id",
+    name: "Detail Return",
+    element: FPReturn,
+  },
+  // DESTROY
+  {
+    path: "/pos/transaction/destroy",
+    name: "Destroy List",
+    element: LPDestroy,
+  },
+  {
+    path: "/pos/transaction/destroy/:type",
+    name: "Create Destroy",
+    element: FPDestroy,
+  },
+  {
+    path: "/pos/transaction/destroy/:type/:id",
+    name: "Detail Destroy",
+    element: FPDestroy,
+  },
+  // STOCK
+  {
+    path: "/pos/transaction/stock",
+    name: "Stock",
+    element: LPStock,
+  },
+  {
+    path: "/pos/transaction/stock/:type/:id",
+    name: "Detail Stock",
+    element: FPStock,
+  },
+  // STOCK
+  {
+    path: "/pos/report/sale",
+    name: "Report Sale",
+    element: LPRSale,
+  },
+  {
+    path: "/pos/report/sale/:type/:id",
+    name: "Detail Report Sale",
+    element: FPRSale,
+  },
+];
+
+export default routes;
