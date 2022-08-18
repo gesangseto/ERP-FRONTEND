@@ -10,7 +10,14 @@ import React, { useEffect, useState } from "react";
 import { canApprove, getRoute } from "helper/utils";
 
 const XButton = (props) => {
-  const { title, popover, type, record, use_permission = true } = props;
+  const {
+    title,
+    popover,
+    type,
+    record,
+    use_permission = true,
+    ...rest
+  } = props;
   const route = getRoute();
   const [icon, setIcon] = useState();
   const [permission, setPermission] = useState({});
@@ -72,7 +79,7 @@ const XButton = (props) => {
     return (
       <>
         {!isHidden ? (
-          <Button size="medium" {...props}>
+          <Button size="medium" {...rest}>
             {icon}
             {title}
           </Button>

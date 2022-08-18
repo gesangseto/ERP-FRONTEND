@@ -22,7 +22,7 @@ const XFormReadTrx = (props) => {
   let itemRef = useRef([]);
 
   useEffect(() => {
-    console.log("data,", data);
+    // console.log("data,", data);
   }, [data]);
 
   const scheme = () => {
@@ -80,6 +80,7 @@ const XFormReadTrx = (props) => {
   return (
     <Card style={{ margin: 40 }}>
       <Table
+        rowKey={"mst_item_variant_id"}
         columns={scheme()}
         dataSource={[...data]}
         pagination={false}

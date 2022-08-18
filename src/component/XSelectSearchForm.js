@@ -3,8 +3,16 @@ import React, { useEffect, useState } from "react";
 const { Option } = Select;
 
 const XSelectSearchForm = React.forwardRef((props, ref) => {
-  const { title, name, option, required, onSearch, onChange, initialValue } =
-    props;
+  const {
+    title,
+    name,
+    option,
+    required,
+    onSearch,
+    onChange,
+    initialValue,
+    ...rest
+  } = props;
   const [data, setData] = useState([]);
   const [value, setValue] = useState("");
 
@@ -49,11 +57,10 @@ const XSelectSearchForm = React.forwardRef((props, ref) => {
           message: `Please input your ${title}!`,
         },
       ]}
-      {...props}
     >
       <Select
         ref={ref}
-        {...props}
+        {...rest}
         showSearch
         value={value}
         placeholder={props.placeholder}

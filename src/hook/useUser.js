@@ -22,15 +22,12 @@ export const useUser = () => {
   }, [filter]);
 
   const loadData = async () => {
-    console.log("Load data");
     try {
       let _data = await getUser(filter);
-      console.log("Load data", _data);
       setTotalData(_data.grand_total);
       setDatas([..._data.data]);
       setData({ ..._data.data[0] });
     } catch (error) {
-      console.log(error);
       setIsError(error.message);
     }
   };

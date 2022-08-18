@@ -10,6 +10,7 @@ const XSelect = (props) => {
     required,
     initialValue,
     onChange,
+    ...rest
   } = props;
 
   useEffect(() => {}, [option]);
@@ -31,7 +32,7 @@ const XSelect = (props) => {
           message: `Please input your ${title}!`,
         },
       ]}
-      {...props}
+      {...rest}
     >
       <Select disabled={disabled} onChange={(e) => handleChange(e)}>
         {option.length > 0 &&

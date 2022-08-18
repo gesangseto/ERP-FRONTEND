@@ -13,6 +13,5 @@ export const dummyData = (num = 10) => {
       status: status,
     });
   }
-  console.log(data);
   return data;
 };

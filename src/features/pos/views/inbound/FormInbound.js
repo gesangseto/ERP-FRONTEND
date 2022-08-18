@@ -27,7 +27,6 @@ const FormInbound = () => {
   }, []);
 
   useEffect(() => {
-    console.log("LEWAT SINI", formData);
     if (formData.hasOwnProperty("pos_trx_inbound_id"))
       form.current.resetFields();
   }, [formData]);
@@ -35,7 +34,6 @@ const FormInbound = () => {
   const loadFormData = async (id) => {
     let _data = await getInbound({ pos_trx_inbound_id: id });
     _data = _data.data[0];
-    console.log(_data);
     setFormData({ ..._data });
   };
 

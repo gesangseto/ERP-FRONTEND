@@ -186,6 +186,7 @@ const XFormReceive = (props) => {
   return (
     <Card style={{ marginBlock: 40 }}>
       <Table
+        rowKey={"mst_item_variant_id"}
         columns={scheme()}
         dataSource={[...formData.item]}
         pagination={false}

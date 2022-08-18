@@ -131,7 +131,6 @@ const FormSale = () => {
     let _data = await getSale({ pos_trx_sale_id: id });
     if (_data) {
       _data = _data.data[0];
-      console.log(_data);
       setFormData({
         ..._data,
         sale_item: remapingDetail(_data.detail),
