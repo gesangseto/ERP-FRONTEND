@@ -14,6 +14,7 @@ const XDateRangePicker = (props) => {
     onChange,
     typeInput = "string",
     rules,
+    ...rest
   } = props;
 
   const handleChange = (e) => {
@@ -44,7 +45,7 @@ const XDateRangePicker = (props) => {
         disabled={disabled}
         onChange={(e) => handleChange(e)}
         // format={dateFormat}
-        {...props}
+        {...rest}
       />
     </Form.Item>
   );

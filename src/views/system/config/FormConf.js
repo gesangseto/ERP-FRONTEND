@@ -60,7 +60,6 @@ const FormConf = () => {
       };
       newData.push(opt);
     }
-    console.log(newData);
     setListItem([...newData]);
   };
 

@@ -12,6 +12,7 @@ const XInput = (props) => {
     typeInput = "string",
     rules,
     useForm = true,
+    ...rest
   } = props;
 
   const handleChange = (e) => {
@@ -41,7 +42,7 @@ const XInput = (props) => {
           <Input
             disabled={disabled}
             onChange={(e) => handleChange(e)}
-            {...props}
+            {...rest}
           />
         </Form.Item>
       ) : (
@@ -53,7 +54,7 @@ const XInput = (props) => {
               placeholder={title ?? "No Title"}
               disabled={disabled}
               onChange={(e) => handleChange(e)}
-              {...props}
+              {...rest}
             />
           </Col>
         </Row>

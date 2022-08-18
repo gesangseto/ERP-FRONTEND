@@ -37,7 +37,6 @@ const XFormApproval = (props) => {
         setData({ ...app });
       }
     }
-    console.log(item);
   }, [item]);
 
   return (

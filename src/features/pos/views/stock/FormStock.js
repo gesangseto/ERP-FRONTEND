@@ -32,7 +32,6 @@ const FormStock = () => {
   const loadFormData = async (id) => {
     let _data = await getStock({ pos_item_stock_id: id });
     if (_data.data.length > 0) {
-      console.log("===========", _data.data[0]);
       _data = _data.data[0];
       setFormData({ ..._data });
     }

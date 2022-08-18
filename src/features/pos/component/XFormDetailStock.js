@@ -5,9 +5,7 @@ import { useEffect } from "react";
 const XFormDetailStock = (props) => {
   const { data } = props;
 
-  useEffect(() => {
-    console.log("data,", data);
-  }, [data]);
+  useEffect(() => {}, [data]);
 
   const scheme = () => {
     return [
@@ -43,7 +41,12 @@ const XFormDetailStock = (props) => {
 
   return (
     <Card style={{ margin: 40 }}>
-      <Table columns={scheme()} dataSource={[...data]} pagination={false} />
+      <Table
+        rowKey={"mst_item_variant_id"}
+        columns={scheme()}
+        dataSource={[...data]}
+        pagination={false}
+      />
     </Card>
   );
 };

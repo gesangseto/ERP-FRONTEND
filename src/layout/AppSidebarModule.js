@@ -4,24 +4,52 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Layout, Menu, Popover } from "antd";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { icon } from "constants";
-import { groupBy, reformatMenu } from "helper/utils";
+import { groupBy } from "helper/utils";
+import { useEffect, useState } from "react";
+import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
+import routes from "routes";
 
 const { Sider } = Layout;
 
 const AppSidebarModule = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [{ route }] = matchRoutes(routes, location);
   const { isCollapsed, changeMenu } = props;
   const [module, setModule] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([1]);
   const [profile, setProfile] = useState({
     ...JSON.parse(localStorage.getItem("profile")),
   });
+  const [menu, setMenu] = useState([
+    ...JSON.parse(localStorage.getItem("menu")),
+  ]);
 
   useEffect(() => {
-    let menu = JSON.parse(localStorage.getItem("menu"));
+    let path = route.path.split(":");
+    if (path[0]) {
+      let can_access = false;
+      let method = location.pathname.replace(path[0], "");
+      method = method.split("/")[0];
+      for (const it of menu) {
+        let permission = it.sys_menu_url.replace(/\//g, "").toLowerCase();
+        let access = path[0].replace(/\//g, "").toLowerCase();
+        if (permission === access || access == "profile") {
+          if (method && it[`flag_${method}`] === 1) {
+            can_access = true;
+          } else {
+            can_access = true;
+          }
+        }
+      }
+      if (!can_access && profile.user_id != 0) {
+        navigate("/404");
+      }
+    }
+  }, [route]);
+
+  useEffect(() => {
     if (menu) {
       let grp = groupBy(menu, "sys_menu_module_code");
       let group = [];

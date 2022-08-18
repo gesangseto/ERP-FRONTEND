@@ -45,7 +45,7 @@ const ListStock = () => {
       // }
     >
       <XTable
-        rowKey="pos_trx_inbound_id"
+        rowKey="pos_item_stock_id"
         columns={columns()}
         items={listData}
         totalData={totalData}

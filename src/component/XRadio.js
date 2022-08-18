@@ -9,6 +9,7 @@ const XRadio = (props) => {
     initialValue,
     onChange,
     option = Array,
+    ...rest
   } = props;
 
   const handleChange = (e) => {
@@ -24,7 +25,7 @@ const XRadio = (props) => {
         label={title ?? "No Title"}
         name={name}
         valuePropName="checked"
-        {...props}
+        {...rest}
       >
         <Radio.Group
         // onChange={onChange} value={value}

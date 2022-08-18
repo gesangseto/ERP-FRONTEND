@@ -63,7 +63,6 @@ const FormRole = () => {
     _data = _data.data;
     let reformat = treeify(_data, "sys_menu_id", "sys_menu_parent_id");
     let rmChild = removeEmptyChild(reformat, "children");
-    console.log(rmChild);
     let grouping = groupBy(rmChild, "sys_menu_module_name");
     setGroupRole({ ...grouping });
     setListRole([..._data]);

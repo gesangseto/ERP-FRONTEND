@@ -12,6 +12,7 @@ const XInputNumber = React.forwardRef((props, ref) => {
     min,
     max,
     rules,
+    ...rest
   } = props;
 
   const handleChange = (e) => {
@@ -42,7 +43,7 @@ const XInputNumber = React.forwardRef((props, ref) => {
         onChange={(e) => handleChange(e)}
         min={min}
         max={max}
-        {...props}
+        {...rest}
       />
     </Form.Item>
   );

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 const { Option } = Select;
 
 const XSelectSearch = React.forwardRef((props, ref) => {
-  const { option, onSearch, onChange, initialValue, initialText } = props;
+  const { option, onSearch, onChange, initialValue, initialText, ...rest } =
+    props;
   const [data, setData] = useState([]);
   const [value, setValue] = useState("");
 
@@ -45,7 +46,7 @@ const XSelectSearch = React.forwardRef((props, ref) => {
         maxWidth: 600,
         width: 200,
       }}
-      {...props}
+      {...rest}
       showSearch
       value={value}
       placeholder={props.placeholder}

@@ -15,7 +15,6 @@ const ListUser = () => {
   const [filter, setFilter] = useState({ ...defaultFilter });
 
   useEffect(() => {
-    console.log("filter", filter);
     loadData();
   }, [filter]);
 
