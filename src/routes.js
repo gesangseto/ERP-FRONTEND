@@ -45,6 +45,18 @@ const FConf = React.lazy(() => import("./views/system/config/FormConf"));
 /*
 MODULE POINT OF SALES 
 */
+const LPBranch = React.lazy(() =>
+  import("./features/pos/views/branch/ListBranch")
+);
+const FPBranch = React.lazy(() =>
+  import("./features/pos/views/branch/FormBranch")
+);
+const LPUserBranch = React.lazy(() =>
+  import("./features/pos/views/userBranch/ListUserBranch")
+);
+const FPUserBranch = React.lazy(() =>
+  import("./features/pos/views/userBranch/FormUserBranch")
+);
 const LPDiscount = React.lazy(() =>
   import("./features/pos/views/discount/ListDiscount")
 );
@@ -226,6 +238,38 @@ const routes = [
 
   // FEATURE
   // MODULE POINT OF SALES
+  // BRANCH
+  {
+    path: "/pos/master/branch",
+    name: "Branch List",
+    element: LPBranch,
+  },
+  {
+    path: "/pos/master/branch/:type",
+    name: "Branch Detail",
+    element: FPBranch,
+  },
+  {
+    path: "/pos/master/branch/:type/:id",
+    name: "Branch Detail",
+    element: FPBranch,
+  },
+  // USER BRANCH
+  {
+    path: "/pos/master/user-branch",
+    name: "User Branch List",
+    element: LPUserBranch,
+  },
+  {
+    path: "/pos/master/user-branch/:type",
+    name: "User Branch Detail",
+    element: FPUserBranch,
+  },
+  {
+    path: "/pos/master/user-branch/:type/:id",
+    name: "User Branch Detail",
+    element: FPUserBranch,
+  },
   // DISCOUNT
   {
     path: "/pos/master/discount",

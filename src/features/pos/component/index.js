@@ -4,6 +4,7 @@ import XFormReceive from "./XFormReceive";
 import XModalProduct from "./XModalProduct";
 import XModalOpenCashier from "./XModalOpenCashier";
 import XDrawerPayment from "./XDrawerPayment";
+import XTableDetailUser from "./XTableDetailUser";
 
 export {
   XModalProduct,
@@ -12,4 +13,5 @@ export {
   XFormDetailStock,
   XModalOpenCashier,
   XDrawerPayment,
+  XTableDetailUser,
 };
