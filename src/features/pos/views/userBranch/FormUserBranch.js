@@ -1,30 +1,32 @@
-import { Button, Card, Form } from "antd";
-import { XFormApproval, XInput, XSelect, XTextArea } from "component";
-import { getRoute, makeOption } from "helper/utils";
+import { Button, Card, Col, Divider, Form, Modal, Row, Space } from "antd";
+import { XButton, XFormApproval, XInput, XSwitch, XTextArea } from "component";
+import { getRoute } from "helper/utils";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { XTableDetailUser } from "features/pos/component";
 import {
-  XFormReceive,
-  XTableDetailTrx,
-  XTableDetailUser,
-} from "features/pos/component";
-import {
-  getReceive,
+  deleteUserBranch,
   getUserBranch,
   insertReceive,
+  insertUserBranch,
   updateReceive,
+  updateUserBranch,
 } from "features/pos/resource";
-import { getSupplier } from "resource";
+import XSelectSearch from "component/XSelectSearch";
+import { getUser } from "resource";
 
 const FormUserBranch = () => {
   const route = getRoute();
   let { type, id } = useParams();
   const navigate = useNavigate();
   const form = useRef(null);
+  const formUserBranch = useRef(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ ...{}, detail: [] });
+  const [selectedData, setSelectedData] = useState({});
+  const [listUser, setListUser] = useState([]);
 
   useEffect(() => {
     (async function () {
@@ -41,33 +43,54 @@ const FormUserBranch = () => {
   const loadFormData = async (id) => {
     let _data = await getUserBranch({ pos_branch_id: id });
     _data = _data.data[0];
-    console.log(_data);
     setFormData({ ..._data });
   };
 
-  const saveFormData = async (param = Object) => {
-    let _body = { ...formData, ...param };
-    let _item = [];
-    for (const it of _body.item) {
-      if (it.mst_item_variant_id) {
-        _item.push(it);
-      }
-    }
-    _body.item = _item;
-    let _data;
-    if (id) {
-      param.mst_customer_id = id;
-      _data = await updateReceive(_body);
-    } else {
-      _data = await insertReceive(_body);
-    }
+  const loadUser = async (e) => {
+    let filter = { page: 1, limit: 10, search: e };
+    let _data = await getUser(filter);
     if (_data) {
-      toast.success("Success");
-      navigate(-1);
+      setListUser([..._data.data]);
+    } else {
+      setListUser([]);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleClickRow = async (type, item) => {
+    loadUser(item.user_name);
+    if (type === "update" || type === "create") {
+      formUserBranch.current?.resetFields();
+      setSelectedData(item);
+    } else {
+      let res = await deleteUserBranch({
+        pos_user_branch_id: item.pos_user_branch_id,
+      });
+      if (res) {
+        toast.success("Success delete data");
+        loadFormData(id);
+      }
+    }
+  };
+  const saveFormData = async (param = Object) => {
+    let _body = { ...param };
+    if (!_body.user_id) {
+      return toast.error("User is required");
+    }
+    let _data = false;
+    if (param.pos_user_branch_id) {
+      _data = await updateUserBranch(_body);
+    } else {
+      _data = await insertUserBranch(_body);
+    }
+    if (_data) {
+      toast.success("Success");
+      loadFormData(id);
+      setSelectedData({});
+    }
+  };
+
+  const handleSubmit = async () => {
+    let e = selectedData;
     e.status = e.status ? 1 : 0;
     saveFormData(e);
   };
@@ -114,7 +137,24 @@ const FormUserBranch = () => {
           initialValue={formData.pos_branch_address}
           disabled
         />
-        <XTableDetailUser data={formData.detail} />
+        <Divider orientation="right">
+          <XButton
+            title="Add User"
+            type="create"
+            onClick={() =>
+              handleClickRow("create", {
+                pos_branch_id: formData.pos_branch_id,
+                user_id: null,
+                status: 1,
+                is_cashier: false,
+              })
+            }
+          />
+        </Divider>
+        <XTableDetailUser
+          data={formData.detail}
+          onClickRow={(type, item) => handleClickRow(type, item)}
+        />
 
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>
@@ -122,6 +162,68 @@ const FormUserBranch = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Modal
+        title="User On branch"
+        visible={Object.keys(selectedData).length > 0}
+        onCancel={() => setSelectedData({})}
+        onOk={() => handleSubmit()}
+      >
+        <Form
+          ref={formUserBranch}
+          defaultValue={selectedData}
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          layout="horizontal"
+        >
+          <Row>
+            <Col span={6}>
+              <p style={{ float: "right", marginInline: 10 }}>User: </p>
+            </Col>
+            <Col span={16}>
+              <XSelectSearch
+                allowClear
+                required
+                disabled={selectedData.pos_user_branch_id}
+                title="User"
+                placeholder="Input search text"
+                name="user_id"
+                onSearch={(e) => loadUser(e)}
+                option={listUser.map((it) => {
+                  return {
+                    text: `(${it.user_name}) ${it.user_email} ${it.user_phone}`,
+                    value: it.user_id,
+                  };
+                })}
+                onChange={(val) =>
+                  setSelectedData({ ...selectedData, user_id: val })
+                }
+                initialValue={selectedData.user_id}
+              />
+            </Col>
+          </Row>
+          <br />
+          <XSwitch
+            title="Is Cashier"
+            name={"is_cashier"}
+            initialValue={selectedData.is_cashier}
+            onChange={(val) =>
+              setSelectedData({ ...selectedData, is_cashier: val })
+            }
+          />
+          <XSwitch
+            title="Status"
+            name={"status"}
+            initialValue={selectedData.status}
+            onChange={(val) =>
+              setSelectedData({ ...selectedData, status: val ? 1 : 0 })
+            }
+          />
+        </Form>
+      </Modal>
       <XFormApproval item={formData} />
     </Card>
   );

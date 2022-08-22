@@ -1,13 +1,13 @@
-import { Button, Card, Form, Radio, Space } from "antd";
+import { Button, Card, Form } from "antd";
 import {
   XDateRangePicker,
   XFormApproval,
   XInputNumber,
-  XRadio,
   XSelectSearchForm,
   XSwitch,
 } from "component";
 import {
+  getBranchByUser,
   getDiscount,
   insertDiscount,
   updateDiscount,
@@ -18,7 +18,6 @@ import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getCustomer, insertCustomer, updateCustomer } from "resource";
 
 const FormDiscount = () => {
   const route = getRoute();
@@ -34,6 +33,7 @@ const FormDiscount = () => {
     status: 1,
   });
   const [listProduct, setListProduct] = useState([]);
+  const [listBranch, setListBranch] = useState([]);
 
   useEffect(() => {
     (async function () {
@@ -60,6 +60,16 @@ const FormDiscount = () => {
     });
   };
 
+  const loadBranch = async (e) => {
+    let filter = { page: 1, limit: 10, search: e };
+    let _data = await getBranchByUser(filter);
+    if (_data) {
+      setListBranch([..._data.data]);
+    } else {
+      setListBranch([]);
+    }
+  };
+
   const loadProduct = async (e) => {
     let filter = { page: 1, limit: 10, search: e };
     let _data = await getProductVariant(filter);
@@ -69,6 +79,7 @@ const FormDiscount = () => {
       setListProduct([]);
     }
   };
+
   const saveFormData = async (param = Object) => {
     param = { ...formData, ...param };
     let _data;
@@ -107,6 +118,23 @@ const FormDiscount = () => {
         }}
         layout="horizontal"
       >
+        <XSelectSearchForm
+          allowClear
+          disabled={type != "create"}
+          required
+          title="Branch"
+          placeholder="Input search text"
+          name="pos_branch_id"
+          onSearch={(e) => loadBranch(e)}
+          option={listBranch.map((it) => {
+            return {
+              text: `(${it.pos_branch_name}) ${it.pos_branch_address}`,
+              value: it.pos_branch_id,
+            };
+          })}
+          onChange={(val) => setFormData({ ...formData, pos_branch_id: val })}
+          initialValue={formData.pos_branch_id}
+        />
         <XSelectSearchForm
           allowClear
           disabled={type != "create"}
