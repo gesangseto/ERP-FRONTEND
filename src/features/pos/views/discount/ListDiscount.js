@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getDiscount } from "features/pos/resource";
+import { getDiscountByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const ListDiscount = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getDiscount(filter);
+    let _data = await getDiscountByUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -69,6 +69,10 @@ const columns = () => {
     {
       title: "Created By",
       key: "user_name",
+    },
+    {
+      title: "Branch Code",
+      key: "pos_branch_code",
     },
     {
       title: "Product",

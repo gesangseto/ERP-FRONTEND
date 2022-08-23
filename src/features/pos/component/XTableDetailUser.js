@@ -64,7 +64,7 @@ const XFormReadTrx = (props) => {
           let color = rec.status ? "green" : "red";
           return (
             <Tag color={color} key={i}>
-              {rec.is_cashier ? "Active" : "Inactive"}
+              {rec.status ? "Active" : "Inactive"}
             </Tag>
           );
         },

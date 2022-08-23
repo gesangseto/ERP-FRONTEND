@@ -21,6 +21,7 @@ const FormBranch = () => {
   const [formData, setFormData] = useState({
     allow_return_day: 0,
     pos_branch_name: null,
+    pos_branch_code: null,
     pos_branch_desc: null,
     pos_branch_address: null,
     pos_branch_phone: null,
@@ -85,6 +86,13 @@ const FormBranch = () => {
           title="Branch Name"
           name="pos_branch_name"
           initialValue={formData.pos_branch_name}
+        />
+        <XInput
+          disabled={type == "read"}
+          required
+          title="Branch Code"
+          name="pos_branch_code"
+          initialValue={formData.pos_branch_code}
         />
         <XInput
           disabled={type == "read"}

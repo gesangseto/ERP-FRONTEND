@@ -80,8 +80,8 @@ const columns = () => {
       key: "pos_branch_name",
     },
     {
-      title: "Address",
-      key: "pos_branch_address",
+      title: "Branch Code",
+      key: "pos_branch_code",
     },
     {
       title: "Username",
@@ -94,19 +94,6 @@ const columns = () => {
     {
       title: "Cashier",
       key: "total_cashier",
-    },
-    {
-      title: "Status",
-      key: "status",
-      render: (i, rec) => (
-        <p
-          style={{
-            color: rec.status == 1 ? "green" : "red",
-          }}
-        >
-          {rec.status == 1 ? "Active" : "Inactive"}
-        </p>
-      ),
     },
     {
       title: "",

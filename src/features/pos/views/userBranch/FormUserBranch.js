@@ -1,20 +1,18 @@
-import { Button, Card, Col, Divider, Form, Modal, Row, Space } from "antd";
+import { Button, Card, Col, Divider, Form, Modal, Row } from "antd";
 import { XButton, XFormApproval, XInput, XSwitch, XTextArea } from "component";
 import { getRoute } from "helper/utils";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import XSelectSearch from "component/XSelectSearch";
 import { XTableDetailUser } from "features/pos/component";
 import {
   deleteUserBranch,
   getUserBranch,
-  insertReceive,
   insertUserBranch,
-  updateReceive,
   updateUserBranch,
 } from "features/pos/resource";
-import XSelectSearch from "component/XSelectSearch";
 import { getUser } from "resource";
 
 const FormUserBranch = () => {
@@ -72,7 +70,7 @@ const FormUserBranch = () => {
     }
   };
   const saveFormData = async (param = Object) => {
-    let _body = { ...param };
+    let _body = { ...param, pos_branch_code: formData.pos_branch_code };
     if (!_body.user_id) {
       return toast.error("User is required");
     }
@@ -117,6 +115,12 @@ const FormUserBranch = () => {
           title="Branch Name"
           name={"pos_branch_name"}
           initialValue={formData.pos_branch_name}
+          disabled
+        />
+        <XInput
+          title="Branch Code"
+          name={"pos_branch_code"}
+          initialValue={formData.pos_branch_code}
           disabled
         />
         <XInput

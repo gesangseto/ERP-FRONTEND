@@ -84,6 +84,10 @@ const columns = () => {
       key: "pos_branch_name",
     },
     {
+      title: "Code",
+      key: "pos_branch_code",
+    },
+    {
       title: "Address",
       key: "pos_branch_address",
     },
