@@ -74,6 +74,13 @@ const FormStock = () => {
         size={"default"}
       >
         <XInput
+          title="Branch"
+          name={"pos_branch_code"}
+          initialValue={formData.pos_branch_code}
+          disabled={type == "read"}
+          required
+        />
+        <XInput
           title="Product"
           name={"mst_item_name"}
           initialValue={formData.mst_item_name}

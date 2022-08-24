@@ -1,6 +1,7 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { Card, DatePicker, Input, InputNumber, Table } from "antd";
 import XSelectSearch from "component/XSelectSearch";
+import { makeId, sumByKey } from "helper/utils";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { getProductVariant } from "resource";
@@ -8,6 +9,7 @@ import { getProductVariant } from "resource";
 const itemDef = () => {
   return JSON.parse(
     JSON.stringify({
+      key: makeId(5),
       batch_no: "",
       mst_item_variant_id: "",
       mfg_date: moment(),
@@ -40,28 +42,28 @@ const XFormReceive = (props) => {
     return _data;
   };
 
-  const handleChangeRowProduct = (val, index) => {
-    let _item = formData.item;
-    _item[index].mst_item_variant_id = val;
-    changeItem(val, "mst_item_variant_id", index);
-  };
-
   const handleChangeBarcode = async (val, index) => {
     let _data = await loadItem(val, "barcode");
     if (_data.data.length == 1) {
-      let id = _data.data[0].mst_item_variant_id;
-      changeItem(id, "mst_item_variant_id", index);
+      changeItemV2(_data.data[0], index);
     }
   };
 
-  const changeItem = (val, key, index) => {
+  const changeItemV2 = (item, index) => {
+    item = { ...itemDef(), ...item };
+    item.key = makeId(5);
+    console.log(index, item);
     let _item = formData.item;
-    _item[index][key] = val;
-    if (val && key == "mst_item_variant_id") {
-      if (!_item[index + 1]) {
-        _item.push(itemDef());
-        itemRef.current[index + 1]?.focus();
-      }
+    console.log(_item);
+    if (Object.keys(item) == 0) {
+      _item[index] = itemDef();
+    } else {
+      _item[index] = { ...item, qty: 1 };
+    }
+    _item = sumByKey({ sum: "qty", key: "mst_item_variant_id", array: _item });
+    if (!_item[index + 1]) {
+      _item.push(itemDef());
+      itemRef.current[index + 1]?.focus();
     }
     setFormData({ ...formData, item: [..._item] });
   };
@@ -85,10 +87,10 @@ const XFormReceive = (props) => {
         render: (i, rec, index) => {
           return (
             <Input
+              ref={(el) => itemRef.current.push(el)}
               defaultValue={formData.item[index].barcode}
               onChange={(e) => {}}
               onKeyDown={(e) => {
-                changeItem(e.target.value, "barcode", index);
                 if (e.key === "Enter") {
                   handleChangeBarcode(e.target.value, index);
                   e.preventDefault();
@@ -97,7 +99,6 @@ const XFormReceive = (props) => {
               status={
                 !formData.item[index].mst_item_variant_id ? "error" : null
               }
-              ref={(el) => itemRef.current.push(el)}
               autoFocus
             />
           );
@@ -116,34 +117,32 @@ const XFormReceive = (props) => {
               option={listItem.map((it) => {
                 return {
                   text: `${it.mst_item_name} (${it.mst_packaging_code}) @${it.mst_item_variant_qty}`,
-                  value: it.mst_item_variant_id,
+                  value: it.mst_item_variant_id + "",
+                  ...it,
                 };
               })}
-              onChange={(val) => handleChangeRowProduct(val, index)}
-              initialValue={formData.item[index].mst_item_variant_id}
+              onChange={(val, item) => {
+                changeItemV2(
+                  item.hasOwnProperty("item") ? item.item : {},
+                  index
+                );
+              }}
+              initialValue={rec.mst_item_variant_id + ""}
             />
           );
         },
       },
-      // {
-      //   title: "Batch No",
-      //   key: "batch_no",
-      //   render: (i, rec, index) => (
-      //     <Input
-      //       defaultValue={rec.batch_no}
-      //       onChange={(e) => changeItem(e.target.value, "batch_no", index)}
-      //     />
-      //   ),
-      // },
       {
         title: "Mfg Date",
         key: "mfg_date",
         render: (i, rec, index) => (
           <DatePicker
             defaultValue={moment(rec.mfg_date)}
-            onChange={(e) =>
-              changeItem(moment(e).format("YYYY-MM-DD"), "mfg_date", index)
-            }
+            onChange={(e) => {
+              let _item = formData.item;
+              _item[index].mfg_date = moment(e).format("YYYY-MM-DD");
+              setFormData({ ...formData, item: _item });
+            }}
           />
         ),
       },
@@ -152,10 +151,12 @@ const XFormReceive = (props) => {
         key: "exp_date",
         render: (i, rec, index) => (
           <DatePicker
+            onChange={(e) => {
+              let _item = formData.item;
+              _item[index].exp_date = moment(e).format("YYYY-MM-DD");
+              setFormData({ ...formData, item: _item });
+            }}
             defaultValue={moment(rec.exp_date)}
-            onChange={(e) =>
-              changeItem(moment(e).format("YYYY-MM-DD"), "exp_date", index)
-            }
           />
         ),
       },
@@ -164,8 +165,14 @@ const XFormReceive = (props) => {
         key: "qty",
         render: (i, rec, index) => (
           <InputNumber
+            value={rec.qty}
+            onChange={(e) => {
+              let _item = formData.item;
+              _item[index].qty = e;
+              setFormData({ ...formData, item: _item });
+            }}
+            min={0}
             defaultValue={rec.qty}
-            onChange={(e) => changeItem(e, "qty", index)}
           />
         ),
       },
@@ -186,7 +193,7 @@ const XFormReceive = (props) => {
   return (
     <Card style={{ marginBlock: 40 }}>
       <Table
-        rowKey={"mst_item_variant_id"}
+        rowKey={"key"}
         columns={scheme()}
         dataSource={[...formData.item]}
         pagination={false}

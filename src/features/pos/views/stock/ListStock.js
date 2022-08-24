@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import { XTable } from "component";
 import { defaultFilter } from "constants";
-import { getStock } from "features/pos/resource";
+import { getStock, getStockByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const ListStock = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getStock(filter);
+    let _data = await getStockByUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -60,6 +60,10 @@ export default ListStock;
 
 const columns = () => {
   return [
+    {
+      title: "Branch",
+      key: "pos_branch_code",
+    },
     {
       title: "Product",
       key: "mst_item_name",
