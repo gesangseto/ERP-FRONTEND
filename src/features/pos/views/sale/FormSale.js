@@ -19,7 +19,7 @@ import {
 } from "antd";
 import Countdown from "antd/lib/statistic/Countdown";
 import XSelectSearch from "component/XSelectSearch";
-import { XDrawerPayment } from "features/pos/component";
+import { XDrawerPayment, XSelectUserBranch } from "features/pos/component";
 import {
   getCashier,
   getSale,
@@ -433,7 +433,8 @@ const FormSale = () => {
         style={{ textTransform: "capitalize" }}
         extra={
           <Space>
-            {expandCashier ? (
+            <XSelectUserBranch initialValue={cashierData.pos_branch_code} />
+            {/* {expandCashier ? (
               <Button onClick={() => setExpandCashier(!expandCashier)}>
                 <DownOutlined />
               </Button>
@@ -441,7 +442,7 @@ const FormSale = () => {
               <Button onClick={() => setExpandCashier(!expandCashier)}>
                 <RightOutlined />
               </Button>
-            )}
+            )} */}
           </Space>
         }
       >

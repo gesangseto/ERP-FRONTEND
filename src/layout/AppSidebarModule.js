@@ -19,14 +19,45 @@ const AppSidebarModule = (props) => {
   const { isCollapsed, changeMenu } = props;
   const [module, setModule] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([1]);
-  const [profile, setProfile] = useState({
-    ...JSON.parse(localStorage.getItem("profile")),
-  });
-  const [menu, setMenu] = useState([
-    ...JSON.parse(localStorage.getItem("menu")),
-  ]);
+  const [profile, setProfile] = useState({});
+  const [menu, setMenu] = useState([]);
 
   useEffect(() => {
+    checkPermission();
+  }, [route]);
+
+  useEffect(() => {
+    loadMenuModule();
+  }, [menu]);
+
+  useEffect(() => {
+    let storageProfile = localStorage.getItem("profile");
+    let storageMenu = localStorage.getItem("menu");
+    if (!storageProfile || !storageMenu) {
+      return navigate("/404");
+    } else {
+      setMenu([...JSON.parse(storageMenu)]);
+      setProfile({ ...JSON.parse(storageMenu) });
+    }
+  }, []);
+
+  const loadMenuModule = () => {
+    if (menu) {
+      let grp = groupBy(menu, "sys_menu_module_code");
+      let group = [];
+      for (const key in grp) {
+        let it = {
+          key: key,
+          label: grp[key][0].sys_menu_module_name,
+          icon: icon[grp[key][0].sys_menu_module_icon] ?? null,
+        };
+        group.push(it);
+      }
+      setModule([...group]);
+    }
+  };
+
+  const checkPermission = () => {
     let path = route.path.split(":");
     if (path[0]) {
       let can_access = false;
@@ -47,23 +78,7 @@ const AppSidebarModule = (props) => {
         navigate("/404");
       }
     }
-  }, [route]);
-
-  useEffect(() => {
-    if (menu) {
-      let grp = groupBy(menu, "sys_menu_module_code");
-      let group = [];
-      for (const key in grp) {
-        let it = {
-          key: key,
-          label: grp[key][0].sys_menu_module_name,
-          icon: icon[grp[key][0].sys_menu_module_icon] ?? null,
-        };
-        group.push(it);
-      }
-      setModule([...group]);
-    }
-  }, []);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("profile");
