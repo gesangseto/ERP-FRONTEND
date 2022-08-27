@@ -27,14 +27,16 @@ const AppSidebarModule = (props) => {
   }, [route]);
 
   useEffect(() => {
-    loadMenuModule();
+    if (menu.length > 0) {
+      loadMenuModule();
+    }
   }, [menu]);
 
   useEffect(() => {
     let storageProfile = localStorage.getItem("profile");
     let storageMenu = localStorage.getItem("menu");
     if (!storageProfile || !storageMenu) {
-      return navigate("/404");
+      return handleLogout();
     } else {
       setMenu([...JSON.parse(storageMenu)]);
       setProfile({ ...JSON.parse(storageMenu) });
@@ -58,12 +60,17 @@ const AppSidebarModule = (props) => {
   };
 
   const checkPermission = () => {
+    let storageMenu = localStorage.getItem("menu");
+    if (!storageMenu) {
+      return handleLogout();
+    }
+    storageMenu = JSON.parse(storageMenu);
     let path = route.path.split(":");
     if (path[0]) {
       let can_access = false;
       let method = location.pathname.replace(path[0], "");
       method = method.split("/")[0];
-      for (const it of menu) {
+      for (const it of storageMenu) {
         let permission = it.sys_menu_url.replace(/\//g, "").toLowerCase();
         let access = path[0].replace(/\//g, "").toLowerCase();
         if (permission === access || access == "profile") {
