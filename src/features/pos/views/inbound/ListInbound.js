@@ -62,8 +62,8 @@ export default ListInbound;
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_trx_inbound_id",
+      title: "Branch",
+      key: "pos_branch_code",
     },
     {
       title: "Date",
@@ -73,10 +73,6 @@ const columns = () => {
     {
       title: "Created By",
       key: "user_name",
-    },
-    {
-      title: "Branch",
-      key: "pos_branch_code",
     },
     {
       title: "Type",

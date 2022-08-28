@@ -1,9 +1,4 @@
-import {
-  CheckOutlined,
-  DeleteOutlined,
-  DownOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
+import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -17,7 +12,6 @@ import {
   Space,
   Table,
 } from "antd";
-import Countdown from "antd/lib/statistic/Countdown";
 import XSelectSearch from "component/XSelectSearch";
 import { XDrawerPayment, XSelectUserBranch } from "features/pos/component";
 import {
@@ -35,7 +29,6 @@ import {
   removeEmptyObject,
   sumByKey,
 } from "helper/utils";
-import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -63,12 +56,15 @@ const FormSale = () => {
   let inputCash = useRef(null);
   let itemRef = useRef([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [expandCashier, setExpandCashier] = useState(false);
   const [customer, setCustomer] = useState({});
   const [cashierData, setCashierData] = useState({});
   const [listCustomer, setListCustomer] = useState([]);
   const [listItem, setListItem] = useState([]);
-  const [formData, setFormData] = useState({ sale_item: [{ ...itemDef() }] });
+  const [formData, setFormData] = useState({
+    pos_branch_code: null,
+    mst_customer_id: null,
+    sale_item: [{ ...itemDef() }],
+  });
   const [visiblePayment, setVisiblePayment] = useState(false);
 
   const disableForm = () => {
@@ -158,10 +154,6 @@ const FormSale = () => {
       if (_data.hasOwnProperty("detail")) {
         let cust = _data.detail;
         setCustomer({ ...cust });
-        setFormData({
-          ...formData,
-          mst_customer_id: cust.mst_customer_id + "",
-        });
         setListCustomer([{ ...cust }]);
         localStorage.setItem("customer_default", JSON.stringify(cust));
       } else {
@@ -180,7 +172,8 @@ const FormSale = () => {
       if (_data.total == 0) {
         setCashierData({});
       } else {
-        setCashierData({ ..._data.data[0] });
+        let data = _data.data[0];
+        setCashierData({ ...data });
       }
     }
   };
@@ -202,13 +195,20 @@ const FormSale = () => {
   };
 
   const checkout = async () => {
+    let pos_branch_code = cashierData.pos_branch_code;
+    let mst_customer_id = customer.mst_customer_id;
     if (formData.pos_trx_sale_id) return;
     setIsLoading(true);
-    let _body = formData;
+    let _body = {
+      ...formData,
+      mst_customer_id: mst_customer_id,
+      pos_branch_code: pos_branch_code,
+    };
     _body.sale_item = removeEmptyObject(
       formData.sale_item,
       "mst_item_variant_id"
     );
+    console.log(_body);
     let _data = await insertSale(_body);
     if (_data) {
       let id = _data.data[0].pos_trx_sale_id;
@@ -433,28 +433,15 @@ const FormSale = () => {
         style={{ textTransform: "capitalize" }}
         extra={
           <Space>
-            <XSelectUserBranch initialValue={cashierData.pos_branch_code} />
-            {/* {expandCashier ? (
-              <Button onClick={() => setExpandCashier(!expandCashier)}>
-                <DownOutlined />
-              </Button>
-            ) : (
-              <Button onClick={() => setExpandCashier(!expandCashier)}>
-                <RightOutlined />
-              </Button>
-            )} */}
+            <XSelectUserBranch
+              initialValue={cashierData.pos_branch_code}
+              onChange={(val) =>
+                setCashierData({ ...cashierData, pos_branch_code: val })
+              }
+            />
           </Space>
         }
       >
-        {expandCashier ? (
-          <Divider orientation="right" orientationMargin={50}>
-            <Countdown
-              title="Count Down Working Time"
-              value={moment(cashierData.created_at).add(8, "hours").valueOf()}
-            />
-          </Divider>
-        ) : null}
-
         {/* Start San Product */}
         {Object.keys(cashierData).length == 0 ? null : (
           <>
@@ -479,7 +466,7 @@ const FormSale = () => {
                         allowClear
                         placeholder="Customer Default"
                         name="mst_customer_id"
-                        initialValue={formData.mst_customer_id + ""}
+                        initialValue={customer.mst_customer_id + ""}
                         onSearch={(e) => loadCustomer(e, "search")}
                         option={listCustomer.map((it) => {
                           return {
@@ -490,7 +477,7 @@ const FormSale = () => {
                         })}
                         onChange={(val, item) => {
                           setCustomer({ ...item.item });
-                          setFormData({ ...formData, mst_customer_id: val });
+                          // setFormData({ ...formData, mst_customer_id: val });
                         }}
                       />
                     ) : (

@@ -5,13 +5,18 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { XFormReceive, XTableDetailTrx } from "features/pos/component";
+import {
+  XFormReceive,
+  XSelectUserBranch,
+  XTableDetailTrx,
+} from "features/pos/component";
 import {
   getDestroy,
   insertDestroy,
   updateDestroy,
 } from "features/pos/resource";
 import { getSupplier } from "resource";
+import XSelectUserBranchForm from "features/pos/component/XSelectUserBranchForm";
 
 const FormDestroy = () => {
   const route = getRoute();
@@ -92,6 +97,11 @@ const FormDestroy = () => {
         }}
         size={"default"}
       >
+        <XSelectUserBranchForm
+          required={false}
+          name={"pos_branch_code"}
+          initialValue={formData.pos_branch_code}
+        />
         {type != "create" ? (
           <XTextArea
             title="Note"

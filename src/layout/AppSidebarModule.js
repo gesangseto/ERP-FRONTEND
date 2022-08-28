@@ -39,7 +39,7 @@ const AppSidebarModule = (props) => {
       return handleLogout();
     } else {
       setMenu([...JSON.parse(storageMenu)]);
-      setProfile({ ...JSON.parse(storageMenu) });
+      setProfile({ ...JSON.parse(storageProfile) });
     }
   }, []);
 

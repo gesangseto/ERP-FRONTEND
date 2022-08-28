@@ -3,17 +3,17 @@ import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
 import {
   getCashier,
-  getSale,
+  getSaleByUser,
   insertCashier,
   updateCashier,
 } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute, numberWithComma } from "helper/utils";
-import moment from "moment";
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { XModalOpenCashier } from "features/pos/component";
+import { getRoute, numberWithComma } from "helper/utils";
+import moment from "moment";
 import { toast } from "react-toastify";
 
 const ListSale = () => {
@@ -35,7 +35,7 @@ const ListSale = () => {
   }, []);
 
   const loadData = async () => {
-    let _data = await getSale(filter);
+    let _data = await getSaleByUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -82,6 +82,10 @@ const ListSale = () => {
 
   const columns = () => {
     return [
+      {
+        title: "Branch",
+        key: "pos_branch_code",
+      },
       {
         title: "INVOICE",
         key: "pos_trx_sale_id",

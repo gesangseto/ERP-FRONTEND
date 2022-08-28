@@ -62,8 +62,8 @@ export default ListDestroy;
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_trx_destroy_id",
+      title: "Branch",
+      key: "pos_branch_code",
     },
     {
       title: "Date",

@@ -1,12 +1,14 @@
-import XSelectSearch from "component/XSelectSearch";
+import { XSelectSearchForm } from "component";
 import { useEffect, useState } from "react";
 import { getBranchByUser } from "../resource";
 
-const XSelectUserBranch = (props) => {
+const XSelectUserBranchForm = (props) => {
   const { title, initialValue, onChange, ...rest } = props;
   const [listBranch, setListBranch] = useState([]);
+  const [thisVal, setThisVal] = useState(null);
 
   useEffect(() => {
+    setThisVal(initialValue);
     loadBranch();
   }, [initialValue]);
 
@@ -21,17 +23,19 @@ const XSelectUserBranch = (props) => {
   };
 
   const handleChange = (val, item) => {
-    console.log(val, item);
+    setThisVal(val);
     if (onChange) {
       onChange(val, item);
     }
   };
 
   return (
-    <XSelectSearch
-      status={!initialValue ? "error" : null}
+    <XSelectSearchForm
+      status={!thisVal ? "error" : null}
+      required
       allowClear
       placeholder="Branch"
+      title="Branch"
       name="pos_branch_code"
       initialValue={initialValue}
       onSearch={(e) => loadBranch(e, "search")}
@@ -50,4 +54,4 @@ const XSelectUserBranch = (props) => {
     />
   );
 };
-export default XSelectUserBranch;
+export default XSelectUserBranchForm;

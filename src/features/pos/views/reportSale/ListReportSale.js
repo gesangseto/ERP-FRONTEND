@@ -1,7 +1,7 @@
 import { Card, Tag } from "antd";
 import { XTable } from "component";
 import { defaultFilter } from "constants";
-import { getInbound, getReportCashierSale } from "features/pos/resource";
+import { getReceiveByUser, getReportSaleByBranch } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const ListReportSale = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getReportCashierSale(filter);
+    let _data = await getReportSaleByBranch(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -62,6 +62,10 @@ export default ListReportSale;
 const columns = () => {
   return [
     {
+      title: "Branch",
+      key: "pos_branch_code",
+    },
+    {
       title: "Open Cashier",
       key: "created_at",
       render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
@@ -77,10 +81,6 @@ const columns = () => {
     {
       title: "Cashier",
       key: "user_name",
-    },
-    {
-      title: "Shift",
-      key: "pos_cashier_shift",
     },
     {
       title: "Shift",

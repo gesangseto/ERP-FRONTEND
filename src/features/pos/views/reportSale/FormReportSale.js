@@ -1,12 +1,11 @@
-import { Button, Card, Form } from "antd";
-import { XFormApproval, XInput } from "component";
-import { getRoute } from "helper/utils";
+import { Button, Card, Descriptions, Form, Tag } from "antd";
+import { XButton, XFormApproval, XInput, XTable } from "component";
+import { getRoute, numberWithComma } from "helper/utils";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { XTableDetailTrx } from "features/pos/component";
-import { getInbound, getReportCashierSale } from "features/pos/resource";
+import { getReportSale } from "features/pos/resource";
 import moment from "moment";
 import { insertCustomer, updateCustomer } from "resource";
 
@@ -31,7 +30,7 @@ const FormReportSale = () => {
   }, [formData]);
 
   const loadFormData = async (id) => {
-    let _data = await getReportCashierSale({ pos_cashier_id: id });
+    let _data = await getReportSale({ pos_cashier_id: id });
     _data = _data.data[0];
     setFormData({ ..._data });
   };
@@ -73,7 +72,14 @@ const FormReportSale = () => {
         size={"default"}
       >
         <XInput
-          title="Created At"
+          title="Branch"
+          name={"pos_branch_code"}
+          initialValue={formData.pos_branch_code}
+          disabled={type == "read"}
+          required
+        />
+        <XInput
+          title="Created at"
           name={"created_at"}
           initialValue={moment(formData.created_at).format(
             "YYYY-MM-DD HH:mm:ss"
@@ -89,22 +95,48 @@ const FormReportSale = () => {
           required
         />
         <XInput
-          title="Type"
-          name={"pos_trx_inbound_type"}
-          initialValue={formData.pos_trx_inbound_type}
+          title="Status Cashier"
+          name={"is_cashier_open"}
+          initialValue={formData.is_cashier_open ? "Open" : "Close"}
           disabled={type == "read"}
           required
         />
         <XInput
-          title="Source"
-          name={"pos_trx_inbound_id"}
-          initialValue={
-            formData.mst_supplier_name
-              ? formData.mst_supplier_name
-              : formData.mst_customer_name
-          }
+          title="Shift"
+          name={"pos_cashier_shift"}
+          initialValue={formData.pos_cashier_shift}
           disabled={type == "read"}
           required
+        />
+        <XInput
+          title="Number"
+          name={"pos_cashier_number"}
+          initialValue={formData.pos_cashier_number}
+          disabled={type == "read"}
+          required
+        />
+        <XInput
+          title="Cash Collect"
+          name={"grand_total"}
+          initialValue={numberWithComma(formData.grand_total)}
+          disabled={type == "read"}
+          addonBefore={"Rp"}
+          required
+        />
+        <XInput
+          title="Cash Capital"
+          name={"pos_cashier_capital_cash"}
+          initialValue={numberWithComma(formData.pos_cashier_capital_cash)}
+          disabled={type == "read"}
+          addonBefore={"Rp"}
+          required
+        />
+
+        <XTable
+          rowKey="pos_trx_sale_id"
+          columns={columns()}
+          items={formData.detail}
+          totalData={formData.detail.length}
         />
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>
@@ -112,8 +144,87 @@ const FormReportSale = () => {
           </Button>
         </Form.Item>
       </Form>
-      <XFormApproval item={formData} />
     </Card>
   );
 };
 export default FormReportSale;
+
+const columns = () => {
+  return [
+    {
+      title: "Branch",
+      key: "pos_branch_code",
+    },
+    {
+      title: "INVOICE",
+      key: "pos_trx_sale_id",
+    },
+    {
+      title: "Date",
+      key: "created_at",
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+    },
+    {
+      title: "Created By",
+      key: "user_name",
+    },
+    {
+      title: "Customer",
+      key: "mst_customer_name",
+    },
+    {
+      title: "Phone",
+      key: "mst_customer_phone",
+    },
+    {
+      title: "Total Price",
+      key: "total_price",
+      render: (i, rec) => <>Rp. {numberWithComma(i)}</>,
+    },
+    {
+      title: "PPN",
+      key: "ppn",
+      render: (i, rec) => <>{i ?? 0} %</>,
+    },
+    {
+      title: "Discount",
+      key: "total_discount",
+      render: (i, rec) => <>{i ?? 0} %</>,
+    },
+    {
+      title: "Grand Total",
+      key: "grand_total",
+      render: (i, rec) => <>Rp. {numberWithComma(i)}</>,
+    },
+    {
+      title: "Status",
+      key: "status",
+      render: (i, rec) => (
+        <p
+          style={{
+            color:
+              rec.status == 1 ? "green" : rec.status == -1 ? "blue" : "red",
+          }}
+        >
+          {rec.status == 1
+            ? "Active"
+            : rec.status == -1
+            ? "Rejected"
+            : "Inactive"}
+        </p>
+      ),
+    },
+    {
+      title: "Pay Status",
+      key: "is_paid",
+      render: (i, rec) => {
+        let color = rec.is_paid ? "green" : "red";
+        return (
+          <Tag color={color} key={i}>
+            {rec.is_paid ? "Paid" : "Not Paid"}
+          </Tag>
+        );
+      },
+    },
+  ];
+};

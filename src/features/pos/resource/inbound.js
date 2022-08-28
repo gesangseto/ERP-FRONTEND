@@ -35,7 +35,7 @@ export const getInboundByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/inbound/by-user?${query_string}`)
+      .get(`/api/transaction/pos/inbound/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

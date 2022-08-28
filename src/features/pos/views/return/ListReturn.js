@@ -1,7 +1,11 @@
 import { Button, Card, Modal, Tag } from "antd";
 import { XButton, XSelectSearchForm, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getReturn, getSale, insertReturn } from "features/pos/resource";
+import {
+  getReturnByUser,
+  getSaleByUser,
+  insertReturn,
+} from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -24,7 +28,7 @@ const ListReturn = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getReturn(filter);
+    let _data = await getReturnByUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -33,7 +37,7 @@ const ListReturn = () => {
 
   const loadSale = async (e) => {
     let filter = { page: 1, limit: 10, search: e };
-    let _data = await getSale(filter);
+    let _data = await getSaleByUser(filter);
     if (_data) {
       setListSale([..._data.data]);
     }
@@ -127,6 +131,10 @@ export default ListReturn;
 
 const columns = () => {
   return [
+    {
+      title: "Branch",
+      key: "pos_branch_code",
+    },
     {
       title: "INVOICE",
       key: "pos_trx_sale_id",

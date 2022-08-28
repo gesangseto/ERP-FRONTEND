@@ -62,8 +62,8 @@ export default ListReceive;
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_receive_id",
+      title: "Branch",
+      key: "pos_branch_code",
     },
     {
       title: "Date",
@@ -73,10 +73,6 @@ const columns = () => {
     {
       title: "Created By",
       key: "user_name",
-    },
-    {
-      title: "Branch",
-      key: "pos_branch_code",
     },
     {
       title: "Product",
