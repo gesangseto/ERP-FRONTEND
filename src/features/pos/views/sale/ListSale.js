@@ -110,22 +110,22 @@ const ListSale = () => {
       {
         title: "Total Price",
         key: "total_price",
-        render: (i, rec) => <>Rp. {numberWithComma(i)}</>,
+        render: (i, rec) => <>{numberWithComma(i)}</>,
       },
       {
-        title: "PPN",
+        title: "PPN (%)",
         key: "ppn",
-        render: (i, rec) => <>{i ?? 0} %</>,
+        render: (i, rec) => <>{i ?? 0}</>,
       },
       {
-        title: "Discount",
+        title: "Discount (%)",
         key: "total_discount",
-        render: (i, rec) => <>{i ?? 0} %</>,
+        render: (i, rec) => <>{i ?? 0}</>,
       },
       {
         title: "Grand Total",
         key: "grand_total",
-        render: (i, rec) => <>Rp. {numberWithComma(i)}</>,
+        render: (i, rec) => <>{numberWithComma(i)}</>,
       },
       {
         title: "Status",

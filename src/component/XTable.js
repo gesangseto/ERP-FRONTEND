@@ -134,6 +134,7 @@ const XTable = (props) => {
         columns={structureColumns}
         dataSource={[...items]}
         pagination={false}
+        size="small"
       />
 
       <Row style={{ padding: 30 }}>

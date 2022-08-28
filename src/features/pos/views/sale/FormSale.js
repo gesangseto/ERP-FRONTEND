@@ -443,7 +443,7 @@ const FormSale = () => {
         }
       >
         {/* Start San Product */}
-        {Object.keys(cashierData).length == 0 ? null : (
+        {Object.keys(cashierData).length > 0 || type == "read" ? (
           <>
             <Row style={{}}>
               <Col span={18}>
@@ -542,7 +542,7 @@ const FormSale = () => {
               </Col>
             </Row>
           </>
-        )}
+        ) : null}
       </Card>
       <XDrawerPayment
         visible={visiblePayment}
