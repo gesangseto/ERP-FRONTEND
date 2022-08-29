@@ -110,6 +110,9 @@ const FormStock = () => {
 
         {/* <XTableDetailTrx data={formData.detail} /> */}
         <XFormDetailStock data={formData.variant} />
+        <br />
+        <br />
+        <br />
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>
             Back

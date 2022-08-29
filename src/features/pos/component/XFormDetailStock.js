@@ -1,4 +1,5 @@
 import { Card, Table } from "antd";
+import { XTableV2 } from "component";
 import { numberWithComma } from "helper/utils";
 import { useEffect } from "react";
 
@@ -11,43 +12,35 @@ const XFormDetailStock = (props) => {
     return [
       {
         title: "Barcode",
-        key: "mst_item_variant_id",
-        render: (i, rec) => <p>{rec.barcode}</p>,
+        key: "barcode",
       },
       {
         title: "Variant",
         key: "mst_item_variant_name",
-        render: (i, rec) => <p>{rec.mst_item_variant_name}</p>,
       },
       {
         title: "Pack",
         key: "mst_packaging_code",
-        render: (i, rec) => <p>{rec.mst_packaging_code}</p>,
       },
       {
         title: "Qty Child",
         key: "mst_item_variant_qty",
-        render: (i, rec) => <p>{rec.mst_item_variant_qty}</p>,
       },
       {
-        title: "Price",
+        title: "Price (Rp)",
         key: "mst_item_variant_price",
-        render: (i, rec) => (
-          <p>Rp. {numberWithComma(rec.mst_item_variant_price)}</p>
-        ),
+        cell: (rec) => numberWithComma(rec.mst_item_variant_price),
       },
     ];
   };
 
   return (
-    <Card style={{ margin: 40 }}>
-      <Table
-        rowKey={"mst_item_variant_id"}
-        columns={scheme()}
-        dataSource={[...data]}
-        pagination={false}
-      />
-    </Card>
+    <XTableV2
+      columns={scheme()}
+      items={[...data]}
+      pagination={false}
+      searchable={false}
+    />
   );
 };
 
