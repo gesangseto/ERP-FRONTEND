@@ -1,12 +1,11 @@
 import { Card } from "antd";
-import { XButton, XTable } from "component";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { deleteBranch, getBranch } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getRoute } from "helper/utils";
-import moment from "moment";
 import { toast } from "react-toastify";
 
 const ListBranch = () => {
@@ -54,8 +53,7 @@ const ListBranch = () => {
         />
       }
     >
-      <XTable
-        rowKey="pos_branch_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -71,21 +69,16 @@ export default ListBranch;
 const columns = () => {
   return [
     {
-      title: "Date",
-      key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
-    },
-    {
-      title: "Desc",
-      key: "pos_branch_desc",
+      title: "Code",
+      key: "pos_branch_code",
     },
     {
       title: "Branch Name",
       key: "pos_branch_name",
     },
     {
-      title: "Code",
-      key: "pos_branch_code",
+      title: "Desc",
+      key: "pos_branch_desc",
     },
     {
       title: "Address",

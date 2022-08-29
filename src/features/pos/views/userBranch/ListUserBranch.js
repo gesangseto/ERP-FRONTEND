@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { XButton, XTable } from "component";
+import { XButton, XTable, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { deleteBranch, getBranch, getUserBranch } from "features/pos/resource";
 import { useEffect, useState } from "react";
@@ -54,8 +54,7 @@ const ListUserBranch = () => {
       //   />
       // }
     >
-      <XTable
-        rowKey="pos_branch_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -71,17 +70,12 @@ export default ListUserBranch;
 const columns = () => {
   return [
     {
-      title: "Date",
-      key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      title: "Branch Code",
+      key: "pos_branch_code",
     },
     {
       title: "Branch Name",
       key: "pos_branch_name",
-    },
-    {
-      title: "Branch Code",
-      key: "pos_branch_code",
     },
     {
       title: "Username",

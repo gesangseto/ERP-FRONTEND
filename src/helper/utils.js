@@ -1,6 +1,7 @@
 import { icon } from "constants";
 import { matchRoutes, useLocation } from "react-router-dom";
 import routes from "routes";
+import moment from "moment";
 
 export const makeId = (length) => {
   var result = "";
@@ -11,6 +12,9 @@ export const makeId = (length) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+};
+export const toDate = (date) => {
+  return moment(date).format("YYYY-MM-DD hh:mm:ss");
 };
 export const makeString = (length) => {
   var result = "";

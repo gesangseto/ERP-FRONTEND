@@ -152,6 +152,9 @@ const FormReceive = () => {
         ) : (
           <XTableDetailTrx data={formData.item} />
         )}
+        <br />
+        <br />
+        <br />
 
         <Form.Item>
           {type == "create" ? (

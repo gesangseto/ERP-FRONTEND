@@ -1,12 +1,11 @@
 import { Card, Tag } from "antd";
-import { XButton, XTable } from "component";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
-import { getReceive, getReceiveByUser } from "features/pos/resource";
+import { getReceiveByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute } from "helper/utils";
-import moment from "moment";
+import { getRoute, toDate } from "helper/utils";
 
 const ListReceive = () => {
   const route = getRoute();
@@ -45,8 +44,7 @@ const ListReceive = () => {
         />
       }
     >
-      <XTable
-        rowKey="pos_receive_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -67,8 +65,7 @@ const columns = () => {
     },
     {
       title: "Date",
-      key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.created_at),
     },
     {
       title: "Created By",
@@ -82,10 +79,6 @@ const columns = () => {
       title: "Supplier",
       key: "mst_supplier_name",
     },
-    // {
-    //   title: "Batch",
-    //   key: "batch",
-    // },
     {
       title: "Quantity",
       key: "qty",
@@ -97,34 +90,21 @@ const columns = () => {
     {
       title: "Status",
       key: "status",
-      render: (i, rec) => (
-        <p
-          style={{
-            color: rec.status == 1 ? "green" : "red",
-          }}
-        >
-          {rec.status == 1 ? "Active" : "Inactive"}
-        </p>
-      ),
     },
     {
       title: "Received Status",
       key: "is_received",
-      render: (i, rec) => {
+      cell: (it) => {
         let color = "yellow";
         let title = "Not Received";
-        if (rec.is_received) {
+        if (it.is_received) {
           color = "green";
           title = "Received";
-        } else if (rec.is_received == false) {
+        } else if (it.is_received == false) {
           color = "red";
           title = "Rejected";
         }
-        return (
-          <Tag color={color} key={i}>
-            {title}
-          </Tag>
-        );
+        return <Tag color={color}>{title}</Tag>;
       },
     },
     {

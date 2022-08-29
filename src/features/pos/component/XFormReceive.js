@@ -1,7 +1,8 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import { Card, DatePicker, Input, InputNumber, Table } from "antd";
+import { Card, DatePicker, Input, InputNumber } from "antd";
+import { XTableV2 } from "component";
 import XSelectSearch from "component/XSelectSearch";
-import { makeId, sumByKey } from "helper/utils";
+import { makeId, sumByKey, toDate } from "helper/utils";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { getProductVariant } from "resource";
@@ -52,9 +53,7 @@ const XFormReceive = (props) => {
   const changeItemV2 = (item, index) => {
     item = { ...itemDef(), ...item };
     item.key = makeId(5);
-    console.log(index, item);
     let _item = formData.item;
-    console.log(_item);
     if (Object.keys(item) == 0) {
       _item[index] = itemDef();
     } else {
@@ -65,6 +64,7 @@ const XFormReceive = (props) => {
       _item.push(itemDef());
       itemRef.current[index + 1]?.focus();
     }
+    console.log(index, "===> ", _item);
     setFormData({ ...formData, item: [..._item] });
   };
 
@@ -84,11 +84,11 @@ const XFormReceive = (props) => {
       {
         title: "Barcode",
         key: "mst_item_variant_id",
-        render: (i, rec, index) => {
+        cell: (row, index) => {
           return (
             <Input
               ref={(el) => itemRef.current.push(el)}
-              defaultValue={formData.item[index].barcode}
+              defaultValue={row.barcode}
               onChange={(e) => {}}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -96,9 +96,7 @@ const XFormReceive = (props) => {
                   e.preventDefault();
                 }
               }}
-              status={
-                !formData.item[index].mst_item_variant_id ? "error" : null
-              }
+              status={!row.mst_item_variant_id ? "error" : null}
               autoFocus
             />
           );
@@ -107,7 +105,7 @@ const XFormReceive = (props) => {
       {
         title: "Product",
         key: "mst_item_id",
-        render: (i, rec, index) => {
+        cell: (row, index) => {
           return (
             <XSelectSearch
               allowClear
@@ -127,7 +125,7 @@ const XFormReceive = (props) => {
                   index
                 );
               }}
-              initialValue={rec.mst_item_variant_id + ""}
+              initialValue={row.mst_item_variant_id + ""}
             />
           );
         },
@@ -135,12 +133,12 @@ const XFormReceive = (props) => {
       {
         title: "Mfg Date",
         key: "mfg_date",
-        render: (i, rec, index) => (
+        cell: (rec, index) => (
           <DatePicker
             defaultValue={moment(rec.mfg_date)}
             onChange={(e) => {
               let _item = formData.item;
-              _item[index].mfg_date = moment(e).format("YYYY-MM-DD");
+              _item[index].mfg_date = toDate(e);
               setFormData({ ...formData, item: _item });
             }}
           />
@@ -149,11 +147,11 @@ const XFormReceive = (props) => {
       {
         title: "Exp Date",
         key: "exp_date",
-        render: (i, rec, index) => (
+        cell: (rec, index) => (
           <DatePicker
             onChange={(e) => {
               let _item = formData.item;
-              _item[index].exp_date = moment(e).format("YYYY-MM-DD");
+              _item[index].exp_date = toDate(e);
               setFormData({ ...formData, item: _item });
             }}
             defaultValue={moment(rec.exp_date)}
@@ -163,7 +161,7 @@ const XFormReceive = (props) => {
       {
         title: "Quantity",
         key: "qty",
-        render: (i, rec, index) => (
+        cell: (rec, index) => (
           <InputNumber
             value={rec.qty}
             onChange={(e) => {
@@ -179,7 +177,7 @@ const XFormReceive = (props) => {
       {
         title: "",
         key: "null",
-        render: (i, rec, index) => (
+        cell: (rec, index) => (
           <>
             {!index ? null : (
               <DeleteOutlined onClick={() => handleDeleteRow(index)} />
@@ -191,15 +189,12 @@ const XFormReceive = (props) => {
   };
 
   return (
-    <Card style={{ marginBlock: 40 }}>
-      <Table
-        rowKey={"key"}
-        columns={scheme()}
-        dataSource={[...formData.item]}
-        pagination={false}
-        size="small"
-      />
-    </Card>
+    <XTableV2
+      columns={scheme()}
+      items={[...formData.item]}
+      pagination={false}
+      searchable={false}
+    />
   );
 };
 

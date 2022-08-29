@@ -159,6 +159,9 @@ const FormUserBranch = () => {
           data={formData.detail}
           onClickRow={(type, item) => handleClickRow(type, item)}
         />
+        <br />
+        <br />
+        <br />
 
         <Form.Item>
           <Button type="primary" onClick={() => navigate(-1)}>

@@ -1,12 +1,11 @@
 import { Card } from "antd";
-import { XButton, XTable } from "component";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { getDiscountByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute } from "helper/utils";
-import moment from "moment";
+import { getRoute, toDate } from "helper/utils";
 
 const ListDiscount = () => {
   const route = getRoute();
@@ -45,8 +44,7 @@ const ListDiscount = () => {
         />
       }
     >
-      <XTable
-        rowKey="pos_discount_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -64,7 +62,7 @@ const columns = () => {
     {
       title: "Date",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.created_at),
     },
     {
       title: "Created By",
@@ -88,26 +86,15 @@ const columns = () => {
     },
     {
       title: "Start",
-      key: "pos_discount_starttime",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.pos_discount_starttime),
     },
     {
       title: "End",
-      key: "pos_discount_endtime",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.pos_discount_endtime),
     },
     {
       title: "Status",
       key: "status",
-      render: (i, rec) => (
-        <p
-          style={{
-            color: rec.status == 1 ? "green" : "red",
-          }}
-        >
-          {rec.status == 1 ? "Active" : "Inactive"}
-        </p>
-      ),
     },
     {
       title: "",

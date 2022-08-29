@@ -1,5 +1,5 @@
 import { Button, Card, Modal, Tag } from "antd";
-import { XButton, XSelectSearchForm, XTable } from "component";
+import { XButton, XSelectSearchForm, XTable, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import {
   getReturnByUser,
@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute, numberWithComma } from "helper/utils";
+import { getRoute, numberWithComma, toDate } from "helper/utils";
 import moment from "moment";
 import { toast } from "react-toastify";
 
@@ -74,8 +74,7 @@ const ListReturn = () => {
         />
       }
     >
-      <XTable
-        rowKey="pos_trx_return_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -142,7 +141,7 @@ const columns = () => {
     {
       title: "Date",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.created_at),
     },
     {
       title: "Created By",
@@ -159,45 +158,31 @@ const columns = () => {
     {
       title: "Total Price",
       key: "total_price",
-      render: (i, rec) => <>{numberWithComma(i)}</>,
+      cell: (it) => <>{numberWithComma(it.total_price)}</>,
     },
     {
       title: "PPN (%)",
       key: "ppn",
-      render: (i, rec) => <>{i ?? 0}</>,
+      cell: (it) => it.ppn ?? 0,
     },
     {
       title: "Discount (%)",
       key: "total_discount",
-      render: (i, rec) => <>{i ?? 0}</>,
+      cell: (it) => it.total_discount ?? 0,
     },
     {
       title: "Grand Total",
       key: "grand_total",
-      render: (i, rec) => <>{numberWithComma(i)}</>,
+      cell: (it) => numberWithComma(it.grand_total),
     },
     {
       title: "Status",
       key: "status",
-      render: (i, rec) => (
-        <p
-          style={{
-            color:
-              rec.status == 1 ? "green" : rec.status == -1 ? "blue" : "red",
-          }}
-        >
-          {rec.status == 1
-            ? "Active"
-            : rec.status == -1
-            ? "Rejected"
-            : "Inactive"}
-        </p>
-      ),
     },
     {
       title: "Return Status",
       key: "is_returned",
-      render: (i, rec) => {
+      cell: (rec) => {
         let color = "yellow";
         let title = "Not Returned";
         if (rec.is_returned) {
@@ -207,11 +192,7 @@ const columns = () => {
           color = "red";
           title = "Rejected";
         }
-        return (
-          <Tag color={color} key={i}>
-            {title}
-          </Tag>
-        );
+        return <Tag color={color}>{title}</Tag>;
       },
     },
     {

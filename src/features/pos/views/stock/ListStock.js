@@ -1,7 +1,7 @@
 import { Card } from "antd";
-import { XTable } from "component";
+import { XTableV2 } from "component";
 import { defaultFilter } from "constants";
-import { getStock, getStockByUser } from "features/pos/resource";
+import { getStockByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,19 +33,8 @@ const ListStock = () => {
     navigate(`${route.path}/create`);
   };
   return (
-    <Card
-      title={route.name}
-      style={{ textTransform: "capitalize" }}
-      // extra={
-      //   <XButton
-      //     popover="Create"
-      //     type="create"
-      //     onClick={() => handleClickAdd()}
-      //   />
-      // }
-    >
-      <XTable
-        rowKey="pos_item_stock_id"
+    <Card title={route.name} style={{ textTransform: "capitalize" }}>
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}

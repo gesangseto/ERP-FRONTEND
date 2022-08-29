@@ -1,12 +1,11 @@
 import { Card } from "antd";
-import { XTable } from "component";
+import { XTableV2 } from "component";
 import { defaultFilter } from "constants";
-import { getInbound, getInboundByUser } from "features/pos/resource";
+import { getInboundByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute } from "helper/utils";
-import moment from "moment";
+import { getRoute, toDate } from "helper/utils";
 
 const ListInbound = () => {
   const route = getRoute();
@@ -45,8 +44,7 @@ const ListInbound = () => {
       //   />
       // }
     >
-      <XTable
-        rowKey="pos_trx_inbound_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -68,7 +66,7 @@ const columns = () => {
     {
       title: "Date",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.created_at),
     },
     {
       title: "Created By",
@@ -81,13 +79,8 @@ const columns = () => {
     {
       title: "Source",
       key: "pos_trx_inbound_id",
-      render: (i, rec) => (
-        <p>
-          {rec.mst_supplier_name
-            ? rec.mst_supplier_name
-            : rec.mst_customer_name}
-        </p>
-      ),
+      cell: (it) =>
+        it.mst_supplier_name ? it.mst_supplier_name : it.mst_customer_name,
     },
     {
       title: "",

@@ -1,5 +1,5 @@
-import { Card, Popconfirm, Space, Table, Tag } from "antd";
-import { XButton } from "component";
+import { Popconfirm, Space, Tag } from "antd";
+import { XButton, XTableV2 } from "component";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 
@@ -38,41 +38,27 @@ const XFormReadTrx = (props) => {
       {
         title: "Username",
         key: "user_name",
-        render: (i, rec) => <p>{`${rec.user_name}`}</p>,
       },
       {
         title: "Email",
         key: "user_email",
-        render: (i, rec) => <p>{`${rec.user_name}`}</p>,
       },
       {
         title: "Is Cashier",
         key: "is_cashier",
-        render: (i, rec) => {
+        cell: (rec) => {
           let color = rec.is_cashier ? "green" : "red";
-          return (
-            <Tag color={color} key={i}>
-              {rec.is_cashier ? "Yes" : "No"}
-            </Tag>
-          );
+          return <Tag color={color}>{rec.is_cashier ? "Yes" : "No"}</Tag>;
         },
       },
       {
         title: "Status",
         key: "status",
-        render: (i, rec) => {
-          let color = rec.status ? "green" : "red";
-          return (
-            <Tag color={color} key={i}>
-              {rec.status ? "Active" : "Inactive"}
-            </Tag>
-          );
-        },
       },
       {
         title: "Action",
         key: "pos_user_branch_id",
-        render: (i, rec) => {
+        cell: (rec) => {
           return (
             <Space>
               <XButton
@@ -95,14 +81,12 @@ const XFormReadTrx = (props) => {
   };
 
   return (
-    <Card style={{ margin: 40 }}>
-      <Table
-        rowKey={"user_id"}
-        columns={scheme()}
-        dataSource={[...data]}
-        size="small"
-      />
-    </Card>
+    <XTableV2
+      columns={scheme()}
+      items={[...data]}
+      pagination={false}
+      searchable={false}
+    />
   );
 };
 

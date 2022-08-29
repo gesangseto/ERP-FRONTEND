@@ -88,13 +88,7 @@ const sectionColumns = () => {
     },
     {
       title: "Status",
-      cell: (row) => {
-        return (
-          <Tag color={row.status ? "green" : "red"}>
-            {row.status ? "Active" : "Inactive"}
-          </Tag>
-        );
-      },
+      key: "status",
     },
     {
       title: "",

@@ -8,6 +8,7 @@ import {
   XFormItemVariant,
   XInput,
   XSwitch,
+  XTableV2,
   XTextArea,
 } from "component";
 import { getRoute } from "helper/utils";
@@ -115,18 +116,15 @@ const FormItem = () => {
       {
         title: "Barcode",
         key: "barcode",
-        dataIndex: "barcode",
       },
       {
         title: "Variant",
         key: "mst_item_variant_name",
-        dataIndex: "mst_item_variant_name",
       },
       {
         title: "Packaging",
         key: "mst_packaging_name",
-        dataIndex: "mst_packaging_name",
-        render: (_, record) => (
+        cell: (record) => (
           <p>
             {record.mst_packaging_name}{" "}
             {record.mst_packaging_code ? `(${record.mst_packaging_code})` : ""}
@@ -136,27 +134,20 @@ const FormItem = () => {
       {
         title: "Qty",
         key: "mst_item_variant_qty",
-        dataIndex: "mst_item_variant_qty",
       },
       {
         title: "Price",
         key: "mst_item_variant_price",
-        dataIndex: "mst_item_variant_price",
       },
       {
         title: "Status",
         key: "status",
-        render: (i, rec) => (
-          <p style={{ color: rec.status ? "green" : "red" }}>
-            {rec.status ? "Active" : "Inactive"}
-          </p>
-        ),
       },
       {
         title: "",
         key: "mst_item_variant_id",
         dataIndex: "barcode",
-        render: (_, record, dataIndex) => (
+        cell: (record, dataIndex) => (
           <Space>
             <Popconfirm
               title="Are you sure to delete this data?"
@@ -247,12 +238,15 @@ const FormItem = () => {
             <PlusCircleOutlined /> Add Variant
           </Button>
         </Form.Item>
-        <Table
+        <XTableV2
           columns={columns()}
-          dataSource={[...formData.variant]}
-          rowKey={"mst_item_variant_id"}
-          pagination={null}
+          items={[...formData.variant]}
+          pagination={false}
+          searchable={false}
         />
+        <br />
+        <br />
+        <br />
         <Form.Item>
           <Button
             loading={loading}

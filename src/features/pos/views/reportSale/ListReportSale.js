@@ -1,12 +1,11 @@
 import { Card, Tag } from "antd";
-import { XTable } from "component";
+import { XTableV2 } from "component";
 import { defaultFilter } from "constants";
-import { getReceiveByUser, getReportSaleByBranch } from "features/pos/resource";
+import { getReportSaleByBranch } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute, numberWithComma } from "helper/utils";
-import moment from "moment";
+import { getRoute, numberWithComma, toDate } from "helper/utils";
 
 const ListReportSale = () => {
   const route = getRoute();
@@ -34,19 +33,8 @@ const ListReportSale = () => {
     navigate(`${route.path}/create`);
   };
   return (
-    <Card
-      title={route.name}
-      style={{ textTransform: "capitalize" }}
-      // extra={
-      //   <XButton
-      //     popover="Create"
-      //     type="create"
-      //     onClick={() => handleClickAdd()}
-      //   />
-      // }
-    >
-      <XTable
-        rowKey="pos_cashier_id"
+    <Card title={route.name} style={{ textTransform: "capitalize" }}>
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -68,15 +56,12 @@ const columns = () => {
     {
       title: "Open Cashier",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.created_at),
     },
     {
       title: "Close Cashier",
       key: "updated_at",
-      render: (i, rec) => {
-        let dt = moment(i).format("YYYY-MM-DD HH:mm:ss");
-        return <p>{dt === "Invalid date" ? "-" : dt}</p>;
-      },
+      cell: (it) => toDate(it.updated_at),
     },
     {
       title: "Cashier",
@@ -93,33 +78,24 @@ const columns = () => {
     {
       title: "Is Open",
       key: "is_cashier_open",
-      render: (i, rec) => {
+      cell: (rec) => {
         let color = "red";
         let title = "Open";
         if (!rec.is_cashier_open) {
           color = "green";
           title = "Close";
         }
-        return (
-          <Tag color={color} key={i}>
-            {title}
-          </Tag>
-        );
+        return <Tag color={color}>{title}</Tag>;
       },
     },
     {
-      title: "Cash Collect",
+      title: "Cash Collect (Rp)",
       key: "grand_total",
-      render: (i, rec) => {
-        return <>Rp. {numberWithComma(i || 0)}</>;
-      },
+      cell: (it) => numberWithComma(it.grand_total),
     },
     {
       title: "Sell Item",
       key: "total_qty",
-      render: (i, rec) => {
-        return <>{numberWithComma(i || 0)}</>;
-      },
     },
     {
       title: "",

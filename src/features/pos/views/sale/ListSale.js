@@ -1,5 +1,5 @@
 import { Button, Card, Popover, Space, Tag } from "antd";
-import { XButton, XTable } from "component";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import {
   getCashier,
@@ -12,8 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { XModalOpenCashier } from "features/pos/component";
-import { getRoute, numberWithComma } from "helper/utils";
-import moment from "moment";
+import { getRoute, numberWithComma, toDate } from "helper/utils";
 import { toast } from "react-toastify";
 
 const ListSale = () => {
@@ -93,7 +92,7 @@ const ListSale = () => {
       {
         title: "Date",
         key: "created_at",
-        render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+        cell: (it) => toDate(it.created_at),
       },
       {
         title: "Created By",
@@ -110,73 +109,58 @@ const ListSale = () => {
       {
         title: "Total Price",
         key: "total_price",
-        render: (i, rec) => <>{numberWithComma(i)}</>,
+        cell: (it) => numberWithComma(it.total_price),
       },
       {
         title: "PPN (%)",
         key: "ppn",
-        render: (i, rec) => <>{i ?? 0}</>,
+        cell: (it) => it.ppn ?? 0,
       },
       {
         title: "Discount (%)",
         key: "total_discount",
-        render: (i, rec) => <>{i ?? 0}</>,
+        cell: (it) => it.total_discount ?? 0,
       },
       {
         title: "Grand Total",
         key: "grand_total",
-        render: (i, rec) => <>{numberWithComma(i)}</>,
+        cell: (it) => numberWithComma(it.grand_total),
       },
       {
         title: "Status",
         key: "status",
-        render: (i, rec) => (
-          <p
-            style={{
-              color:
-                rec.status == 1 ? "green" : rec.status == -1 ? "blue" : "red",
-            }}
-          >
-            {rec.status == 1
-              ? "Active"
-              : rec.status == -1
-              ? "Rejected"
-              : "Inactive"}
-          </p>
-        ),
       },
       {
         title: "Pay Status",
         key: "is_paid",
-        render: (i, rec) => {
-          let color = rec.is_paid ? "green" : "red";
-          return (
-            <Tag color={color} key={i}>
-              {rec.is_paid ? "Paid" : "Not Paid"}
-            </Tag>
-          );
-        },
+        cell: (it) => (
+          <Tag color={it.is_paid ? "green" : "red"}>
+            {it.is_paid ? "Paid" : "Not Paid"}
+          </Tag>
+        ),
       },
       {
         title: "",
         key: "pos_trx_sale_id",
-        render: (i, rec, index) => {
+        cell: (it, index) => {
           return (
             <>
-              {!rec.is_paid ? (
+              {!it.is_paid ? (
                 <XButton
                   popover={"update"}
                   type={"update"}
-                  record={rec}
-                  onClick={() => handleClickAction("update", i)}
+                  record={it}
+                  onClick={() =>
+                    handleClickAction("update", it.pos_trx_sale_id)
+                  }
                   style={{ float: "right", marginInline: 2 }}
                 />
               ) : null}
               <XButton
                 popover={"read"}
                 type={"read"}
-                record={rec}
-                onClick={() => handleClickAction("read", i)}
+                record={it}
+                onClick={() => handleClickAction("read", it.pos_trx_sale_id)}
                 style={{ float: "right", marginInline: 2 }}
               />
             </>
@@ -221,8 +205,7 @@ const ListSale = () => {
         onCancel={() => setVisibleOpenCashier(false)}
         initialValue={cashierData}
       />
-      <XTable
-        rowKey="pos_trx_sale_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}

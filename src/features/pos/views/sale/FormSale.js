@@ -10,8 +10,8 @@ import {
   Popconfirm,
   Row,
   Space,
-  Table,
 } from "antd";
+import { XTableV2 } from "component";
 import XSelectSearch from "component/XSelectSearch";
 import { XDrawerPayment, XSelectUserBranch } from "features/pos/component";
 import {
@@ -266,20 +266,20 @@ const FormSale = () => {
     _item = sumByKey({ sum: "qty", key: "mst_item_variant_id", array: _item });
     if (!_item[index + 1]) {
       _item.push(itemDef());
-      itemRef.current[index + 1]?.focus();
+      // itemRef.current[index + 1]?.focus();
     }
     setFormData({ ...formData, sale_item: [..._item] });
   };
 
   const getTotal = (index) => {
     let _total = 0;
-    if (index >= 0) {
-      let _item = formData.sale_item[index];
+    let _item = formData.sale_item[index] ?? {};
+    let _items = formData.sale_item;
+    if (index >= 0 && _item.hasOwnProperty("mst_item_variant_price")) {
       _total =
         numberPercent(_item.mst_item_variant_price, customer.price_percentage) *
         _item.qty;
     } else {
-      let _items = formData.sale_item;
       for (var i = 0; i < _items.length; i++) {
         _total += getTotal(i);
       }
@@ -291,8 +291,9 @@ const FormSale = () => {
     return [
       {
         title: "Barcode",
-        key: "mst_item_variant_id",
-        render: (i, rec, index) => {
+        width: "10rem",
+        cell: (rec, index) => {
+          if (formData.pos_trx_sale_id) return rec.barcode;
           return (
             <Input
               ref={(el) => itemRef.current.push(el)}
@@ -305,7 +306,6 @@ const FormSale = () => {
                 }
               }}
               status={!rec.mst_item_variant_id ? "error" : null}
-              readOnly={formData.pos_trx_sale_id}
             />
           );
         },
@@ -313,7 +313,10 @@ const FormSale = () => {
       {
         title: "Product",
         key: "mst_item_variant_id",
-        render: (i, rec, index) => {
+        width: "20rem",
+        cell: (rec, index) => {
+          if (formData.pos_trx_sale_id)
+            return `${rec.mst_item_name} (${rec.mst_packaging_code}) @${rec.mst_item_variant_qty}`;
           return (
             <XSelectSearch
               style={{
@@ -335,15 +338,14 @@ const FormSale = () => {
                 changeItem(item.hasOwnProperty("item") ? item.item : {}, index);
               }}
               initialValue={rec.mst_item_variant_id + ""}
-              disabled={formData.pos_trx_sale_id}
             />
           );
         },
       },
       {
-        title: "Price",
+        title: "Price (Rp)",
         key: "price",
-        render: (i, rec, index) => {
+        cell: (rec, index) => {
           let price = rec.price;
           if (!price) {
             price = numberPercent(
@@ -351,13 +353,13 @@ const FormSale = () => {
               customer.price_percentage
             );
           }
-          return <> Rp. {numberWithComma(price)} </>;
+          return <> {numberWithComma(price)} </>;
         },
       },
       {
         title: "Promo",
         key: "discount",
-        render: (i, rec, index) => {
+        cell: (rec, index) => {
           if (rec.discount_free_qty) {
             return (
               <>
@@ -368,7 +370,7 @@ const FormSale = () => {
           } else {
             return (
               <>
-                {rec.discount} %{" "}
+                {rec.discount ?? 0} %{" "}
                 {rec.discount_max_qty ? `(Max ${rec.discount_max_qty})` : ""}
               </>
             );
@@ -378,7 +380,8 @@ const FormSale = () => {
       {
         title: "Quantity",
         key: "qty",
-        render: (i, rec, index) => {
+        cell: (rec, index) => {
+          if (formData.is_paid) return `${rec.qty}`;
           return (
             <InputNumber
               value={rec.qty}
@@ -394,18 +397,18 @@ const FormSale = () => {
         },
       },
       {
-        title: "Total",
+        title: "Total (Rp)",
         key: "total",
-        render: (i, rec, index) => {
+        cell: (rec, index) => {
           let total = rec.total;
           if (!total) total = getTotal(index);
-          return <> Rp. {numberWithComma(total)} </>;
+          return <> {numberWithComma(total)} </>;
         },
       },
       {
         title: "",
         key: "null",
-        render: (i, rec, index) => (
+        cell: (rec, index) => (
           <>
             {index + 1 !== formData.sale_item.length &&
               !formData.pos_trx_sale_id && (
@@ -433,12 +436,16 @@ const FormSale = () => {
         style={{ textTransform: "capitalize" }}
         extra={
           <Space>
-            <XSelectUserBranch
-              initialValue={cashierData.pos_branch_code}
-              onChange={(val) =>
-                setCashierData({ ...cashierData, pos_branch_code: val })
-              }
-            />
+            {formData.pos_trx_sale_id ? (
+              formData.pos_branch_code
+            ) : (
+              <XSelectUserBranch
+                initialValue={cashierData.pos_branch_code}
+                onChange={(val) =>
+                  setCashierData({ ...cashierData, pos_branch_code: val })
+                }
+              />
+            )}
           </Space>
         }
       >
@@ -447,12 +454,11 @@ const FormSale = () => {
           <>
             <Row style={{}}>
               <Col span={18}>
-                <Table
-                  rowKey={"key"}
+                <XTableV2
                   columns={scheme()}
-                  dataSource={[...formData.sale_item]}
+                  items={[...formData.sale_item]}
                   pagination={false}
-                  size="small"
+                  searchable={false}
                 />
               </Col>
               <Col span={6}>

@@ -1,12 +1,11 @@
 import { Card, Tag } from "antd";
-import { XButton, XTable } from "component";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { getDestroy } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRoute } from "helper/utils";
-import moment from "moment";
+import { getRoute, toDate } from "helper/utils";
 
 const ListDestroy = () => {
   const route = getRoute();
@@ -45,8 +44,7 @@ const ListDestroy = () => {
         />
       }
     >
-      <XTable
-        rowKey="pos_trx_destroy_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -68,7 +66,7 @@ const columns = () => {
     {
       title: "Date",
       key: "created_at",
-      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+      cell: (it) => toDate(it.created_at),
     },
     {
       title: "Created By",
@@ -78,14 +76,6 @@ const columns = () => {
       title: "Product",
       key: "mst_item_name",
     },
-    // {
-    //   title: "Supplier",
-    //   key: "mst_supplier_name",
-    // },
-    // {
-    //   title: "Batch",
-    //   key: "batch",
-    // },
     {
       title: "Quantity",
       key: "qty",
@@ -97,20 +87,11 @@ const columns = () => {
     {
       title: "Status",
       key: "status",
-      render: (i, rec) => (
-        <p
-          style={{
-            color: rec.status == 1 ? "green" : "red",
-          }}
-        >
-          {rec.status == 1 ? "Active" : "Inactive"}
-        </p>
-      ),
     },
     {
       title: "Destroyed Status",
       key: "is_destroyed",
-      render: (i, rec) => {
+      cell: (rec) => {
         let color = "yellow";
         let title = "Not Destroyed";
         if (rec.is_destroyed) {
@@ -120,11 +101,7 @@ const columns = () => {
           color = "red";
           title = "Rejected";
         }
-        return (
-          <Tag color={color} key={i}>
-            {title}
-          </Tag>
-        );
+        return <Tag color={color}>{title}</Tag>;
       },
     },
     {
