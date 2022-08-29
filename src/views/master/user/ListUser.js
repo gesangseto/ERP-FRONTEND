@@ -1,10 +1,10 @@
-import { Card } from "antd";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { XButton, XTable } from "component";
+import { Card, Tag } from "antd";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { getRoute } from "helper/utils";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { deleteUser, getUser } from "resource";
 
 const ListUser = () => {
@@ -51,8 +51,7 @@ const ListUser = () => {
         />
       }
     >
-      <XTable
-        rowKey="user_id"
+      <XTableV2
         columns={userColumns()}
         items={listData}
         totalData={totalData}
@@ -85,15 +84,16 @@ const userColumns = () => {
     },
     {
       title: "Status",
-      key: "status",
-      render: (i, rec) => (
-        <p style={{ color: rec.status ? "green" : "red" }}>
-          {rec.status ? "Active" : "Inactive"}
-        </p>
-      ),
+      cell: (row) => {
+        return (
+          <Tag color={row.status ? "green" : "red"}>
+            {row.status ? "Active" : "Inactive"}
+          </Tag>
+        );
+      },
     },
     {
-      title: "Action",
+      title: "Status",
       key: "user_id",
       action: ["update", "read", "delete"],
     },

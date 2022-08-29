@@ -1,12 +1,11 @@
-import { Card } from "antd";
-import React, { useEffect, useState } from "react";
-import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { XButton, XTable } from "component";
+import { Card, Tag } from "antd";
+import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { getRoute } from "helper/utils";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { deleteCustomer, getCustomer } from "resource";
-import routes from "routes";
 
 const ListCust = () => {
   const route = getRoute();
@@ -52,8 +51,7 @@ const ListCust = () => {
         />
       }
     >
-      <XTable
-        rowKey="mst_customer_id"
+      <XTableV2
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -94,12 +92,13 @@ const columns = () => {
     },
     {
       title: "Status",
-      key: "status",
-      render: (i, rec) => (
-        <p style={{ color: rec.status ? "green" : "red" }}>
-          {rec.status ? "Active" : "Inactive"}
-        </p>
-      ),
+      cell: (row) => {
+        return (
+          <Tag color={row.status ? "green" : "red"}>
+            {row.status ? "Active" : "Inactive"}
+          </Tag>
+        );
+      },
     },
     {
       title: "",

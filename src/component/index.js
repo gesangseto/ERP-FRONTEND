@@ -1,20 +1,22 @@
 import XButton from "./XButton";
+import XDateRangePicker from "./XDateRangePicker";
+import XDebounceSelect from "./XDebounceSelect";
 import XFormApproval from "./XFormApproval";
+import XFormItemVariant from "./XFormItemVariant";
 import XInput from "./XInput";
+import XInputNumber from "./XInputNumber";
 import XModalApproval from "./XModalApproval";
+import XRadio from "./XRadio";
+import XSelect from "./XSelect";
+import XSelectSearchForm from "./XSelectSearchForm";
 import XSwitch from "./XSwitch";
 import XTable from "./XTable";
+import XTableV2 from "./XTableV2";
 import XTextArea from "./XTextArea";
-import XFormItemVariant from "./XFormItemVariant";
-import XInputNumber from "./XInputNumber";
-import XSelect from "./XSelect";
-import XDebounceSelect from "./XDebounceSelect";
-import XSelectSearchForm from "./XSelectSearchForm";
-import XDateRangePicker from "./XDateRangePicker";
-import XRadio from "./XRadio";
 
 export {
   XTable,
+  XTableV2,
   XSelect,
   XButton,
   XModalApproval,

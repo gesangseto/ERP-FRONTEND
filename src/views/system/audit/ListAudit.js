@@ -1,9 +1,9 @@
 import { Card } from "antd";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { XTable } from "component";
+import { XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { getRoute } from "helper/utils";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAudit } from "resource";
 
 const ListAudit = () => {
@@ -40,8 +40,7 @@ const ListAudit = () => {
       //   />
       // }
     >
-      <XTable
-        rowKey="id"
+      <XTableV2
         columns={tableSchema()}
         items={listData}
         totalData={totalData}
