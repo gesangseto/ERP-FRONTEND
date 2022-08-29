@@ -58,8 +58,8 @@ const XTableV2 = (props) => {
             row.status == 1
               ? "Active"
               : row.status == -1
-              ? "Inactive"
-              : "Rejected";
+              ? "Rejected"
+              : "Inactive";
           return <Tag color={color}>{title}</Tag>;
         };
       } else if (it.hasOwnProperty("action") && Array.isArray(it["action"])) {
