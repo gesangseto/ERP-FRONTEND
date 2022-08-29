@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import $axios from "Api";
 
-export const getReturn = async (property = {}, useAlert = true) => {
+export const getUserBranch = async (property = {}, useAlert = true) => {
   if (property.hasOwnProperty("search")) {
     if (Array.isArray(property.search)) {
       property.search = JSON.stringify(property.search);
@@ -10,7 +10,7 @@ export const getReturn = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/return?${query_string}`)
+      .get(`/api/master/pos/user-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -26,16 +26,28 @@ export const getReturn = async (property = {}, useAlert = true) => {
   });
 };
 
-export const getReturnByUser = async (property = {}, useAlert = true) => {
-  if (property.hasOwnProperty("search")) {
-    if (Array.isArray(property.search)) {
-      property.search = JSON.stringify(property.search);
-    }
-  }
-  var query_string = new URLSearchParams(property).toString();
+export const insertUserBranch = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/return/by-branch?${query_string}`)
+      .put(`/api/master/pos/user-branch`, body)
+      .then((result) => {
+        let _res = result.data;
+        if (_res.error && useAlert) {
+          toast.error(`${_res.message}`);
+          return resolve(false);
+        }
+        return resolve(_res);
+      })
+      .catch((e) => {
+        if (useAlert) toast.error(`${e.message}`);
+        return resolve(false);
+      });
+  });
+};
+export const updateUserBranch = async (body = {}, useAlert = true) => {
+  return new Promise((resolve) => {
+    $axios
+      .post(`/api/master/pos/user-branch`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -51,28 +63,11 @@ export const getReturnByUser = async (property = {}, useAlert = true) => {
   });
 };
 
-export const insertReturn = async (body = {}, useAlert = true) => {
+export const deleteUserBranch = async (body = {}, useAlert = true) => {
+  body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/return`, body)
-      .then((result) => {
-        let _res = result.data;
-        if (_res.error && useAlert) {
-          toast.error(`${_res.message}`);
-          return resolve(false);
-        }
-        return resolve(_res);
-      })
-      .catch((e) => {
-        if (useAlert) toast.error(`${e.message}`);
-        return resolve(false);
-      });
-  });
-};
-export const approveReturn = async (body = {}, useAlert = true) => {
-  return new Promise((resolve) => {
-    $axios
-      .post(`/api/transaction/pos/return`, body)
+      .delete(`/api/master/pos/user-branch`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

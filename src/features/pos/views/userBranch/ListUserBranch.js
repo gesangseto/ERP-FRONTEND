@@ -1,13 +1,15 @@
 import { Card } from "antd";
-import { XTable } from "component";
+import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getStock, getStockByUser } from "features/pos/resource";
+import { deleteBranch, getBranch, getUserBranch } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getRoute } from "helper/utils";
+import moment from "moment";
+import { toast } from "react-toastify";
 
-const ListStock = () => {
+const ListUserBranch = () => {
   const route = getRoute();
   const navigate = useNavigate();
   const [listData, setListData] = useState([]);
@@ -19,7 +21,7 @@ const ListStock = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getStockByUser(filter);
+    let _data = await getUserBranch(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -27,6 +29,14 @@ const ListStock = () => {
   };
 
   const handleClickAction = async (action, id) => {
+    if (action === "delete") {
+      let res = await deleteBranch({ pos_branch_id: id });
+      if (res) {
+        toast.success("Delete successfully");
+        loadData();
+      }
+      return;
+    }
     navigate(`${route.path}/${action}/${id}`);
   };
   const handleClickAdd = () => {
@@ -45,7 +55,7 @@ const ListStock = () => {
       // }
     >
       <XTable
-        rowKey="pos_item_stock_id"
+        rowKey="pos_branch_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -56,46 +66,39 @@ const ListStock = () => {
   );
 };
 
-export default ListStock;
+export default ListUserBranch;
 
 const columns = () => {
   return [
     {
-      title: "Branch",
+      title: "Date",
+      key: "created_at",
+      render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
+    },
+    {
+      title: "Branch Name",
+      key: "pos_branch_name",
+    },
+    {
+      title: "Branch Code",
       key: "pos_branch_code",
     },
     {
-      title: "Product",
-      key: "mst_item_name",
+      title: "Username",
+      key: "user_name",
     },
     {
-      title: "Item No",
-      key: "mst_item_no",
+      title: "Total User",
+      key: "total_user",
     },
     {
-      title: "Desc",
-      key: "mst_item_desc",
-    },
-    {
-      title: "Barcode",
-      key: "barcode",
-    },
-    {
-      title: "Variant",
-      key: "mst_item_variant_name",
-    },
-    {
-      title: "Price",
-      key: "price",
-    },
-    {
-      title: "Quantity",
-      key: "qty",
+      title: "Cashier",
+      key: "total_cashier",
     },
     {
       title: "",
-      key: "pos_item_stock_id",
-      action: ["read"],
+      key: "pos_branch_id",
+      action: ["update", "read"],
     },
   ];
 };

@@ -1,14 +1,15 @@
-import { Card, Tag } from "antd";
+import { Card } from "antd";
 import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getDestroy } from "features/pos/resource";
+import { deleteBranch, getBranch } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getRoute } from "helper/utils";
 import moment from "moment";
+import { toast } from "react-toastify";
 
-const ListDestroy = () => {
+const ListBranch = () => {
   const route = getRoute();
   const navigate = useNavigate();
   const [listData, setListData] = useState([]);
@@ -20,7 +21,7 @@ const ListDestroy = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getDestroy(filter);
+    let _data = await getBranch(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -28,6 +29,14 @@ const ListDestroy = () => {
   };
 
   const handleClickAction = async (action, id) => {
+    if (action === "delete") {
+      let res = await deleteBranch({ pos_branch_id: id });
+      if (res) {
+        toast.success("Delete successfully");
+        loadData();
+      }
+      return;
+    }
     navigate(`${route.path}/${action}/${id}`);
   };
   const handleClickAdd = () => {
@@ -46,7 +55,7 @@ const ListDestroy = () => {
       }
     >
       <XTable
-        rowKey="pos_trx_destroy_id"
+        rowKey="pos_branch_id"
         columns={columns()}
         items={listData}
         totalData={totalData}
@@ -57,42 +66,34 @@ const ListDestroy = () => {
   );
 };
 
-export default ListDestroy;
+export default ListBranch;
 
 const columns = () => {
   return [
-    {
-      title: "Branch",
-      key: "pos_branch_code",
-    },
     {
       title: "Date",
       key: "created_at",
       render: (i, rec) => <p>{moment(i).format("YYYY-MM-DD HH:mm:ss")}</p>,
     },
     {
-      title: "Created By",
-      key: "user_name",
+      title: "Desc",
+      key: "pos_branch_desc",
     },
     {
-      title: "Product",
-      key: "mst_item_name",
-    },
-    // {
-    //   title: "Supplier",
-    //   key: "mst_supplier_name",
-    // },
-    // {
-    //   title: "Batch",
-    //   key: "batch",
-    // },
-    {
-      title: "Quantity",
-      key: "qty",
+      title: "Branch Name",
+      key: "pos_branch_name",
     },
     {
-      title: "@ Quantity",
-      key: "qty_stock",
+      title: "Code",
+      key: "pos_branch_code",
+    },
+    {
+      title: "Address",
+      key: "pos_branch_address",
+    },
+    {
+      title: "Phone",
+      key: "pos_branch_phone",
     },
     {
       title: "Status",
@@ -108,29 +109,9 @@ const columns = () => {
       ),
     },
     {
-      title: "Destroyed Status",
-      key: "is_destroyed",
-      render: (i, rec) => {
-        let color = "yellow";
-        let title = "Not Destroyed";
-        if (rec.is_destroyed) {
-          color = "green";
-          title = "Destroyed";
-        } else if (rec.is_destroyed == false) {
-          color = "red";
-          title = "Rejected";
-        }
-        return (
-          <Tag color={color} key={i}>
-            {title}
-          </Tag>
-        );
-      },
-    },
-    {
       title: "",
-      key: "pos_trx_destroy_id",
-      action: ["approve", "update", "read"],
+      key: "pos_branch_id",
+      action: ["approve", "delete", "update", "read"],
     },
   ];
 };

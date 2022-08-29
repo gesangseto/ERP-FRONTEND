@@ -4,7 +4,7 @@ import { numberWithComma } from "helper/utils";
 import React, { useEffect, useRef, useState } from "react";
 
 const XDrawerPayment = React.forwardRef((props, ref) => {
-  const { data, onClose, onClickPaid } = props;
+  const { data, onClose, onClickPaid, ...rest } = props;
   const [formData, setFormData] = useState({
     pos_trx_sale_id: null,
     payment_type: "Cash",

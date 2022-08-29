@@ -2,7 +2,15 @@ import { Form, Switch } from "antd";
 import React from "react";
 
 const XSwitch = (props) => {
-  const { title, name, disabled, initialValue, onChange, ...rest } = props;
+  const {
+    title,
+    name,
+    disabled,
+    initialValue,
+    onChange,
+    useForm = true,
+    ...rest
+  } = props;
 
   const handleChange = (e) => {
     if (onChange) {
@@ -12,15 +20,19 @@ const XSwitch = (props) => {
 
   return (
     <>
-      <Form.Item
-        initialValue={initialValue}
-        label={title ?? "No Title"}
-        name={name}
-        valuePropName="checked"
-        {...rest}
-      >
-        <Switch disabled={disabled} onChange={(e) => handleChange(e)} />
-      </Form.Item>
+      {useForm ? (
+        <Form.Item
+          initialValue={initialValue}
+          label={title ?? "No Title"}
+          name={name}
+          valuePropName="checked"
+          {...rest}
+        >
+          <Switch disabled={disabled} onChange={(e) => handleChange(e)} />
+        </Form.Item>
+      ) : (
+        <Switch disabled={disabled} {...rest} />
+      )}
     </>
   );
 };

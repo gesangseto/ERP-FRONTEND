@@ -1,7 +1,7 @@
 import { Card, Tag } from "antd";
 import { XButton, XTable } from "component";
 import { defaultFilter } from "constants";
-import { getReceive } from "features/pos/resource";
+import { getReceive, getReceiveByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const ListReceive = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getReceive(filter);
+    let _data = await getReceiveByUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -62,8 +62,8 @@ export default ListReceive;
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_receive_id",
+      title: "Branch",
+      key: "pos_branch_code",
     },
     {
       title: "Date",

@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import { XTable } from "component";
 import { defaultFilter } from "constants";
-import { getInbound } from "features/pos/resource";
+import { getInbound, getInboundByUser } from "features/pos/resource";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const ListInbound = () => {
   }, [filter]);
 
   const loadData = async () => {
-    let _data = await getInbound(filter);
+    let _data = await getInboundByUser(filter);
     if (_data) {
       setTotalData(_data.grand_total);
       setListData([..._data.data]);
@@ -62,8 +62,8 @@ export default ListInbound;
 const columns = () => {
   return [
     {
-      title: "ID",
-      key: "pos_trx_inbound_id",
+      title: "Branch",
+      key: "pos_branch_code",
     },
     {
       title: "Date",

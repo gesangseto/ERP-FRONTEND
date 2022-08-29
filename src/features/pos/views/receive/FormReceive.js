@@ -1,5 +1,10 @@
 import { Button, Card, Form } from "antd";
-import { XFormApproval, XSelect, XTextArea } from "component";
+import {
+  XFormApproval,
+  XSelect,
+  XSelectSearchForm,
+  XTextArea,
+} from "component";
 import { getRoute, makeOption } from "helper/utils";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,6 +12,7 @@ import { toast } from "react-toastify";
 
 import { XFormReceive, XTableDetailTrx } from "features/pos/component";
 import {
+  getBranchByUser,
   getReceive,
   insertReceive,
   updateReceive,
@@ -21,6 +27,7 @@ const FormReceive = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ ...{}, item: [] });
   const [listSupplier, setListSupplier] = useState([]);
+  const [listBranch, setListBranch] = useState([]);
 
   useEffect(() => {
     (async function () {
@@ -42,6 +49,16 @@ const FormReceive = () => {
     setListSupplier([..._data]);
   };
 
+  const loadBranch = async (e) => {
+    let filter = { page: 1, limit: 10, search: e, status: 1 };
+    let _data = await getBranchByUser(filter);
+    if (_data) {
+      setListBranch([..._data.data]);
+    } else {
+      setListBranch([]);
+    }
+  };
+
   const loadFormData = async (id) => {
     let _data = await getReceive({ pos_receive_id: id });
     _data = _data.data[0];
@@ -57,6 +74,7 @@ const FormReceive = () => {
       }
     }
     _body.item = _item;
+    console.log(_body);
     let _data;
     if (id) {
       param.mst_customer_id = id;
@@ -100,6 +118,23 @@ const FormReceive = () => {
           disabled={type != "create"}
           required
           option={listSupplier}
+        />
+        <XSelectSearchForm
+          allowClear
+          disabled={type != "create"}
+          required
+          title="Branch Code"
+          placeholder="Input search text"
+          name="pos_branch_code"
+          onSearch={(e) => loadBranch(e)}
+          option={listBranch.map((it) => {
+            return {
+              text: `(${it.pos_branch_code}) ${it.pos_branch_name}`,
+              value: it.pos_branch_code,
+            };
+          })}
+          onChange={(val) => setFormData({ ...formData, pos_branch_code: val })}
+          initialValue={formData.pos_branch_code}
         />
         {type != "create" ? (
           <XTextArea

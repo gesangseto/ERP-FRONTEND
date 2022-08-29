@@ -1,14 +1,14 @@
-import { Button, Card, Form, Radio, Space } from "antd";
+import { Button, Card, Form } from "antd";
 import {
   XDateRangePicker,
   XFormApproval,
   XInputNumber,
-  XRadio,
   XSelectSearchForm,
   XSwitch,
 } from "component";
 import {
-  getDiscount,
+  getBranchByUser,
+  getDiscountByUser,
   insertDiscount,
   updateDiscount,
 } from "features/pos/resource";
@@ -18,7 +18,6 @@ import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getCustomer, insertCustomer, updateCustomer } from "resource";
 
 const FormDiscount = () => {
   const route = getRoute();
@@ -34,6 +33,7 @@ const FormDiscount = () => {
     status: 1,
   });
   const [listProduct, setListProduct] = useState([]);
+  const [listBranch, setListBranch] = useState([]);
 
   useEffect(() => {
     (async function () {
@@ -49,7 +49,7 @@ const FormDiscount = () => {
   }, [formData]);
 
   const loadFormData = async (id) => {
-    let _data = await getDiscount({ pos_discount_id: id });
+    let _data = await getDiscountByUser({ pos_discount_id: id });
     _data = _data.data[0];
     let date = [];
     date[0] = moment(_data.pos_discount_starttime);
@@ -58,6 +58,16 @@ const FormDiscount = () => {
       ..._data,
       date_time: date,
     });
+  };
+
+  const loadBranch = async (e) => {
+    let filter = { page: 1, limit: 10, search: e, status: 1 };
+    let _data = await getBranchByUser(filter);
+    if (_data) {
+      setListBranch([..._data.data]);
+    } else {
+      setListBranch([]);
+    }
   };
 
   const loadProduct = async (e) => {
@@ -69,6 +79,7 @@ const FormDiscount = () => {
       setListProduct([]);
     }
   };
+
   const saveFormData = async (param = Object) => {
     param = { ...formData, ...param };
     let _data;
@@ -107,6 +118,23 @@ const FormDiscount = () => {
         }}
         layout="horizontal"
       >
+        <XSelectSearchForm
+          allowClear
+          disabled={type != "create"}
+          required
+          title="Branch Code"
+          placeholder="Input search text"
+          name="pos_branch_code"
+          onSearch={(e) => loadBranch(e)}
+          option={listBranch.map((it) => {
+            return {
+              text: `(${it.pos_branch_code}) ${it.pos_branch_name}`,
+              value: it.pos_branch_code,
+            };
+          })}
+          onChange={(val) => setFormData({ ...formData, pos_branch_code: val })}
+          initialValue={formData.pos_branch_code}
+        />
         <XSelectSearchForm
           allowClear
           disabled={type != "create"}
@@ -162,7 +190,7 @@ const FormDiscount = () => {
           addonAfter={"%"}
           min={0}
           max={100}
-          required
+          required={!formData.discount_free_qty}
         />
         <XInputNumber
           title="Free Qty"
@@ -172,7 +200,7 @@ const FormDiscount = () => {
           onChange={(e) => setFormData({ ...formData, discount_free_qty: e })}
           min={0}
           max={100}
-          required
+          required={!formData.discount}
         />
         <XSwitch
           title="Status"

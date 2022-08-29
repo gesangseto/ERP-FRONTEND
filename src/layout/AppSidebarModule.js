@@ -19,20 +19,58 @@ const AppSidebarModule = (props) => {
   const { isCollapsed, changeMenu } = props;
   const [module, setModule] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([1]);
-  const [profile, setProfile] = useState({
-    ...JSON.parse(localStorage.getItem("profile")),
-  });
-  const [menu, setMenu] = useState([
-    ...JSON.parse(localStorage.getItem("menu")),
-  ]);
+  const [profile, setProfile] = useState({});
+  const [menu, setMenu] = useState([]);
 
   useEffect(() => {
+    checkPermission();
+  }, [route]);
+
+  useEffect(() => {
+    if (menu.length > 0) {
+      loadMenuModule();
+    }
+  }, [menu]);
+
+  useEffect(() => {
+    let storageProfile = localStorage.getItem("profile");
+    let storageMenu = localStorage.getItem("menu");
+    if (!storageProfile || !storageMenu) {
+      return handleLogout();
+    } else {
+      setMenu([...JSON.parse(storageMenu)]);
+      setProfile({ ...JSON.parse(storageProfile) });
+    }
+  }, []);
+
+  const loadMenuModule = () => {
+    if (menu) {
+      let grp = groupBy(menu, "sys_menu_module_code");
+      let group = [];
+      for (const key in grp) {
+        let it = {
+          key: key,
+          label: grp[key][0].sys_menu_module_name,
+          icon: icon[grp[key][0].sys_menu_module_icon] ?? null,
+        };
+        group.push(it);
+      }
+      setModule([...group]);
+    }
+  };
+
+  const checkPermission = () => {
+    let storageMenu = localStorage.getItem("menu");
+    if (!storageMenu) {
+      return handleLogout();
+    }
+    storageMenu = JSON.parse(storageMenu);
     let path = route.path.split(":");
     if (path[0]) {
       let can_access = false;
       let method = location.pathname.replace(path[0], "");
       method = method.split("/")[0];
-      for (const it of menu) {
+      for (const it of storageMenu) {
         let permission = it.sys_menu_url.replace(/\//g, "").toLowerCase();
         let access = path[0].replace(/\//g, "").toLowerCase();
         if (permission === access || access == "profile") {
@@ -47,23 +85,7 @@ const AppSidebarModule = (props) => {
         navigate("/404");
       }
     }
-  }, [route]);
-
-  useEffect(() => {
-    if (menu) {
-      let grp = groupBy(menu, "sys_menu_module_code");
-      let group = [];
-      for (const key in grp) {
-        let it = {
-          key: key,
-          label: grp[key][0].sys_menu_module_name,
-          icon: icon[grp[key][0].sys_menu_module_icon] ?? null,
-        };
-        group.push(it);
-      }
-      setModule([...group]);
-    }
-  }, []);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("profile");
