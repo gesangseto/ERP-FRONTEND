@@ -11,7 +11,7 @@ import {
   Row,
   Space,
 } from "antd";
-import { XTableV2 } from "component";
+import { XNormalInput, XTableV2 } from "component";
 import XSelectSearch from "component/XSelectSearch";
 import { XDrawerPayment, XSelectUserBranch } from "features/pos/component";
 import {
@@ -295,17 +295,21 @@ const FormSale = () => {
         cell: (rec, index) => {
           if (formData.pos_trx_sale_id) return rec.barcode;
           return (
-            <Input
+            <XNormalInput
               ref={(el) => itemRef.current.push(el)}
               autoFocus
-              defaultValue={rec.barcode}
+              value={rec.barcode}
+              onChange={(e) => {
+                let _item = formData.sale_item;
+                _item[index].barcode = e.target.value;
+                setFormData({ ...formData, sale_item: _item });
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleChangeBarcode(e.target.value, index);
                   e.preventDefault();
                 }
               }}
-              status={!rec.mst_item_variant_id ? "error" : null}
             />
           );
         },
@@ -313,7 +317,7 @@ const FormSale = () => {
       {
         title: "Product",
         key: "mst_item_variant_id",
-        width: "20rem",
+        width: "15rem",
         cell: (rec, index) => {
           if (formData.pos_trx_sale_id)
             return `${rec.mst_item_name} (${rec.mst_packaging_code}) @${rec.mst_item_variant_qty}`;
@@ -338,6 +342,7 @@ const FormSale = () => {
                 changeItem(item.hasOwnProperty("item") ? item.item : {}, index);
               }}
               initialValue={rec.mst_item_variant_id + ""}
+              status={!rec.mst_item_variant_id ? "error" : null}
             />
           );
         },

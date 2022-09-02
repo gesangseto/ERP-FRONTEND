@@ -6,6 +6,7 @@ import XFormItemVariant from "./XFormItemVariant";
 import XInput from "./XInput";
 import XInputNumber from "./XInputNumber";
 import XModalApproval from "./XModalApproval";
+import XNormalInput from "./XNormalInput";
 import XRadio from "./XRadio";
 import XSelect from "./XSelect";
 import XSelectSearchForm from "./XSelectSearchForm";
@@ -30,4 +31,5 @@ export {
   XSelectSearchForm,
   XDateRangePicker,
   XRadio,
+  XNormalInput,
 };

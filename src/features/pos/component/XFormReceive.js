@@ -1,6 +1,6 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import { Card, DatePicker, Input, InputNumber } from "antd";
-import { XTableV2 } from "component";
+import { DatePicker, InputNumber } from "antd";
+import { XNormalInput, XTableV2 } from "component";
 import XSelectSearch from "component/XSelectSearch";
 import { makeId, sumByKey, toDate } from "helper/utils";
 import moment from "moment";
@@ -64,7 +64,6 @@ const XFormReceive = (props) => {
       _item.push(itemDef());
       itemRef.current[index + 1]?.focus();
     }
-    console.log(index, "===> ", _item);
     setFormData({ ...formData, item: [..._item] });
   };
 
@@ -86,10 +85,14 @@ const XFormReceive = (props) => {
         key: "mst_item_variant_id",
         cell: (row, index) => {
           return (
-            <Input
+            <XNormalInput
               ref={(el) => itemRef.current.push(el)}
-              defaultValue={row.barcode}
-              onChange={(e) => {}}
+              value={row.barcode}
+              onChange={(e) => {
+                let _item = formData.item;
+                _item[index].barcode = e.target.value;
+                setFormData({ ...formData, item: _item });
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleChangeBarcode(e.target.value, index);
@@ -105,6 +108,7 @@ const XFormReceive = (props) => {
       {
         title: "Product",
         key: "mst_item_id",
+        width: "15rem",
         cell: (row, index) => {
           return (
             <XSelectSearch
@@ -179,7 +183,7 @@ const XFormReceive = (props) => {
         key: "null",
         cell: (rec, index) => (
           <>
-            {!index ? null : (
+            {index + 1 !== formData.item.length && (
               <DeleteOutlined onClick={() => handleDeleteRow(index)} />
             )}
           </>
@@ -190,7 +194,7 @@ const XFormReceive = (props) => {
 
   return (
     <XTableV2
-      columns={scheme()}
+      columns={[...scheme()]}
       items={[...formData.item]}
       pagination={false}
       searchable={false}
