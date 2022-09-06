@@ -10,101 +10,77 @@ const Configuration = React.lazy(() => import("./views/Configuration"));
   -SYSTEM
 */
 // MASTER
-const LDepart = React.lazy(() => import("./views/master/depart/ListDepart"));
-const FDepart = React.lazy(() => import("./views/master/depart/FormDepart"));
-const LSection = React.lazy(() => import("./views/master/section/ListSection"));
-const FSection = React.lazy(() => import("./views/master/section/FormSection"));
-const FRole = React.lazy(() => import("./views/master/role/FormRole"));
-const LRole = React.lazy(() => import("./views/master/role/ListRole"));
-const ListUser = React.lazy(() => import("./views/master/user/ListUser"));
-const FormUser = React.lazy(() => import("./views/master/user/FormUser"));
+
+var path = "./views/master/";
+const LDepart = React.lazy(() => import(path + "depart/ListDepart"));
+const FDepart = React.lazy(() => import(path + "depart/FormDepart"));
+const LSection = React.lazy(() => import(path + "section/ListSection"));
+const FSection = React.lazy(() => import(path + "section/FormSection"));
+const FRole = React.lazy(() => import(path + "role/FormRole"));
+const LRole = React.lazy(() => import(path + "role/ListRole"));
+const ListUser = React.lazy(() => import(path + "user/ListUser"));
+const FormUser = React.lazy(() => import(path + "user/FormUser"));
 // MASTER Data
-const LCust = React.lazy(() => import("./views/masterData/customer/ListCust"));
-const FCust = React.lazy(() => import("./views/masterData/customer/FormCust"));
-const LSupp = React.lazy(() =>
-  import("./views/masterData/supplier/ListSupplier")
-);
-const FSupp = React.lazy(() =>
-  import("./views/masterData/supplier/FormSupplier")
-);
+var path = "./views/masterData/";
+const LCust = React.lazy(() => import(path + "customer/ListCust"));
+const FCust = React.lazy(() => import(path + "customer/FormCust"));
+const LSupp = React.lazy(() => import(path + `supplier/ListSupplier`));
+const FSupp = React.lazy(() => import(path + "supplier/FormSupplier"));
 const FormPackaging = React.lazy(() =>
-  import("./views/masterData/packaging/FormPackaging")
+  import(path + "packaging/FormPackaging")
 );
 const ListPackaging = React.lazy(() =>
-  import("./views/masterData/packaging/ListPackaging")
+  import(path + "packaging/ListPackaging")
 );
-const FormItem = React.lazy(() => import("./views/masterData/item/FormItem"));
-const ListItem = React.lazy(() => import("./views/masterData/item/ListItem"));
+const FormItem = React.lazy(() => import(path + "item/FormItem"));
+const ListItem = React.lazy(() => import(path + "item/ListItem"));
 // SYSTEM
-const LAppr = React.lazy(() => import("./views/system/approval/ListApproval"));
-const FAppr = React.lazy(() => import("./views/system/approval/FormApproval"));
-const LAudit = React.lazy(() => import("./views/system/audit/ListAudit"));
-const FAudit = React.lazy(() => import("./views/system/audit/FormAudit"));
-const LConf = React.lazy(() => import("./views/system/config/ListConf"));
-const FConf = React.lazy(() => import("./views/system/config/FormConf"));
+
+var path = "./views/system/";
+const LAppr = React.lazy(() => import(path + "approval/ListApproval"));
+const FAppr = React.lazy(() => import(path + "approval/FormApproval"));
+const LAudit = React.lazy(() => import(path + "audit/ListAudit"));
+const FAudit = React.lazy(() => import(path + "audit/FormAudit"));
+const LConf = React.lazy(() => import(path + "config/ListConf"));
+const FConf = React.lazy(() => import(path + "config/FormConf"));
 /*
 MODULE POINT OF SALES 
 */
-const LPBranch = React.lazy(() =>
-  import("./features/pos/views/branch/ListBranch")
-);
-const FPBranch = React.lazy(() =>
-  import("./features/pos/views/branch/FormBranch")
-);
+var path = "./features/pos/views/";
+const LPBranch = React.lazy(() => import(path + "branch/ListBranch"));
+const FPBranch = React.lazy(() => import(path + "branch/FormBranch"));
 const LPUserBranch = React.lazy(() =>
-  import("./features/pos/views/userBranch/ListUserBranch")
+  import(path + "userBranch/ListUserBranch")
 );
 const FPUserBranch = React.lazy(() =>
-  import("./features/pos/views/userBranch/FormUserBranch")
+  import(path + "userBranch/FormUserBranch")
 );
-const LPDiscount = React.lazy(() =>
-  import("./features/pos/views/discount/ListDiscount")
-);
-const FPDiscount = React.lazy(() =>
-  import("./features/pos/views/discount/FormDiscount")
-);
-const LPReceive = React.lazy(() =>
-  import("./features/pos/views/receive/ListReceive")
-);
-const FPReceive = React.lazy(() =>
-  import("./features/pos/views/receive/FormReceive")
-);
-const LPInbound = React.lazy(() =>
-  import("./features/pos/views/inbound/ListInbound")
-);
-const FPInbound = React.lazy(() =>
-  import("./features/pos/views/inbound/FormInbound")
-);
-const LPSale = React.lazy(() => import("./features/pos/views/sale/ListSale"));
-const FPSale = React.lazy(() => import("./features/pos/views/sale/FormSale"));
-const LPReturn = React.lazy(() =>
-  import("./features/pos/views/return/ListReturn")
-);
-const FPReturn = React.lazy(() =>
-  import("./features/pos/views/return/FormReturn")
-);
-const LPDestroy = React.lazy(() =>
-  import("./features/pos/views/destroy/ListDestroy")
-);
-const FPDestroy = React.lazy(() =>
-  import("./features/pos/views/destroy/FormDestroy")
-);
-const LPStock = React.lazy(() =>
-  import("./features/pos/views/stock/ListStock")
-);
-const FPStock = React.lazy(() =>
-  import("./features/pos/views/stock/FormStock")
-);
-const LPRSale = React.lazy(() =>
-  import("./features/pos/views/reportSale/ListReportSale")
-);
-const FPRSale = React.lazy(() =>
-  import("./features/pos/views/reportSale/FormReportSale")
-);
+const LPDiscount = React.lazy(() => import(path + "discount/ListDiscount"));
+const FPDiscount = React.lazy(() => import(path + "discount/FormDiscount"));
+const LPReceive = React.lazy(() => import(path + "receive/ListReceive"));
+const FPReceive = React.lazy(() => import(path + "receive/FormReceive"));
+const LPInbound = React.lazy(() => import(path + "inbound/ListInbound"));
+const FPInbound = React.lazy(() => import(path + "inbound/FormInbound"));
+const LPSale = React.lazy(() => import(path + "sale/ListSale"));
+const FPSale = React.lazy(() => import(path + "sale/FormSale"));
+const LPReturn = React.lazy(() => import(path + "return/ListReturn"));
+const FPReturn = React.lazy(() => import(path + "return/FormReturn"));
+const LPDestroy = React.lazy(() => import(path + "destroy/ListDestroy"));
+const FPDestroy = React.lazy(() => import(path + "destroy/FormDestroy"));
+const LPStock = React.lazy(() => import(path + "stock/ListStock"));
+const FPStock = React.lazy(() => import(path + "stock/FormStock"));
+const LPRSale = React.lazy(() => import(path + "reportSale/ListReportSale"));
+const FPRSale = React.lazy(() => import(path + "reportSale/FormReportSale"));
+/*
+MODULE WAREHOUSE 
+*/
+var path = "./features/warehouse/views/";
+const LWBranch = React.lazy(() => import(path + "branch/ListBranch"));
+const FWBranch = React.lazy(() => import(path + "branch/FormBranch"));
+const LWWhType = React.lazy(() => import(path + "wh-type/ListWhType"));
+const FWWhType = React.lazy(() => import(path + "wh-type/FormWhType"));
+
 const routes = [
-  // { path: "/master/user", name: "Master User", element: LUser },
-  // { path: "/master/user/:type", name: "Master User", element: FUser },
-  // { path: "/master/user/:type/:id", name: "Master User", element: FUser },
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
   { path: "/profile", name: "Profile", element: Profile },
@@ -382,6 +358,40 @@ const routes = [
     path: "/pos/report/sale/:type/:id",
     name: "Detail Report Sale",
     element: FPRSale,
+  },
+  // FEATURE
+  // MODULE WAREHOUSE
+  // BRANCH
+  {
+    path: "/warehouse/master/branch",
+    name: "Branch List",
+    element: LWBranch,
+  },
+  {
+    path: "/warehouse/master/branch/:type",
+    name: "Branch Detail",
+    element: FWBranch,
+  },
+  {
+    path: "/warehouse/master/branch/:type/:id",
+    name: "Branch Detail",
+    element: FWBranch,
+  },
+  // Warehouse Type
+  {
+    path: "/warehouse/master/wh-type",
+    name: "Wh Type List",
+    element: LWWhType,
+  },
+  {
+    path: "/warehouse/master/wh-type/:type",
+    name: "Wh Type Detail",
+    element: FWWhType,
+  },
+  {
+    path: "/warehouse/master/wh-type/:type/:id",
+    name: "Wh Type Detail",
+    element: FWWhType,
   },
 ];
 
