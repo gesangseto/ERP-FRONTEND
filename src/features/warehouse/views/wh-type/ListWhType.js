@@ -1,4 +1,4 @@
-import { Card, Tag } from "antd";
+import { Button, Card, Popover, Space, Tag } from "antd";
 import { XButton, XTableV2 } from "component";
 import { defaultFilter } from "constants";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteWhType, getWhType } from "features/warehouse/resource";
 import { getRoute } from "helper/utils";
 import { toast } from "react-toastify";
+import { XModalFlow } from "features/warehouse/component";
 
 const ListWhType = () => {
   const route = getRoute();
@@ -14,6 +15,7 @@ const ListWhType = () => {
   const [listData, setListData] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [filter, setFilter] = useState({ ...defaultFilter });
+  const [openModalFLow, setOpenModalFLow] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -46,13 +48,26 @@ const ListWhType = () => {
       title={route.name}
       style={{ textTransform: "capitalize" }}
       extra={
-        <XButton
-          popover="Create"
-          type="create"
-          onClick={() => handleClickAdd()}
-        />
+        <Space>
+          <Popover content={"Flow Config"}>
+            <Button onClick={() => setOpenModalFLow(true)} size="small">
+              Flow
+            </Button>
+          </Popover>
+          <XButton
+            popover="Create"
+            type="create"
+            onClick={() => handleClickAdd()}
+          />
+        </Space>
       }
     >
+      <XModalFlow
+        visible={openModalFLow}
+        onCancel={() => setOpenModalFLow(false)}
+        // onSubmit={(item) => handleSubmitCashier(item)}
+        // initialValue={cashierData}
+      />
       <XTableV2
         columns={columns()}
         items={listData}

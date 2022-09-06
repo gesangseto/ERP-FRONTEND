@@ -9,6 +9,7 @@ const XSwitch = (props) => {
     initialValue,
     onChange,
     useForm = true,
+    useTitle = true,
     ...rest
   } = props;
 
@@ -23,7 +24,7 @@ const XSwitch = (props) => {
       {useForm ? (
         <Form.Item
           initialValue={initialValue}
-          label={title ?? "No Title"}
+          label={title && useTitle ? title : useTitle ? "No Title" : null}
           name={name}
           valuePropName="checked"
           {...rest}

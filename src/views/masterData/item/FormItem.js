@@ -169,7 +169,7 @@ const FormItem = () => {
               size="small"
               onClick={() =>
                 window.open(
-                  `${process.env.REACT_APP_API}api/generate-barcode?text=${record.barcode}`,
+                  `${process.env.REACT_APP_API}api/administrator/generate-barcode?text=${record.barcode}`,
                   "_blank"
                 )
               }

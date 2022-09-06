@@ -1,5 +1,5 @@
-import { Button, Card, Form } from "antd";
-import { XFormApproval, XInput, XSwitch } from "component";
+import { Button, Card, Col, Form, Row, Space } from "antd";
+import { XFormApproval, XInput, XSwitch, XTableV2 } from "component";
 import {
   getWhType,
   insertWhType,
@@ -97,41 +97,62 @@ const WhType = () => {
           initialValue={formData.wh_mst_wh_type_desc}
         />
         <XSwitch
-          title="Packing"
-          name={"support_packing"}
-          initialValue={formData.support_packing}
-          disabled={type == "read"}
-        />
-        <XSwitch
-          title="Operation"
-          name={"support_operation"}
-          initialValue={formData.support_operation}
-          disabled={type == "read"}
-        />
-        <XSwitch
-          title="Transfer"
-          name={"support_transfer"}
-          initialValue={formData.support_transfer}
-          disabled={type == "read"}
-        />
-        <XSwitch
-          title="Picking"
-          name={"support_picking"}
-          initialValue={formData.support_picking}
-          disabled={type == "read"}
-        />
-        <XSwitch
-          title="Return"
-          name={"support_return"}
-          initialValue={formData.support_return}
-          disabled={type == "read"}
-        />
-        <XSwitch
           title="Status"
           name={"status"}
           initialValue={formData.status}
           disabled={type == "read"}
         />
+        <Card title="Configuration">
+          <Row>
+            <Col span={2}>Packing</Col>
+            <Col span={3}>
+              <XSwitch
+                useTitle={false}
+                name={"support_packing"}
+                initialValue={formData.support_packing}
+                disabled={type == "read"}
+              />
+            </Col>
+            <Col span={2}>Operation</Col>
+            <Col span={3}>
+              <XSwitch
+                useTitle={false}
+                name={"support_operation"}
+                initialValue={formData.support_operation}
+                disabled={type == "read"}
+              />
+            </Col>
+            <Col span={2}>Transfer</Col>
+            <Col span={3}>
+              <XSwitch
+                useTitle={false}
+                name={"support_transfer"}
+                initialValue={formData.support_transfer}
+                disabled={type == "read"}
+              />
+            </Col>
+            <Col span={2}>Picking</Col>
+            <Col span={3}>
+              <XSwitch
+                useTitle={false}
+                name={"support_picking"}
+                initialValue={formData.support_picking}
+                disabled={type == "read"}
+              />
+            </Col>
+            <Col span={2}>Return</Col>
+            <Col span={2}>
+              <XSwitch
+                useTitle={false}
+                name={"support_return"}
+                initialValue={formData.support_return}
+                disabled={type == "read"}
+              />
+            </Col>
+          </Row>
+        </Card>
+        <br />
+        <br />
         <Form.Item>
           <Button
             loading={loading}
