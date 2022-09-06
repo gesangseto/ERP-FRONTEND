@@ -10,7 +10,7 @@ export const getReceive = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/receive?${query_string}`)
+      .get(`/api/pos/transaction/receive?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -34,7 +34,7 @@ export const getReceiveByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/receive/by-branch?${query_string}`)
+      .get(`/api/pos/transaction/receive/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -53,7 +53,7 @@ export const getReceiveByUser = async (property = {}, useAlert = true) => {
 export const insertReceive = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/receive`, body)
+      .put(`/api/pos/transaction/receive`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -71,7 +71,7 @@ export const insertReceive = async (body = {}, useAlert = true) => {
 export const updateReceive = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/receive`, body)
+      .post(`/api/pos/transaction/receive`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

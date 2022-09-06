@@ -10,7 +10,7 @@ export const getProduct = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/item?${query_string}`)
+      .get(`/api/administrator/master/item?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -35,7 +35,7 @@ export const getProductVariant = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/item-variant?${query_string}`)
+      .get(`/api/administrator/master/item-variant?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -54,7 +54,7 @@ export const getProductVariant = async (property = {}, useAlert = true) => {
 export const insertProduct = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/master/item`, body)
+      .put(`/api/administrator/master/item`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -72,7 +72,7 @@ export const insertProduct = async (body = {}, useAlert = true) => {
 export const updateProduct = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/master/item`, body)
+      .post(`/api/administrator/master/item`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -92,7 +92,7 @@ export const deleteProduct = async (body = {}, useAlert = true) => {
   body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .delete(`/api/master/item`, body)
+      .delete(`/api/administrator/master/item`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

@@ -10,7 +10,7 @@ export const getReturn = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/return?${query_string}`)
+      .get(`/api/pos/transaction/return?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -35,7 +35,7 @@ export const getReturnByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/return/by-branch?${query_string}`)
+      .get(`/api/pos/transaction/return/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -54,7 +54,7 @@ export const getReturnByUser = async (property = {}, useAlert = true) => {
 export const insertReturn = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/return`, body)
+      .put(`/api/pos/transaction/return`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -72,7 +72,7 @@ export const insertReturn = async (body = {}, useAlert = true) => {
 export const approveReturn = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/return`, body)
+      .post(`/api/pos/transaction/return`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

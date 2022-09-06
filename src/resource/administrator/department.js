@@ -10,7 +10,7 @@ export const getDepartment = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/user_department?${query_string}`)
+      .get(`/api/administrator/master/user_department?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getDepartment = async (property = {}, useAlert = true) => {
 export const insertDepartment = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/master/user_department`, body)
+      .put(`/api/administrator/master/user_department`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -47,7 +47,7 @@ export const insertDepartment = async (body = {}, useAlert = true) => {
 export const updateDepartment = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/master/user_department`, body)
+      .post(`/api/administrator/master/user_department`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -67,7 +67,7 @@ export const deleteDepartment = async (body = {}, useAlert = true) => {
   body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .delete(`/api/master/user_department`, body)
+      .delete(`/api/administrator/master/user_department`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

@@ -10,7 +10,7 @@ export const getSection = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/user_section?${query_string}`)
+      .get(`/api/administrator/master/user_section?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getSection = async (property = {}, useAlert = true) => {
 export const insertSection = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/master/user_section`, body)
+      .put(`/api/administrator/master/user_section`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -47,7 +47,7 @@ export const insertSection = async (body = {}, useAlert = true) => {
 export const updateSection = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/master/user_section`, body)
+      .post(`/api/administrator/master/user_section`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -67,7 +67,7 @@ export const deleteSection = async (body = {}, useAlert = true) => {
   body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .delete(`/api/master/user_section`, body)
+      .delete(`/api/administrator/master/user_section`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

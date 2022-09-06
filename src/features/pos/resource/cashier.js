@@ -10,7 +10,7 @@ export const getCashier = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/cashier?${query_string}`)
+      .get(`/api/pos/transaction/cashier?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getCashier = async (property = {}, useAlert = true) => {
 export const insertCashier = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/cashier`, body)
+      .put(`/api/pos/transaction/cashier`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -47,7 +47,7 @@ export const insertCashier = async (body = {}, useAlert = true) => {
 export const updateCashier = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/cashier`, body)
+      .post(`/api/pos/transaction/cashier`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

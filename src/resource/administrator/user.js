@@ -10,7 +10,7 @@ export const getUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/user?${query_string}`)
+      .get(`/api/administrator/master/user?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getUser = async (property = {}, useAlert = true) => {
 export const insertUser = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/master/user`, body)
+      .put(`/api/administrator/master/user`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -47,7 +47,7 @@ export const insertUser = async (body = {}, useAlert = true) => {
 export const updateUser = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/master/user`, body)
+      .post(`/api/administrator/master/user`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -67,7 +67,7 @@ export const deleteUser = async (body = {}, useAlert = true) => {
   body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .delete(`/api/master/user`, body)
+      .delete(`/api/administrator/master/user`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

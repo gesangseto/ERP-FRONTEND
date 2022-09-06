@@ -10,7 +10,7 @@ export const getStock = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/stock?${query_string}`)
+      .get(`/api/pos/transaction/stock?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -35,7 +35,7 @@ export const getStockByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/stock/by-branch?${query_string}`)
+      .get(`/api/pos/transaction/stock/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

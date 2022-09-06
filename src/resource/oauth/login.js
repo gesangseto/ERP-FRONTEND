@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 export const loginUser = async (property = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`api/login/user`, property)
+      .post(`api/administrator/login/user`, property)
       .then((result) => {
         let _res = result.data;
         if (_res.error) {

@@ -178,14 +178,17 @@ const ListSale = () => {
         <>
           {Object.keys(cashierData).length == 0 ? (
             <Popover content={"Open Cashier"}>
-              <Button onClick={() => setVisibleOpenCashier(true)}>
+              <Button onClick={() => setVisibleOpenCashier(true)} size="small">
                 <LoginOutlined />
               </Button>
             </Popover>
           ) : (
             <Space>
               <Popover content={"Close Cashier"}>
-                <Button onClick={() => setVisibleOpenCashier(true)}>
+                <Button
+                  onClick={() => setVisibleOpenCashier(true)}
+                  size="small"
+                >
                   <LogoutOutlined style={{ color: "red" }} />
                 </Button>
               </Popover>

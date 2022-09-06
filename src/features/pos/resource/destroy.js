@@ -10,7 +10,7 @@ export const getDestroy = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/destroy?${query_string}`)
+      .get(`/api/pos/transaction/destroy?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -34,7 +34,7 @@ export const getDestroyByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/destroy/by-branch?${query_string}`)
+      .get(`/api/pos/transaction/destroy/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -53,7 +53,7 @@ export const getDestroyByUser = async (property = {}, useAlert = true) => {
 export const insertDestroy = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/destroy`, body)
+      .put(`/api/pos/transaction/destroy`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -71,7 +71,7 @@ export const insertDestroy = async (body = {}, useAlert = true) => {
 export const updateDestroy = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/destroy`, body)
+      .post(`/api/pos/transaction/destroy`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

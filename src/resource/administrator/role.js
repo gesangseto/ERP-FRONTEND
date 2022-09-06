@@ -10,7 +10,7 @@ export const getRole = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/role/section?${query_string}`)
+      .get(`/api/administrator/role/section?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getRole = async (property = {}, useAlert = true) => {
 export const updateRole = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/role/section`, body)
+      .post(`/api/administrator/role/section`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

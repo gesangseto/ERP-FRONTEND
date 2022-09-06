@@ -10,7 +10,7 @@ export const getUserBranch = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/pos/user-branch?${query_string}`)
+      .get(`/api/pos/master/user-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getUserBranch = async (property = {}, useAlert = true) => {
 export const insertUserBranch = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/master/pos/user-branch`, body)
+      .put(`/api/pos/master/user-branch`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -47,7 +47,7 @@ export const insertUserBranch = async (body = {}, useAlert = true) => {
 export const updateUserBranch = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/master/pos/user-branch`, body)
+      .post(`/api/pos/master/user-branch`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -67,7 +67,7 @@ export const deleteUserBranch = async (body = {}, useAlert = true) => {
   body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .delete(`/api/master/pos/user-branch`, body)
+      .delete(`/api/pos/master/user-branch`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

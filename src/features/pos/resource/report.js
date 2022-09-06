@@ -10,7 +10,7 @@ export const getReportCashierSale = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/report/pos/sale-cashier?${query_string}`)
+      .get(`/api/pos/report/sale-cashier?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -35,7 +35,7 @@ export const getReportSaleByBranch = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/report/pos/sale/by-branch?${query_string}`)
+      .get(`/api/pos/report/sale/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -59,7 +59,7 @@ export const getReportSale = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/report/pos/sale?${query_string}`)
+      .get(`/api/pos/report/sale?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

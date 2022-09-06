@@ -10,7 +10,7 @@ export const getInbound = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/inbound?${query_string}`)
+      .get(`/api/pos/transaction/inbound?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -35,7 +35,7 @@ export const getInboundByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/inbound/by-branch?${query_string}`)
+      .get(`/api/pos/transaction/inbound/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

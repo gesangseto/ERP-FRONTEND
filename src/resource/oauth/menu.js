@@ -5,7 +5,7 @@ export const menuUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`api/role/section?${query_string}`)
+      .get(`api/administrator/role/section?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error) {

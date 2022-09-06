@@ -10,7 +10,7 @@ export const getConfiguration = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/configuration?${query_string}`)
+      .get(`/api/administrator/configuration?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getConfiguration = async (property = {}, useAlert = true) => {
 export const updateConfiguration = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/configuration`, body)
+      .post(`/api/administrator/configuration`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -54,7 +54,7 @@ export const getConfigRelation = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/config-relation?${query_string}`)
+      .get(`/api/administrator/config-relation?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -79,7 +79,7 @@ export const getConfigRelationList = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/config-relation-list?${query_string}`)
+      .get(`/api/administrator/config-relation-list?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -98,7 +98,7 @@ export const getConfigRelationList = async (property = {}, useAlert = true) => {
 export const updateConfigRelation = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/config-relation`, body)
+      .post(`/api/administrator/config-relation`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

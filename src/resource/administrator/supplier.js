@@ -10,7 +10,7 @@ export const getSupplier = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/master/supplier?${query_string}`)
+      .get(`/api/administrator/master/supplier?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -29,7 +29,7 @@ export const getSupplier = async (property = {}, useAlert = true) => {
 export const insertSupplier = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/master/supplier`, body)
+      .put(`/api/administrator/master/supplier`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -47,7 +47,7 @@ export const insertSupplier = async (body = {}, useAlert = true) => {
 export const updateSupplier = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/master/supplier`, body)
+      .post(`/api/administrator/master/supplier`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -67,7 +67,7 @@ export const deleteSupplier = async (body = {}, useAlert = true) => {
   body = { data: body };
   return new Promise((resolve) => {
     $axios
-      .delete(`/api/master/supplier`, body)
+      .delete(`/api/administrator/master/supplier`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {

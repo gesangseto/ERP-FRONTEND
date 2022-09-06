@@ -98,7 +98,7 @@ const FormSection = () => {
             },
           ]}
         >
-          <Select onChange={(e) => loadSection(e)} disabled={type == "read"}>
+          <Select disabled={type == "read"}>
             {listDepart.map((item, idx) => {
               return (
                 <Select.Option key={idx} value={item.user_department_id}>

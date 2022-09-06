@@ -10,7 +10,7 @@ export const getSale = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/sale?${query_string}`)
+      .get(`/api/pos/transaction/sale?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -35,7 +35,7 @@ export const getSaleByUser = async (property = {}, useAlert = true) => {
   var query_string = new URLSearchParams(property).toString();
   return new Promise((resolve) => {
     $axios
-      .get(`/api/transaction/pos/sale/by-branch?${query_string}`)
+      .get(`/api/pos/transaction/sale/by-branch?${query_string}`)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -54,7 +54,7 @@ export const getSaleByUser = async (property = {}, useAlert = true) => {
 export const insertSale = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .put(`/api/transaction/pos/sale`, body)
+      .put(`/api/pos/transaction/sale`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -72,7 +72,7 @@ export const insertSale = async (body = {}, useAlert = true) => {
 export const updateSale = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/sale`, body)
+      .post(`/api/pos/transaction/sale`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
@@ -91,7 +91,7 @@ export const updateSale = async (body = {}, useAlert = true) => {
 export const paymentSale = async (body = {}, useAlert = true) => {
   return new Promise((resolve) => {
     $axios
-      .post(`/api/transaction/pos/sale/payment`, body)
+      .post(`/api/pos/transaction/sale/payment`, body)
       .then((result) => {
         let _res = result.data;
         if (_res.error && useAlert) {
